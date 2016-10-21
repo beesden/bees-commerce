@@ -19,9 +19,10 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
-	@RequestMapping( value = "/{productKey}", method = RequestMethod.GET )
-	public Product getProduct( @PathVariable String productKey ) {
-		return productService.getProduct( productKey );
+	@RequestMapping( method = RequestMethod.PUT )
+	@ResponseStatus( HttpStatus.CREATED )
+	public Product createProduct( @Valid @RequestBody Product product ) {
+		return productService.createProduct( product );
 	}
 
 	@RequestMapping( value = "/{productKey}", method = RequestMethod.DELETE )
@@ -30,21 +31,20 @@ public class ProductController {
 		productService.deleteProduct( productKey );
 	}
 
-	@RequestMapping( method = RequestMethod.PUT )
-	@ResponseStatus( HttpStatus.CREATED )
-	public Product createProduct( @Valid @RequestBody Product product ) {
-		return productService.createProduct( product );
+	@RequestMapping( value = "/{productKey}", method = RequestMethod.GET )
+	public Product getProduct( @PathVariable String productKey ) {
+		return productService.getProduct( productKey );
+	}
+
+	@RequestMapping( method = RequestMethod.GET )
+	public PagedResponse<Product> listProducts( PagedRequest pagination ) {
+		return productService.listProducts( pagination );
 	}
 
 	@RequestMapping( value = "/{productKey}", method = RequestMethod.PUT )
 	@ResponseStatus( HttpStatus.NO_CONTENT )
 	public void updateProduct( @PathVariable String productKey, @Valid @RequestBody Product product ) {
 		productService.updateProduct( productKey, product );
-	}
-
-	@RequestMapping( method = RequestMethod.GET )
-	public PagedResponse<Product> listProducts( PagedRequest pagination ) {
-		return productService.listProducts( pagination );
 	}
 
 }

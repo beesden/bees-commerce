@@ -6,14 +6,14 @@ import org.beesden.commerce.model.api.Product;
 
 public interface ProductService {
 
-	Product getProduct( String productKey );
+	Product createProduct( Product product );
 
 	void deleteProduct( String productKey );
 
-	Product createProduct( Product product );
-
-	Product updateProduct( String productKey, Product product );
+	Product getProduct( String productKey );
 
 	PagedResponse<Product> listProducts( PagedRequest paginationForm );
+
+	Product updateProduct( String productKey, Product product );
 
 }

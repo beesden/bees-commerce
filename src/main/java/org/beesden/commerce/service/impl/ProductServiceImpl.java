@@ -26,6 +26,22 @@ public class ProductServiceImpl implements ProductService {
 		this.productRepository = productRepository;
 	}
 
+	@Override
+	public Product createProduct( Product product ) {
+
+		ProductDTO createdProduct = new ProductDTO();
+		createdProduct.update( product );
+		createdProduct.updateTimestamps();
+		createdProduct = productRepository.save( createdProduct );
+
+		return new Product( createdProduct );
+	}
+
+	@Override
+	public void deleteProduct( String productKey ) {
+		productRepository.deleteByProductKey( productKey );
+	}
+
 	@Transactional
 	public Product getProduct( String productKey ) {
 
@@ -38,20 +54,17 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
-	@Override
-	public void deleteProduct( String productKey ) {
-		productRepository.deleteByProductKey( productKey );
-	}
+	@Transactional
+	public PagedResponse<Product> listProducts( PagedRequest pagination ) {
 
-	@Override
-	public Product createProduct( Product product ) {
+		Page<ProductDTO> pagedProducts = productRepository.findAll( pagination.toPageable() );
+		List<Product> productList = pagedProducts.getContent()
+				.stream()
+				.map( Product::new )
+				.collect( Collectors.toList() );
 
-		ProductDTO createdProduct = new ProductDTO();
-		createdProduct.update( product );
-		createdProduct.updateTimestamps();
-		createdProduct = productRepository.save( createdProduct );
+		return new PagedResponse<>( productList, pagedProducts.getTotalElements() );
 
-		return new Product( createdProduct );
 	}
 
 	@Override
@@ -67,19 +80,6 @@ public class ProductServiceImpl implements ProductService {
 		updatedProduct = productRepository.save( updatedProduct );
 
 		return new Product( updatedProduct );
-	}
-
-	@Transactional
-	public PagedResponse<Product> listProducts( PagedRequest pagination ) {
-
-		Page<ProductDTO> pagedProducts = productRepository.findAll( pagination.toPageable() );
-		List<Product> productList = pagedProducts.getContent()
-				.stream()
-				.map( Product::new )
-				.collect( Collectors.toList() );
-
-		return new PagedResponse<>( productList, pagedProducts.getTotalElements() );
-
 	}
 
 }
