@@ -1,0 +1,144 @@
+/*
+# Search results
+*/
+
+/*
+#### Standard results list (Table)
+
+````
+<div class="card">
+    <div class="table content-list">
+
+		<div class="table-row table-head">
+			<div class="table-cell">ID</div>
+			<div class="table-cell">Name</div>
+			<div class="table-cell">Status</div>
+			<div class="table-cell">Updated</div>
+		</div>
+
+		<a class="table-row" href="admin/accounts/edit/4">
+			<div class="table-cell id">28156</div>
+			<div class="table-cell title">North v South one-day series: teams to be picked using computer programme</div>
+			<div class="table-cell"><span class="status draft">In draft</span></div>
+			<div class="table-cell">20/5/2016 16:15</div>
+		</a>
+
+		<a class="table-row" href="admin/accounts/edit/2">
+			<div class="table-cell id">28157</div>
+			<div class="table-cell title">Michel Platini: Uefa president to resign after ban appeal fails</div>
+			<div class="table-cell"><span class="status review">In review</span></div>
+			<div class="table-cell">20/5/2016 12:33</div>
+		</a>
+
+		<a class="table-row" href="admin/accounts/edit/5">
+			<div class="table-cell id">28155</div>
+			<div class="table-cell title">Laura Robson: Nottingham Open wildcard for ex-British number one</div>
+			<div class="table-cell"><span class="status published">Published</span></div>
+			<div class="table-cell">19/5/2016 14:05</div>
+		</a>
+
+		<a class="table-row" href="admin/accounts/edit/5">
+			<div class="table-cell id">28155</div>
+			<div class="table-cell title">Sam Warburton leads Warren Gatland's side</div>
+			<div class="table-cell"><span class="status expired">Expired</span></div>
+			<div class="table-cell">14/5/2016 8:55</div>
+		</a>
+
+	</div>
+
+</div>
+````
+
+````
+<div class="card">
+<div class="table">
+
+        <div class="table-row table-head">
+            <div class="table-cell">Title</div>
+            <div class="table-cell">Language</div>
+            <div class="table-cell"></div>
+        </div>
+
+        <a class="table-row" href="blogging/blogs/edit/39">
+            <div class="table-cell title">EN - South Africa v Samoa</div>
+            <div class="table-cell">en</div>
+            <div class="table-cell right"><button type="button" class="btn small reject"></button></div>
+        </a>
+		<a class="table-row" href="blogging/blogs/edit/39">
+            <div class="table-cell title">ES - South Africa v Samoa</div>
+            <div class="table-cell">es</div>
+            <div class="table-cell right"><button type="button" class="btn small reject"></button></div>
+        </a>
+		<a class="table-row" href="blogging/blogs/edit/39">
+            <div class="table-cell title">FR - South Africa v Samoa</div>
+            <div class="table-cell">fr</div>
+            <div class="table-cell right"><button type="button" class="btn small reject"></button></div>
+        </a>
+		<a class="table-row" href="blogging/blogs/edit/39">
+            <div class="table-cell title">JA - South Africa v Samoa</div>
+            <div class="table-cell">ja</div>
+            <div class="table-cell right"><button type="button" class="btn small reject"></button></div>
+        </a>
+
+    </div>
+</div>
+````
+
+````
+<div class="card">
+	<div class="table">
+
+		<div class="table-row table-head">
+			<div class="table-cell">ID</div>
+			<div class="table-cell actions">Home team</div>
+			<div class="table-cell">Start</div>
+			<div class="table-cell">Away team</div>
+			<div class="table-cell">Stadium</div>
+		</div>
+
+		<a class="table-row" href="football/fixtures/edit/2399">
+			<div class="table-cell id">2399</div>
+			<div class="table-cell title actions">West Bromwich Albion</div>
+			<div class="table-cell"><span class="time">20:00</span></div>
+			<div class="table-cell title">Manchester City</div>
+			<div class="table-cell">The Hawthorns</div>
+		</a>
+		<a class="table-row" href="football/fixtures/edit/2398">
+			<div class="table-cell id">2398</div>
+			<div class="table-cell title actions">Stoke City</div>
+			<div class="table-cell"><span class="time">16:00</span></div>
+			<div class="table-cell title">Liverpool</div>
+			<div class="table-cell">Britannia Stadium</div>
+		</a>
+		<a class="table-row" href="football/fixtures/edit/2397">
+			<div class="table-cell id">2397</div>
+			<div class="table-cell title actions">Newcastle United</div>
+			<div class="table-cell"><span class="time">13:30</span></div>
+			<div class="table-cell title">Southampton</div>
+			<div class="table-cell">St. James' Park</div>
+		</a>
+
+	</div>
+</div>
+````
+*/
+.co-table {
+	& { border: $border-secondary; border-bottom: none; border-collapse: collapse; margin: 0 0 1rem; width: 100%; }
+	tr {
+		& { border-bottom: $border-secondary; transition: background 400ms; }
+		&:nth-child(2n+1) { background: $bg-light; }
+		&:hover { background: $bg-soft; }
+		&.highlight, &.highlight:hover { background: $brand-selected; }
+	}
+	th, td {
+		& { height: 3rem; padding: 0.5rem 1rem; text-align: left; vertical-align: middle; }
+	}
+	th { background: $brand-secondary; font-weight: 100; color: $text-light; }
+	td {
+		&:first-child { color: $text-soft; width: 50px; }
+		a {
+			& { color: $text-default; font-weight: 500; }
+			&:hover { text-decoration: underline; }
+		}
+	}
+}

@@ -1,0 +1,15 @@
+/*
+#### Page menu
+
+Provide consistent link menu across all pages
+
+````
+<header class="page-header">
+	<h1>Edit product `41337`</h1>
+</nav>
+````
+*/
+.page-header {
+	& { border-bottom: $border-primary; margin: 0 0 1rem; width: 100%; }
+	h1 { margin: 0 1rem 1rem 0; }
+}

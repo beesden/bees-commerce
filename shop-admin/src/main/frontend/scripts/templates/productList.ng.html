@@ -1,0 +1,32 @@
+<header class="page-header">
+    <nav class="page-actions">
+        <a data-cms-link="commerce.product.create"></a>
+    </nav>
+</header>
+
+<section class="card" data-filter-controller>
+
+    <h2 data-i18n="title.pageInfo" data-i18n-params="data.productList"></h2>
+
+    <table class="co-table">
+
+        <thead>
+        <tr>
+            <th class="table-cell" data-i18n="label.id"></th>
+            <th class="table-cell" data-i18n="label.name"></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr class="table-row" data-ng-repeat="product in data.productList.results">
+            <td data-ng-bind="product.id"></td>
+            <td><a data-cms-href="commerce.product.edit" data-params="{ id: product.id }"
+                   data-ng-bind="product.title"></a></td>
+        </tr>
+        </tbody>
+
+    </table>
+
+    <div data-filter-paging="data.productList.totalPages"></div>
+
+</section>

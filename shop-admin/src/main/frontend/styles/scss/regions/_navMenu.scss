@@ -1,0 +1,28 @@
+.nav-menu {
+
+	.main-menu, .sub-menu { margin: 0; position: fixed; top: 4rem; background: $bg-dark; overflow-y: auto; bottom: 0; z-index: 5; padding-bottom: 3rem; }
+
+	.main-menu {
+		& { left: 0; width: 4rem; }
+		> li > a span { display: none; }
+	}
+
+	.sub-menu { left: -240px; transition: left 250ms ease-in; width: 240px;
+		a { padding-right: 1rem;
+			&:before { margin-right: 0.2rem; }
+		}
+		&.toggle { left: 0; }
+	}
+
+	li {
+		& { border-top: 1px solid #393939; position: relative
+		}
+		a {
+			& { border-left: 4px solid transparent; color: $text-light-soft; display: block; font-size: 1.1rem; line-height: 40px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+			&:before { font-size: 1.3rem; display: inline-block; text-align: center; width: 3rem; }
+			&:hover { background: $brand-secondary; cursor: pointer; color: $text-light; }
+		}
+		&.active > a { border-left-color: $brand-primary; }
+		ul { margin: 0; border-left: 1rem solid; }
+	}
+}

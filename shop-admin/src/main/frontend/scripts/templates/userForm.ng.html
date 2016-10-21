@@ -1,0 +1,27 @@
+<header class="page-header">
+    <nav class="page-actions">
+        <a data-cms-link="admin.account.create"></a>
+    </nav>
+</header>
+
+<section class="card" data-filter-controller>
+
+    <h2 data-i18n="title.pageInfo" data-i18n-params="data.accountList"></h2>
+
+    <div class="table">
+
+        <div class="table-row table-head">
+            <div class="table-cell" data-i18n="label.id"></div>
+            <div class="table-cell" data-i18n="label.name"></div>
+        </div>
+
+        <a class="table-row" data-ng-repeat="account in data.accountList.items" data-cms-href="admin.account.edit"
+           data-params="{ id: account.id }">
+            <div class="table-cell id" data-ng-bind="account.id"></div>
+            <div class="table-cell title" data-ng-bind="account.label || account.name"></div>
+        </a>
+    </div>
+
+    <div data-filter-paging="data.accountList.totalPages"></div>
+
+</section>

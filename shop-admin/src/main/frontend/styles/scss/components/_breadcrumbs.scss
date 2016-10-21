@@ -1,0 +1,23 @@
+/*
+# Breadcrumbs
+*/
+
+/*
+#### Breadcrumbs
+
+````
+<ul class="breadcrumb">
+    <li><a href="/" data-icon="dashboard"></a></li>
+    <li><a href="/commerce">Commerce</a></li>
+    <li><a href="/commerce/products">Manage products</a></li>
+    <li>Edit product #41206</li>
+</ul>
+````
+*/
+.breadcrumbs {
+	& { color: $text-soft; overflow: hidden; }
+	ul { display: flex; flex-flow: row wrap; margin: 0 0 0.8rem; }
+	li { display: inline-block; margin: 0 0 0.2rem; }
+	li + li:before { content: '/'; color: $text-soft; margin: 0 0.2rem; }
+	a, span { display: inline-block; }
+}

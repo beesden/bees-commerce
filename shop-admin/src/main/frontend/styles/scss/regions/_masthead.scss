@@ -1,0 +1,10 @@
+
+.fixed-mast .masthead { position: fixed; top: 0; left: 0; right: 0; z-index: 50; }
+
+.masthead {
+	header { background: $brand-primary; box-shadow: 0 3px 5px rgba(0, 0, 0, .2); display: flex; justify-content: space-between; height: 4rem; margin: 0 0 1rem; }
+	.logo {
+		& { display: flex; align-items: center; height: 4rem; margin: 0; padding: 0 1rem; }
+		a:before { background: url('images/logo.png') left center no-repeat; background-size: 100%; content: ''; display: block; width: 172px; height: 31px; }
+	}
+}

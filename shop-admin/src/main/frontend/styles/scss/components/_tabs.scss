@@ -1,0 +1,39 @@
+/*
+#### Simple tabs
+
+````
+<div class="form-block" data-tab-wrapper>
+    <ul class="tab-container">
+        <li class="active"><a href="#">Tab 1</a></li>
+        <li><a href="#">Tab 2</a></li>
+        <li><a href="#">Tab 3</a></li>
+    </ul>
+    <div class="card">
+        <h2>Content</h2>
+        <p>Tab content appears here...</p>
+    </div>
+</div>
+
+<div class="form-block" data-tab-wrapper>
+    <ul class="tab-container">
+        <li class="invalid"><a href="#">Tab 1</a></li>
+        <li class="active"><a href="#">Tab 2</a></li>
+        <li><a href="#">Tab 3</a></li>
+    </ul>
+    <div class="card">
+        <h2>Content</h2>
+        <p>Tab content appears here...</p>
+    </div>
+</div>
+````
+*/
+[data-tab-wrapper] {
+	.tab-container {
+		& { display: flex; margin: 0; overflow-x: auto; }
+		.tab { background: $bg-main; border-bottom: 2px solid transparent; color: $text-soft; cursor: pointer; display: block; padding: 1rem 2rem; white-space: nowrap; }
+		a:focus { text-decoration: underline; }
+		.invalid .tab { background: $message-error-background; color: $message-error-color; }
+		.active .tab { background: $bg-container; border-color: $brand-primary; color: $text-default; }
+	}
+	.hide { display: none; }
+}

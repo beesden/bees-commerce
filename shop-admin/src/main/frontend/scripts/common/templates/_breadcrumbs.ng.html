@@ -1,0 +1,9 @@
+<nav class="breadcrumbs">
+    <ul>
+        <li><a data-cms-href="dashboard" data-icon="route-dashboard"></a></li>
+        <li data-ng-repeat="crumb in breadcrumbs" data-ng-switch="currentRoute === crumb.id">
+            <span data-ng-switch-when="true" data-ng-bind="'title.' + crumb.id | i18n: pageParams"></span>
+            <a data-ng-switch-default data-cms-href="{{ crumb.id }}" data-params="pageParams" data-ng-bind="'title.' + crumb.id | i18n: pageParams"></a>
+        </li>
+    </ul>
+</nav>

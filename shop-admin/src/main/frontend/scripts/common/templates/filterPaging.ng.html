@@ -1,0 +1,29 @@
+<nav class="pagination" data-ng-show="total > 1">
+
+    <ol>
+        <li data-ng-class="{ disabled: pageData.page == 1 }">
+            <span data-ng-click="changePage( pageData.page - 1 )">&lsaquo;</span>
+        </li>
+
+        <li data-ng-repeat="page in pageData.outerWindow" data-ng-class="{ disabled: pageData.page === ( page + 1 ) }">
+            <span data-ng-click="changePage( page + 1 )" data-ng-bind="page + 1"></span>
+        </li>
+
+        <li data-ng-if="pageData.first > ( pageData.outerWindow.length + 1 )">&hellip;</li>
+
+        <li data-ng-repeat="page in pageData.pages" data-ng-class="{ disabled: pageData.page === page }">
+            <span data-ng-click="changePage( page )" data-ng-bind="page"></span>
+        </li>
+
+        <li data-ng-if="pageData.last < ( total - pageData.outerWindow.length )">&hellip;</li>
+
+        <li data-ng-repeat="page in pageData.outerWindow | orderBy:'$index':true" data-ng-class="{ disabled: pageData.page === ( total - page ) }">
+            <span data-ng-click="changePage( total - page )" data-ng-bind="total - page"></span>
+        </li>
+
+        <li data-ng-class="{ disabled: pageData.page == total }">
+            <span data-ng-click="changePage( pageData.page + 1 )">&rsaquo;</span>
+        </li>
+    </ol>
+
+</nav>

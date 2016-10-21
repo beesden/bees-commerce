@@ -1,0 +1,69 @@
+<header>
+
+	<h1 class="logo">
+		<a data-cms-href="dashboard"></a>
+	</h1>
+
+	<nav class="header-nav">
+
+		<!-- Account options -->
+		<div class="dropdown account" data-ng-class="{ active: menu == 'account' }">
+			<div class="current" data-ng-click="menu = ( menu === 'account' ? null : 'account' )">
+				<span class="icon account" data-icon="account"></span>
+				<span class="context-button" data-ng-bind="currentUser.accounts[ currentUser.currentAccount ]" data-icon="{{ menu == 'account' ? 'up' : 'down' }}"></span>
+			</div>
+
+			<ul class="options">
+				<li class="option" data-ng-class="{ highlight: value === currentUser.currentAccount }" data-ng-repeat="(value, name) in currentUser.accounts" data-ng-click="setAccount( value )">{{ name }}</li>
+			</ul>
+		</div>
+
+		<!-- User options -->
+		<div class="dropdown user" data-ng-class="{ active: menu === 'profile' }">
+			<div class="current" data-ng-click="menu = ( menu === 'profile' ? null : 'profile' )">
+				<span class="icon account" data-icon="profile"></span>
+				<span class="context-button" data-ng-bind="currentUser.name" data-icon="{{ menu == 'profile' ? 'up' : 'down' }}"></span>
+			</div>
+
+			<ul class="options">
+				<li>
+					<a class="option" data-icon="profile" data-cms-href="admin.profile" data-i18n="{{ 'header.profile' }}"></a>
+				</li>
+				<li>
+					<a class="option" data-icon="logout" data-ng-click="logout()" data-i18n="{{ 'header.logout' }}"></a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+</header>
+
+<nav class="nav-menu">
+
+	<ul class="main-menu">
+		<li data-ng-class="{ active: currentPage === 'dashboard' }">
+			<a data-icon="route-dashboard" data-cms-href="dashboard"></a>
+		</li>
+		<li data-ng-class="{ active: route.isActive( currentPage ) }" data-ng-repeat="( id, route ) in navMenu.children">
+			<a data-icon="route-{{ route.icon || route.id }}" data-cms-href="{{ route.id }}" data-ng-click="setParent( $event, route )">
+				<span data-i18n="menu.{{ route.id }}"></span>
+			</a>
+		</li>
+	</ul>
+
+	<ul class="sub-menu" data-ng-repeat="( id, primaryRoute ) in navMenu.children" data-ng-class="{ toggle: ( primaryRoute.id === parentId ) }">
+		<li>
+			<a data-ng-click="setParent( $event )" data-icon="action-left" data-i18n="action.back"></a>
+		</li>
+		<li data-ng-class="{ active: secondaryRoute.isActive( currentPage ) }" data-has-role="secondaryRoute.permissions" data-ng-repeat="( id, secondaryRoute ) in primaryRoute.children">
+			<a data-cms-href="{{ secondaryRoute.id }}" data-i18n="menu.{{ secondaryRoute.id }}" data-icon="route-{{ secondaryRoute.icon }}"></a>
+			<ul>
+				<li data-ng-class="{ active: tertiaryRoute.isActive( currentPage ) }" data-ng-repeat="( id, tertiaryRoute ) in secondaryRoute.children">
+					<a data-cms-href="{{ tertiaryRoute.id }}" data-i18n="menu.{{ tertiaryRoute.id }}" data-icon="route-{{ tertiaryRoute.icon }}"></a>
+				</li>
+			</ul>
+
+		</li>
+	</ul>
+
+</nav>

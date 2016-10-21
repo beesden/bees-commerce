@@ -1,0 +1,8 @@
+<ul class="tab-container" data-ng-if="tabs.length > 1">
+    <li data-ng-repeat="tab in tabs" data-ng-class="{ active: tab.active, invalid: tab.error }" data-ng-switch="tab.type">
+        <span class="tab" data-ng-switch-when="soft" data-ng-click="toggle( $event, tab.label )" data-i18n="tab.{{ tab.label }}"></span>
+        <a class="tab" data-ng-switch-default data-ng-href="#{{ tab.label }}" data-ng-click="toggle( tab.label )" data-i18n="tab.{{ tab.label }}"></a>
+    </li>
+</ul>
+
+<div data-ng-transclude></div>

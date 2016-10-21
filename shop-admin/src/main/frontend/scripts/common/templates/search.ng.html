@@ -1,0 +1,66 @@
+<section data-filter-controller>
+
+	<form class="content-block search-form" id="searchForm" data-ng-submit="filterCtrl.update()">
+		<button class="btn" type="button" data-icon="config" data-ng-click="filters = !filters"></button>
+		<input class="form-element" type="search" placeholder="search" data-ng-model="filterCtrl.params.search" name="search" required />
+		<button class="btn primary" data-icon="search" data-i18n="action.search"></button>
+	</form>
+
+	<!-- Search filters -->
+	<div class="card" data-ng-show="filters">
+
+		<div class="form-block" data-ng-repeat="( group, contentTypes ) in data.contentTypes">
+			<div class="form-grid">
+				<input class="form-element" type="checklist" data-ng-model="filterCtrl.params.contentTypes" data-ng-label="{{ type }}" data-check-value="{{ type }}" data-ng-repeat="type in contentTypes" />
+			</div>
+		</div>
+
+		<h2 data-i18n="title.filter.language"></h2>
+
+		<div class="form-inline">
+			<input class="form-element" type="radio" data-ng-label="{{ 'language.' + language | i18n }}" data-ng-model="filterCtrl.params.language"
+				   data-ng-repeat="language in languages" value="{{ language }}" />
+		</div>
+
+		<button class="btn primary block full" form="searchForm" data-icon="search" data-i18n="action.search"></button>
+	</div>
+
+	<div class="card">
+
+		<h2 data-i18n="title.pageInfo" data-i18n-params="data.searchResults"></h2>
+
+		<!-- Filters -->
+		<div class="filter-wrapper" data-ng-if="data.searchResults.items.length">
+
+			<div class="filter">
+				<select class="form-element" data-label="limit" data-ng-change="filterCtrl.update()" data-ng-model="filterCtrl.params.limit" data-ng-options="limit as limit for limit in [ '30', '45', '60' ]">
+					<option value="">15</option>
+				</select>
+			</div>
+
+			<div class="filter">
+				<select class="form-element" data-label="sort" data-ng-change="filterCtrl.update()" data-ng-model="filterCtrl.params.sort">
+					<option value="" data-i18n="label.relevance"></option>
+					<option value="timestamp_desc" data-i18n="label.sort.newest"></option>
+					<option value="timestamp_asc" data-i18n="label.sort.oldest"></option>
+					<option value="title_asc" data-i18n="label.sort.title"></option>
+				</select>
+			</div>
+
+			<div class="filter">
+				<h3 data-i18n="label.layout"></h3>
+				<ul>
+					<li class="btn" data-icon="grid" data-ng-click="$parent.layout = 'grid'" data-ng-class="{ primary: layout === 'grid' }"></li>
+					<li class="btn" data-icon="list" data-ng-click="$parent.layout = 'list'" data-ng-class="{ primary: layout === 'list' }"></li>
+				</ul>
+			</div>
+
+		</div>
+
+		<!-- Search results -->
+		<div data-content-list data-layout="search"></div>
+
+		<div data-filter-paging="data.searchResults.totalPages"></div>
+	</div>
+
+</section>

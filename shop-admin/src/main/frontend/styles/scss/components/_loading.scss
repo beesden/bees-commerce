@@ -1,0 +1,22 @@
+/*
+#### Loading animation
+
+````
+<div class="card loading">
+    <h2>Content obscured</h2>
+    <p>Sample data...</p>
+</div>
+````
+*/
+
+body {
+	&:after { content: ''; position: fixed; z-index: $zIndex-max; display: block; top: 0; left: 0; width: 100%; background: rgba(#fff, 0.5) url('images/loading.svg') center center no-repeat; }
+}
+
+.co-loading {
+	&:after { animation: fadeLoaderIn 350ms; height: 100%; opacity: 0.8; }
+}
+
+.co-loaded {
+	&:after { animation: fadeLoaderOut 350ms; height: 0; opacity: 0; }
+}

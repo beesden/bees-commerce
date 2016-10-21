@@ -1,0 +1,44 @@
+// Brand colours
+$brand-primary: #bb171a !default; // CTA and main colour
+$brand-secondary: #8a0202 !default; // Alternate shade of primary
+$brand-tertiary: #3c302e !default; // Alternate colour (e.g. link hover)
+
+// Z-Index management
+$zIndex-max: 50;
+
+// todo!
+$brand-selected: #d9f1ff !default; // Selected highlight
+
+// Background colours
+$bg-main: #f0f0f0 !default; // Body background
+$bg-container: #fff !default; // Container background
+$bg-light: #eceef5 !default; // Light alt background
+$bg-dark: #2c3136 !default; // Dark alt background
+$bg-soft: #fafafa !default; // Soft highlight colour, e.g. alt table rows
+
+// Text colours
+$text-default: #555 !default; // Text color
+$text-soft: #888 !default; // Soft text color
+$text-light: #fff !default; //  Light colour (for dark bg)
+$text-light-soft: #aaa !default; // Soft light text colour (for dark bg)
+
+// Message colours (TODO)
+$message-error: #f5dddd !default;
+$message-error-background: #ffdfdf !default;
+$message-error-border: #faa !default;
+$message-error-color: #d62626 !default;
+$message-warning: #fcf8e3 !default;
+$message-success: #daf2e1 !default; // Borders
+$border-primary: 1px solid #c6c6c6 !default;
+$border-secondary: 1px solid #e2e2e2 !default;
+$border-tertiary: 1px solid #0079b7 !default; // Statuses (TODO - merge with messages)
+$status-default: #777 !default;
+$status-approve: #00a65a !default;
+$status-reject: #dd4b39 !default;
+$status-review: #f39c12 !default;
+$status-schedule: #019a94 !default;
+$status-football-default: #aaa; // Football
+$berth-qualification: $status-approve;
+$berth-relegation: $status-reject; // Feature customisation
+$grid-columns: 12 !default; // Shadows
+$box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);

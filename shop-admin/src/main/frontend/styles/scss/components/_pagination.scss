@@ -1,0 +1,37 @@
+/*
+#### Pagination
+
+````
+<div class="card">
+   <nav class="co-pagination">
+
+	   <ol>
+		   <li><span>&laquo;</span></li>
+		   <li><span>1</span></li>
+
+		   <li>...</li>
+
+		   <li><span>3</span></li>
+		   <li class="disabled"><span>4</span></li>
+		   <li><span>5</span></li>
+
+		   <li>...</li>
+
+		   <li><span>8</span></li>
+		   <li><span>&raquo;</span></li>
+	   </ol>
+
+   </nav>
+</div>
+````
+*/
+.co-pagination {
+	& { display: flex; margin: 0 0 1rem; }
+	ol {
+		& { border-left: $border-secondary; display: flex; margin: 0 0 0 auto; }
+		li { border: $border-secondary; border-left: none; line-height: 34px; text-align: center; height: 36px; min-width: 36px; }
+		span { color: $brand-primary; display: block; padding: 0 5px; }
+		span:hover { background: $bg-light; cursor: pointer; }
+		.disabled { background: $bg-light; color: $text-soft; cursor: default; }
+	}
+}

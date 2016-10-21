@@ -1,0 +1,296 @@
+/*
+# Forms and inputs
+*/
+
+output { & { display: block; font-size: 0.8rem; font-weight: 500; margin: 0 0 1rem; &.form-output { font-weight: 500; min-height: 3rem; padding: 0.5rem; } } & > * { font-size: 1rem; font-weight: 500; } } /*
+#### Standard form layouts and features
+
+````
+<form class="form-block">
+
+    <fieldset>
+        <legend>Fieldset 1</legend>
+
+        <div class="standardInput form-input">
+            <label for="input-0">Text input</label>
+            <input id="input-0" name="input-0">
+        </div>
+   </fieldset>
+
+</form>
+````
+*/
+.form-block { & { @extend .block
+	} fieldset { @extend .card
+	} } fieldset { & { border: none; } } legend { & { float: left; width: 100%; @extend h2; } + * { clear: both
+	} } .standardInput { & { margin: 0 0 1rem; } label { @extend h3; line-height: 1.3rem; margin-bottom: 0.5rem; } } /*
+#### Standard input elements
+
+````
+<form class="form-block">
+
+    <fieldset>
+        <legend>Standard inputs</legend>
+
+        <div class="standardInput form-input">
+            <label for="input-0">Text input</label>
+            <input id="input-0" name="input-0">
+        </div>
+
+        <div class="standardInput form-input">
+            <label for="input-1">Select</label>
+            <select id="input-1" name="input-1">
+                <option value="">Please select</option>
+                <option label="1" value="1">1</option>
+                <option label="2" value="2">2</option>
+                <option label="3" value="3">3</option>
+                <option label="4" value="4">4</option>
+            </select>
+        </div>
+
+        <div class="standardInput form-input">
+            <label for="input-2">Textarea</label>
+            <textarea id="input-2" name="input-2"></textarea>
+        </div>
+
+    </fieldset>
+
+</form>
+````
+*/
+.form-input { > label { display: block; } > input, > select, > textarea { border: $border-primary; font: inherit; height: 3rem; padding: 0.5rem; width: 100%
+	} optgroup { font-weight: 500; } > textarea { height: auto; min-height: 6rem
+	} } /*
+#### Standard input elements
+
+````
+<form class="form-block">
+
+    <fieldset>
+        <legend>Standard inputs</legend>
+
+        <div class="standardInput form-input">
+            <label for="input-0">Text input</label>
+            <input id="input-0" name="input-0">
+        </div>
+
+        <div class="standardInput form-input">
+            <label for="input-1">Select</label>
+            <select id="input-1" name="input-1">
+                <option value="">Please select</option>
+                <option label="1" value="1">1</option>
+                <option label="2" value="2">2</option>
+                <option label="3" value="3">3</option>
+                <option label="4" value="4">4</option>
+            </select>
+        </div>
+
+        <div class="standardInput form-input">
+            <label for="input-2">Textarea</label>
+            <textarea id="input-2" name="input-2"></textarea>
+        </div>
+
+    </fieldset>
+
+</form>
+````
+*/
+.form-input { [multiple] { min-height: 12rem
+	} [readonly], [disabled] { background: $bg-light; } [disabled] { color: $text-soft; cursor: not-allowed
+	} } /*
+
+####Standard checkbox / radio elements
+See: [material inputs](http://www.cssscript.com/google-material-design-style-checkbox-transition-effect-with-css3/)
+
+````
+<form class="form-block">
+
+    <fieldset>
+        <legend>Standard inputs</legend>
+
+        <div class="standardInput form-checkbox">
+            <input type="checkbox" id="input-3" name="input-3">
+            <label for="input-3">Checkbox input</label>
+        </div>
+
+        <div class="standardInput form-radio">
+            <input type="radio" value="1" name="input-radio" id="input-4">
+            <label for="input-4">Radio #1</label>
+        </div>
+        <div class="standardInput form-radio">
+            <input type="radio" value="2" name="input-radio" id="input-5">
+            <label for="input-5">Radio #2</label>
+        </div>
+
+    </fieldset>
+
+</form>
+````
+*/
+&.form-checkbox, &.form-radio { .form-label-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } > input { & { display: inline-block; position: relative; width: 1.3rem; height: 1.3rem; margin: 2px; } &:before { transition: all 0.3s ease-in-out; content: ''; cursor: pointer; position: absolute; left: 0; z-index: 2; width: 1.3rem; height: 1.3rem; border: 1px solid #c6c6c6; top: 0; } &:after { background: $bg-container; content: ''; position: absolute; left: 0; z-index: 1; width: 1.3rem; height: 1.3rem; top: 0; } + label { & { cursor: pointer; padding: 2px 1rem 2px 0.5rem; position: relative; margin: 0; vertical-align: bottom; } } &:checked:before { border-color: $brand-primary; border-width: 2px; } &[readonly]:after { background: $bg-light; border: 2px solid $bg-light; } } } &.form-checkbox { > input[disabled] + label { & { cursor: not-allowed; } &:before { background: $bg-light; } } > input:checked:before { transform: rotate(-45deg); height: 0.65rem; border-top-style: none; border-right-style: none; } } .form-radio { > input:before { border-radius: 100%
+	} } /* Form button container
+
+````
+<div class="card">
+	<div class="form-actions">
+		<button class="btn primary" data-icon="save">Save</button>
+		<button class="btn" data-icon="cancel">Cancel</button>
+	</div>
+</div>
+````
+*/
+.form-actions { text-align: right; padding: 1rem 0; border-top: $border-secondary; }
+
+/* Multiple form inputs
+
+````
+<div class="card">
+	<div class="form-multiple">
+		<div class="form-inline">
+			<div class="form-stretch">
+				<div class="standardInput form-input">
+					<input class="form-element" value="tennis">
+				</div>
+			</div>
+			<button class="btn block" type="button" data-icon="add">Add</button>
+		</div>
+		<ul class="items">
+			<li>
+				<span>rugby</span>
+				<button class="btn small reject" data-icon="delete"></button>
+			</li>
+			<li>
+				<span>football</span>
+				<button class="btn small reject" data-icon="delete"></button>
+			</li>
+			<li>
+				<span>cricket</span>
+				<button class="btn small reject" data-icon="delete"></button>
+			</li>
+		</ul>
+	</div>
+</div>
+````
+*/
+.form-multiple { .items { li { align-items: center; border-bottom: $border-secondary; displaY: flex; overflow: hidden; padding: 0.5rem; &:hover { background: $bg-light; } } span { flex-grow: 1; vertical-align: middle; } .btn { vertical-align: middle
+		} } } /* Fade on empty
+
+````
+<form class="form-block">
+
+    <fieldset>
+        <legend>Multiple inputs</legend>
+
+        <div class="form-inline">
+            <div class="standardInput form-input">
+                <input class="form-fade" type="number" placeholder="Width" id="input-1" value="900" onchange="this.form[ 'input-2' ].value = '';" />
+            </div>
+            <div class="standardInput form-input">
+                <input class="form-fade" type="number" placeholder="Height" id="input-2" onchange="this.form[ 'input-1' ].value = '';" />
+            </div>
+        </div>
+
+    </fieldset>
+
+</form>
+````
+*/
+.form-fade { & { transition: background 600ms, opacity 600ms; } &:placeholder-shown { background: $bg-light; opacity: 0.8; } &:focus { background: #fff; opacity: 1
+	} } /*
+#### Inline form layouts
+
+````
+<form class="form-block">
+
+    <fieldset>
+        <legend>Standard inputs</legend>
+
+        <div class="form-inline">
+
+			<div class="standardInput form-input required">
+				<label for="input-0">Input 1</label>
+				<input id="input-0" required name="input-0">
+			</div>
+
+			<div class="standardInput form-input matches">
+				<label for="input-1">Input 2</label>
+				<input id="input-1" name="input-1">
+			</div>
+
+            <button class="btn" type="button">Button</button>
+
+        </div>
+
+    </fieldset>
+
+    <fieldset>
+        <legend>Unlabelled form</legend>
+
+        <div class="form-inline">
+            <div class="standardInput form-input no-label">
+                <input id="input-3" placeholder="Input 3" />
+            </div>
+            <button class="btn">Test button</button>
+        </div>
+
+    </fieldset>
+
+</form>
+````
+*/
+.form-inline { & { display: flex; flex-flow: row wrap; } .form-input ~ { .btn, .form-output, .form-checkbox { margin-top: 1.8rem; } } .no-label ~ { .btn, .form-output, .form-checkbox { margin-top: 0; } } > * { align-self: flex-start; margin-right: 0.4rem; &:last-child { margin-right: 0
+		} } &.form-inline--bottom > * { align-self: flex-end; } } .form-grid { & { display: flex; flex-flow: row wrap; } .standardInput { flex-basis: 15rem; max-width: 15rem; padding-right: 1rem; } } /*
+#### Form validation
+
+````
+<form class="form-block">
+
+    <fieldset>
+        <legend>Standard inputs</legend>
+
+        <div class="standardInput form-input required">
+            <label for="input-0">Required input</label>
+            <input id="input-0" required name="input-0">
+        </div>
+
+		<div class="standardInput form-input matches">
+            <label for="input-0">Confirm password</label>
+            <input id="input-0" name="input-0">
+        </div>
+
+    </fieldset>
+
+</form>
+````
+*/
+.standardInput { &.required label:after,
+	&.matches label:after { content: ' *'; color: #4b9; font-size: 1rem; } &.matches label:after { content: ' **'; } .ng-invalid.ng-dirty.ng-touched { border-color: $message-error-color; color: $message-error-color; } .form-error { display: block; color: $message-error-color; font-size: 0.9rem; font-weight: 500; padding: 0.5rem 0 0 0; } } /*
+#### Form validation
+
+````
+<form class="form-block">
+
+    <fieldset>
+        <legend>Standard inputs</legend>
+
+        <div class="repeated">
+			<button type="button" class="btn btn--right small reject right" data-icon="delete"></button>
+			<div class="standardInput form-input required">
+	            <label for="input-0">Required input</label>
+	            <input id="input-0" required name="input-0">
+			</div>
+        </div>
+
+		<div class="repeated">
+		<button type="button" class="btn btn--right small reject right" data-icon="delete"></button>
+			<div class="standardInput form-input required">
+	            <label for="input-0">Required input</label>
+	            <input id="input-0" required name="input-0">
+			</div>
+        </div>
+
+    </fieldset>
+
+</form>
+````
+*/

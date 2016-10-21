@@ -1,0 +1,14 @@
+<form data-ng-submit="ctrl.submit()" data-nowarn id="loginForm">
+	<fieldset>
+		<legend data-i18n="title.form.login"></legend>
+
+		<p class="message error" data-ng-if="ctrl.failed" data-i18n="message.error.login.failed"></p>
+
+		<input class="form-element" name="username" data-ng-model="ctrl.loginForm.username" placeholder="username" required />
+		<input class="form-element" name="password" data-ng-model="ctrl.loginForm.password" type="password" placeholder="password" required />
+
+		<input class="form-element" name="remember" data-ng-model="ctrl.loginForm.remember" type="checkbox" />
+
+		<button class="btn primary full" data-i18n="action.login"></button>
+	</fieldset>
+</form>

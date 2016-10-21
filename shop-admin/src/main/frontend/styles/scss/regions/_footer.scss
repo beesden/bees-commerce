@@ -1,0 +1,4 @@
+main > footer {
+	& { border-top: $border-secondary; color: $text-soft; font-size: 0.7rem; padding: 1rem; text-align: center;}
+	span + span { content: '|'; display: none; margin: 0 1rem; }
+}

@@ -1,0 +1,25 @@
+
+.ngdialog {
+	& { position: fixed; overflow: auto; z-index: 1000; top: 0; right: 0; bottom: 0; left: 0; }
+	.ngdialog-overlay { position: fixed; background: rgba(0, 0, 0, 0.4); top: 0; right: 0; bottom: 0; left: 0; animation: fadeIn 0.5s; }
+	.ngdialog-content { animation: slideFromTop 0.5s; background: $bg-container; box-shadow: 3px 4px 10px 4px rgba(0, 0, 0, 0.3); margin: 4rem auto 5rem; min-width: 330px; overflow: auto; padding: 2.5rem 1.5rem 0; position: relative; width: 80%; }
+	&.small .ngdialog-content { max-width: 46rem; }
+	.ngdialog-close { cursor: pointer; position: absolute; line-height: 2.5rem; right: 0; top: 0; }
+	.ngdialog-close:before { background: transparent; color: #bbb; content: "\00D7"; font-size: 2rem; position: absolute; padding: 0 0.5rem; right: 0; text-align: center; top: 0; }
+	.ngdialog-close:hover:before,
+	.ngdialog-close:active:before { color: #777; }
+	&.ngdialog-closing .ngdialog-overlay { animation: fadeOut 300ms; }
+	&.ngdialog-closing .ngdialog-content { animation: fadeOut 300ms; }
+	.ngdialog-close:before { font-family: 'Helvetica', Arial, sans-serif; content: '\00D7'; cursor: pointer; }
+	&.login-form {
+		.ngdialog-content { padding-bottom: 2rem; max-width: 30rem; }
+		legend {
+			& { width: 100%; border: none; color: #888; padding: 0; text-align: center; }
+			&:before { content: url('images/logo.png'); display: block; margin: 0 auto 1rem; }
+		}
+		.form-input label { display: none; }
+		.message { text-align: center; }
+	}
+}
+
+body.ngdialog-open { overflow: hidden; }

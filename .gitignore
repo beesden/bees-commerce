@@ -1,5 +1,5 @@
 # Generated folders
-target
+**/target
 
 # Editor files
 **/*.idea

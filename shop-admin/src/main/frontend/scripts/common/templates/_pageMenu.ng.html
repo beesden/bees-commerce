@@ -1,0 +1,5 @@
+<ul class="row page-menu" data-ng-if="current">
+    <li class="col-sm-6 col-md-4 col-lg-3 col-xl-2" data-has-role="route.permissions" data-ng-repeat="route in current.children">
+        <a data-cms-href="{{ route.id }}" data-i18n="{{ 'menu.' + route.id }}" data-icon="route-{{ route.icon || route.id }}"></a>
+    </li>
+</ul>

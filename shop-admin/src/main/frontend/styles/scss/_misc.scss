@@ -1,0 +1,53 @@
+@import "variables";
+
+.page-menu {
+  & {
+    margin-top: 2rem;
+    margin-bottom: 2rem
+  }
+  li {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  a {
+    border: $border-primary;
+    color: $text-default;
+    display: block;
+    font-weight: 500;
+    font-size: 1.1rem;
+    padding: 2rem;
+  }
+  a:before {
+    font-size: 6rem;
+    color: $brand-secondary;
+    display: block;
+    font-weight: 400;
+    margin: 0 0 1rem
+  }
+  a:hover {
+    background: $bg-light
+  }
+}
+
+.block {
+  margin-bottom: 1rem;
+}
+
+.staticText {
+  & {
+    margin: -0.7rem 0 1rem;
+    overflow: hidden;
+  }
+  dt {
+    float: left;
+    clear: left;
+    width: 9rem;
+    &:after {
+      content: ':'
+    }
+  }
+  dt, dd {
+    font-size: 1rem;
+    margin: 0.7rem 0 0;
+  }
+}

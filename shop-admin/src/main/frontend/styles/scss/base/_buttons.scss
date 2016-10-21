@@ -1,0 +1,50 @@
+/*
+# Buttons
+*/
+
+/*
+#### Standard button
+
+````
+<div class="card">
+    <button type="button" class="btn block">Button</button>
+</div>
+````
+
+#### Size variations
+
+````
+<div class="card">
+    <button type="button" class="btn block small">Small Button</button>
+</div>
+<div class="card">
+    <button type="button" class="btn block small slim" data-icon="drag"></button>
+</div>
+<div class="card">
+    <button type="button" class="btn block large">Large Button</button>
+</div>
+<div class="card">
+    <button type="button" class="btn block full">Full Button</button>
+</div>
+````
+
+#### Colour variations
+
+````
+<div class="card">
+    <button type="button" class="btn block">Standard Button</button>
+    <button type="button" class="btn primary">Primary Button</button>
+    <button type="button" class="btn secondary">Secondary Button</button>
+    <button type="button" class="btn approve">Approve Button</button>
+    <button type="button" class="btn reject">Reject Button</button>
+</div>
+````
+*/
+.btn { & { background: $bg-light; border: $border-primary; color: $text-default; cursor: pointer; display: inline-block; font: inherit; font-size: 0.8rem; font-weight: 500; height: 3rem; line-height: 3rem; min-width: 8rem; overflow: hidden; padding: 0 1rem; text-align: center; text-overflow: ellipsis; text-transform: uppercase; transition: box-shadow 350ms ease-out; vertical-align: bottom; white-space: nowrap; } &:hover { background: darken($bg-light, 10); color: inherit; } &:hover, &:focus { box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.3)
+	} &:focus { outline: none
+	} &:before { font-size: 1.3rem; } &:empty { min-width: 3rem; padding: 0
+	} &[disabled] { cursor: not-allowed; opacity: 0.7; } // Size Variations (todo?)
+	&.large { height: 4rem; line-height: 4rem; padding: 0 1.5rem
+	} &.small { line-height: 1.65rem; height: auto; padding: 0.2rem 0.4rem; min-width: 1.3rem; } &.full { width: 100%
+	} &.label-margin { margin-top: 1.7rem; } // Colour variations
+	&.primary { & { background: $brand-primary; border-color: $brand-secondary; color: $text-light; } &:hover { background: darken($brand-primary, 10); } } &.secondary { & { background: $brand-selected; color: $text-default; } &:hover { background: darken($brand-selected, 10); } } &.approve { & { background: $status-approve; border-color: $status-approve; color: $text-light; } &:hover { background: darken($status-approve, 10); } } &.highlight { & { background: $status-review; border-color: $status-review; color: $text-light; } &:hover { background: darken($status-review, 10); } } &.reject { & { background: $status-reject; border-color: $status-reject; color: $text-light; } &:hover { background: darken($status-reject, 10); } } } .btn--minimum { flex-grow: 0; flex-shrink: 1; } .btn--right { float: right; }

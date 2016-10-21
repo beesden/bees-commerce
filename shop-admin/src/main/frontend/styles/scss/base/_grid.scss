@@ -1,0 +1,57 @@
+@import '../_variables';
+
+.container { max-width: 1920px; padding: 0 1rem; }
+
+main.container { margin: 1rem 0 4rem; }
+
+.fixed-mast main.container { margin-top: 5rem; }
+
+.fixed-nav main.container { margin-left: 4rem; }
+
+.content-block {
+	& { background: #fff; margin: 0 0 1rem; box-shadow: $box-shadow; }
+	&:after { content: ''; display: table; clear: both; }
+	.content-block { box-shadow: none; }
+}
+
+.card { @extend .content-block; display: block; padding: 1rem 1rem 0; width: auto; }
+
+body > { // Styledocco hax
+	.card, .form-block, .page-header, .content-block {
+		&:first-child { margin: 1rem
+		}
+	}
+}
+
+.row {
+	& { box-sizing: border-box; display: flex; flex: 0 1 auto; flex-flow: row wrap; margin-right: -0.5rem; margin-left: -0.5rem; }
+	&.reverse { flex-direction: row-reverse; }
+	&.reverse { flex-direction: column-reverse; }
+}
+
+[class*="col-"] { width: 100%; flex: 0 0 auto; padding: 0 0.5rem; }
+
+// Generate grid layout for different media breakpoints
+@mixin generateLayout( $size ) {
+	.col-#{$size} { flex-grow: 1; flex-basis: 0; max-width: 100%; }
+	@for $i from 1 through $grid-columns {
+		.col-#{$size}-#{$i} { flex-basis: percentage($i / $grid-columns); max-width: percentage($i / $grid-columns); }
+		.col-#{$size}-offset-#{$i} { margin-left: percentage(1 / $i); }
+	}
+	.start-#{$size} { justify-content: flex-start; text-align: start; }
+	.center-#{$size} { justify-content: center; text-align: center; }
+	.end-#{$size} { justify-content: flex-end; text-align: end; }
+	.top-#{$size} { align-items: flex-start; }
+	.middle-#{$size} { align-items: center; }
+	.bottom-#{$size} { align-items: flex-end; }
+	.around-#{$size} { justify-content: space-around; }
+	.between-#{$size} { justify-content: space-between; }
+	.first-#{$size} { order: -1; }
+	.last-#{$size} { order: 1; }
+}
+
+@include generateLayout('xs');
+@media only screen and (min-width: 481px) { @include generateLayout('sm'); }
+@media only screen and (min-width: 681px) { @include generateLayout('md'); }
+@media only screen and (min-width: 941px) { @include generateLayout('lg'); }
+@media only screen and (min-width: 1441px) { @include generateLayout('xl'); }

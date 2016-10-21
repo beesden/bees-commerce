@@ -1,0 +1,5 @@
+<form class="content-block search-form" action="#" data-cms-action="{{ searchUrl }}">
+	<input class="form-element" type="search" placeholder="search" name="search" required />
+	<input type="hidden" data-ng-repeat="contentType in types" name="contentTypes" value="{{ contentType }}" />
+	<button class="btn" data-icon="search"></button>
+</form>

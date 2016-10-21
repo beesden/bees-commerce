@@ -1,0 +1,61 @@
+/*
+# App Messaging
+*/
+
+/*
+#### Standard messaging
+
+````
+<div class="card">
+   <p class="message">This is a message</p>
+   <p class="message success" data-icon="success">Something has completed succesfully.</p>
+   <p class="message warn" data-icon="warn">Something may have happened</p>
+   <p class="message error" data-icon="error">An error has occurred</p>
+</div>
+````
+*/
+.message {
+	& { background: $bg-light; border: $border-primary; color: $text-soft; font-size: 0.9rem; font-weight: 500; padding: 1rem 0.5rem; }
+	&.error { background: $message-error-background; border-color: $message-error-border; color: $message-error-color; }
+	&.success { background: #e2f7d8; border-color: #b0d86e; color: #578c00
+	}
+	&.warn { background: #fff8d7; border-color: #ff9e3a; color: #ee800a
+	}
+}
+
+/*
+#### Alert box
+
+````
+<div class="card">
+   <ul class="message-box">
+	   <li class="message success" data-icon="success">
+		   <span class="close" data-icon="remove"></span>
+		   <span>Something has completed succesfully.</span>
+	   </li>
+	   <li class="message warn" data-icon="warn">
+		   <span class="close" data-icon="remove"></span>
+		   <span>Something may have happened.</span>
+	   </li>
+	   <li class="message error" data-icon="error">
+		   <span class="close" data-icon="remove"></span>
+		   <span>An error has occurred.</span>
+	   </li>
+   </ul>
+</div>
+````
+*/
+.message-box {
+	& { animation-name: fadeIn; animation-duration: 400ms; margin: 0 0 1rem; max-height: 12rem; overflow-y: auto; }
+	> li { // Alert styles
+		& { overflow: hidden; margin: 0 0 1rem; padding: 0.5rem 2.5rem 0.5rem 0.5rem; position: relative; }
+		&:last-child { margin: 0
+		}
+		&:before { font-size: 2rem; vertical-align: middle; }
+		// Close message icon
+		.close {
+			& { cursor: pointer; font-size: 1.3rem; position: absolute; top: 0.9rem; right: 0.5rem; }
+			&:hover { opacity: 0.6; }
+		}
+	}
+}

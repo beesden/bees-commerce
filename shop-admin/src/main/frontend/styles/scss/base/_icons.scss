@@ -1,0 +1,15 @@
+@import '../../../lib/cms-icons/_cms-icons-map';
+
+[data-icon] {
+	&:before { font-family: "cms-icons"; font-style: normal; margin-right: 5px; text-transform: none; text-rendering: auto; }
+	&:empty:before { margin-right: 0; }
+	&:before { vertical-align: bottom; }
+}
+
+@function unicode($str) { @return unquote("\"") + $str + unquote("\""); }
+
+@each $cms-font, $hex-code in map-get($font, glyphs) {
+	[data-icon="#{$cms-font}"] {
+		&:before { content: unquote("\"")+unquote(str-insert($hex-code,"\\", 1))+unquote("\""); }
+	}
+}

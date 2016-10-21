@@ -1,0 +1,10 @@
+<section data-ng-if="messages.length">
+
+    <ul class="message-box">
+        <li class="message {{ message.level }}" data-icon="{{ message.level }}" data-ng-repeat="message in messages">
+            <span class="close" data-ng-click="closeMessage( $index )" data-icon="close"></span>
+            <span data-ng-bind="message.text"></span>
+        </li>
+    </ul>
+
+</section>

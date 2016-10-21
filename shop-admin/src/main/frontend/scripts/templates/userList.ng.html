@@ -1,0 +1,30 @@
+<header class="page-header">
+    <nav class="page-actions">
+        <a data-cms-link="admin.user.create"></a>
+    </nav>
+</header>
+
+<section class="card" data-filter-controller>
+
+    <h2 data-i18n="title.pageInfo" data-i18n-params="data.userList"></h2>
+
+    <div class="table">
+
+        <div class="table-row table-head">
+            <div class="table-cell" data-i18n="label.id"></div>
+            <div class="table-cell" data-i18n="label.name"></div>
+        </div>
+
+        <a class="table-row" data-ng-repeat="user in data.userList.items" data-cms-href="admin.user.edit"
+           data-params="{ id: user.id }">
+            <div class="table-cell id" data-ng-bind="user.id"></div>
+            <div class="table-cell title">
+                <span data-ng-bind="user.name"></span>
+                <small data-ng-bind="user.username"></small>
+            </div>
+        </a>
+    </div>
+
+    <div data-filter-paging="data.userList.totalPages"></div>
+
+</section>
