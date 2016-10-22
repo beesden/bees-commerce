@@ -6,94 +6,159 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.*;
+import org.apache.lucene.facet.FacetField;
+import org.apache.lucene.facet.Facets;
+import org.apache.lucene.facet.FacetsCollector;
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
+import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyReader;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
+import org.beesden.common.EntityReference;
+import org.beesden.common.EntityType;
 import org.beesden.common.model.SearchDocument;
-import org.beesden.search.exception.SearchIndexingException;
+import org.beesden.search.exception.SearchAddIndexException;
+import org.beesden.search.exception.SearchDeleteIndexException;
+import org.beesden.search.exception.SearchException;
+import org.beesden.search.exception.SearchQueryException;
 import org.beesden.search.model.SearchForm;
 import org.beesden.search.model.SearchResult;
-import org.beesden.search.model.SearchResultEntity;
+import org.beesden.search.model.SearchResultWrapper;
 import org.beesden.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Random;
 
 @Service
 @Slf4j
 public class SearchServiceImpl implements SearchService {
 
+	private FacetsConfig facetConfig = new FacetsConfig();
 	private Analyzer analyzer = new StandardAnalyzer();
 	private Directory index;
+	private Directory taxoIndex;
 
 	@Autowired
-	public SearchServiceImpl( Directory index ) {
+	public SearchServiceImpl( Directory index, Directory taxonomy ) {
 		this.index = index;
+		this.taxoIndex = taxonomy;
 	}
 
 	@Override
-	public SearchResult performSearch( SearchForm searchForm ) {
+	public void clearIndex() {
 
-		MultiFieldQueryParser queryParser = new MultiFieldQueryParser( new String[]{ "title" }, analyzer );
-		queryParser.setAllowLeadingWildcard( true );
-
-		Query query;
 		try {
-			query = queryParser.parse( searchForm.getTitle() );
-		} catch ( ParseException e ) {
-			// todo - rethrow
-			e.printStackTrace();
-			return null;
-		}
+			IndexWriterConfig config = new IndexWriterConfig( analyzer );
+			IndexWriter writer = new IndexWriter( index, config );
 
-		IndexReader reader;
-		try {
-			reader = DirectoryReader.open( index );
+			writer.deleteAll();
+			writer.close();
+
 		} catch ( IOException e ) {
-			// todo - rethrow
-			e.printStackTrace();
-			return null;
+			throw new SearchDeleteIndexException( "Error clearing the index" );
 		}
+	}
 
-		IndexSearcher searcher = new IndexSearcher( reader );
-		TopScoreDocCollector collector = TopScoreDocCollector.create( 10 );
+	@Override
+	public SearchResultWrapper performSearch( SearchForm searchForm ) {
+
+		SearchResultWrapper resultWrapper = new SearchResultWrapper();
 
 		try {
-			searcher.search( query, collector );
-		} catch ( IOException e ) {
-			// todo - rethrow
-			e.printStackTrace();
-			return null;
-		}
+			DirectoryReader indexReader = DirectoryReader.open( index );
+			IndexSearcher searcher = new IndexSearcher( indexReader );
+			TaxonomyReader taxoReader = new DirectoryTaxonomyReader( taxoIndex );
 
-		ScoreDoc[] hits = collector.topDocs().scoreDocs;
+			// Construct base query
+			BooleanQuery.Builder query = new BooleanQuery.Builder();
 
-		SearchResult searchResult = new SearchResult();
-
-		for ( ScoreDoc hit : hits ) {
-			SearchResultEntity entity = new SearchResultEntity();
-			int docId = hit.doc;
-
-			Document document;
-			try {
-
-				document = searcher.doc( docId );
-				entity.setTitle( toSafe( document.getField( "title" ) ) );
-
-			} catch ( IOException e ) {
-				// todo - throw error?
-				e.printStackTrace();
+			// Filter by ID
+			if ( searchForm.getId() != null && searchForm.getId().length > 0 ) {
+				query.add( new TermQuery( new Term( "id", String.join( " ", searchForm.getId() ) ) ),
+						BooleanClause.Occur.MUST );
 			}
 
-			searchResult.addEntity( entity );
+			// Provide fuzzy searching for search terms
+			if ( searchForm.getTerm() != null ) {
+				MultiFieldQueryParser queryParser = new MultiFieldQueryParser(
+						new String[]{ "title" }, analyzer );
+				queryParser.setAllowLeadingWildcard( true );
+				query.add( queryParser.parse( "*" + searchForm.getTerm().replaceAll( " ", "* *" ) + "*" ),
+						BooleanClause.Occur.MUST );
+			}
+
+			// Filter by type
+			if ( searchForm.getType() != null && searchForm.getType().length > 0 ) {
+				query.add( new TermQuery( new Term( "type", String.join( " ", searchForm.getType() ) ) ),
+						BooleanClause.Occur.MUST );
+			}
+
+			// Perform search
+			TopDocs results = searcher.search( query.build(), searchForm.getResults() * searchForm.getPage() );
+			resultWrapper.setTotal( results.totalHits );
+
+			// Convert results
+			for ( int i = searchForm.getStartIndex(); i < results.scoreDocs.length; i++ ) {
+				resultWrapper.addResult( new SearchResult( searcher.doc( results.scoreDocs[ i ].doc ) ) );
+			}
+
+			// Collect facets
+			FacetsCollector fc = new FacetsCollector();
+			FacetsCollector.search( searcher, new MatchAllDocsQuery(), 10, fc );
+			Facets facets = new FastTaxonomyFacetCounts( taxoReader, facetConfig, fc );
+			resultWrapper.addFacet( facets.getTopChildren( 50, "colour" ) );
+
+		} catch ( ParseException e ) {
+			throw new SearchQueryException( "There was an error building the search query" );
+		} catch ( IOException e ) {
+			throw new SearchException( "Error performing search" );
 		}
-		return searchResult;
+
+		return resultWrapper;
+	}
+
+	@PostConstruct
+	public void populateIndex() throws Exception {
+
+		SearchDocument document = new SearchDocument();
+
+		clearIndex();
+
+		// Create a huge index!
+		SecureRandom random = new SecureRandom();
+		Random rn = new Random();
+
+		for ( int i = 3000; i < 5000; i++ ) {
+			document.setEntity( new EntityReference( "p" + i, EntityType.PRODUCT ) );
+			document.setTitle( new BigInteger( 130, random ).toString( 32 ) );
+			int col = rn.nextInt( 5 );
+			document.getFacets().put( "colour",
+					col == 0 ? "red" : col == 1 ? "yellow" : col == 2 ? "blue" : col == 3 ? "pink" : col == 4 ? "green" :
+							"purple" );
+			submitToIndex( document );
+		}
+
+		String[] categories = { "Accessories", "All Accessories", "Jackets & Coats", "Jewellery", "All Sale", "All Shoes", "Skirts", "Tops", "Trousers & Shorts", "Bags", "Boots", "Cardigans", "Casual", "Clothing", "Clutch Bags", "Coats", "Dresses", "Flat Shoes", "Formal", "Gifts", "Hats & Gloves", "High Heels", "Jackets", "Playsuits & Jumpsuits", "Cardigans & Jumpers", "Tops", "Dresses", "Lace Dresses", "Maxi Dresses", "New Vintage", "New In", "Accessories", "Clothing", "Sale", "Accessories", "Clothing", "Coats & Jackets", "Denim", "Dresses", "Shoes", "Skirts", "Tops", "Trousers & Shorts", "Scarves", "Shoes", "Tights & Socks", "Watches", "Wraps and Capes" };
+		for ( String c : categories ) {
+			document.setEntity( new EntityReference( c.replace( " ", "_" ).replace( "[^\\w_]", "" ).toLowerCase(),
+					EntityType.CATEGORY ) );
+			document.setTitle( c );
+			submitToIndex( document );
+		}
 	}
 
 	@Override
@@ -105,31 +170,31 @@ public class SearchServiceImpl implements SearchService {
 	public void submitToIndex( SearchDocument searchDocument ) {
 
 		try {
-			IndexWriterConfig config = new IndexWriterConfig( analyzer );
-			IndexWriter writer = new IndexWriter( index, config );
+			IndexWriter writer = new IndexWriter( index, new IndexWriterConfig( analyzer ) );
+			TaxonomyWriter taxoWriter = new DirectoryTaxonomyWriter( taxoIndex );
 
 			Document document = new Document();
 
+			document.add( new TextField( "id", searchDocument.getEntity().getId(), Field.Store.YES ) );
+			document.add( new TextField( "type", searchDocument.getEntity().getType().name(), Field.Store.YES ) );
 			document.add( new TextField( "title", searchDocument.getTitle(), Field.Store.YES ) );
-			document.add( new TextField( "type", searchDocument.getEntityType().name(), Field.Store.YES ) );
 
-			writer.addDocument( document );
+			// Populate additional fields
+			searchDocument.getFacets().entrySet().forEach( f -> {
+				if ( f.getKey() != null && f.getValue() != null ) {
+					document.add( new FacetField( f.getKey(), f.getValue() ) );
+				}
+			} );
+
+			writer.addDocument( facetConfig.build( taxoWriter, document ) );
+
+			taxoWriter.close();
 			writer.close();
 
 		} catch ( IOException e ) {
-			throw new SearchIndexingException( searchDocument );
+			throw new SearchAddIndexException( searchDocument );
 		}
-
-
 	}
-
-	private String toSafe( IndexableField type ) {
-		if ( type == null ) {
-			return null;
-		}
-		return type.stringValue();
-	}
-
 
 }
 

@@ -1,5 +1,6 @@
 package org.beesden.search.controller;
 
+import org.beesden.common.EntityReference;
 import org.beesden.common.EntityType;
 import org.beesden.common.model.SearchDocument;
 import org.beesden.search.service.SearchService;
@@ -31,18 +32,21 @@ public class SearchControllerTest extends AbstractTestController {
 	public void indexDocumentTest() throws Exception {
 
 		SearchDocument document = new SearchDocument();
-		document.setId( "accessories" );
+		document.setEntity( new EntityReference( "accessories", EntityType.CATEGORY ) );
 		document.setTitle( "All accessories" );
-		document.setEntityType( EntityType.CATEGORY );
 
 		mockMvc.perform(
 				post( SEARCH_URL ).contentType( contentType ).content( json( document ) ) )
 				.andExpect( status().isCreated() );
 
-		mockMvc.perform( get( SEARCH_URL ).param( "title", document.getTitle() ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "id", document.getEntity().getId() ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) )
-				.andExpect( jsonPath( "$.results[0].id", Matchers.equalTo( document.getTitle() ) ) )
+				.andExpect( jsonPath( "$.results[0].title", Matchers.equalTo( document.getTitle() ) ) )
 				.andExpect( status().isOk() );
+
+		// TODO - fix this test!
+		searchService.clearIndex();
+		populateIndex();
 
 		//		mockMvc.perform( delete( SEARCH_URL + "/" + document ) )
 		//				.andExpect( status().isNoContent() );
@@ -52,23 +56,52 @@ public class SearchControllerTest extends AbstractTestController {
 	}
 
 	@Test
+	public void performPaginationTest() throws Exception {
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 5 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "results", "2" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "results", "2" ).param( "page", "3" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
+
+	}
+
+	@Test
 	public void performSearchTest() throws Exception {
 
-		//		mockMvc.perform( get( SEARCH_URL ).param( "title", "fancy kimono" ) )
-		//				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
-		//				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
-
-		mockMvc.perform( get( SEARCH_URL ).param( "title", "kimono" ) )
-				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
-				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
-
-		mockMvc.perform( get( SEARCH_URL ).param( "title", "kim" ) )
-				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
-				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
-
-		mockMvc.perform( get( SEARCH_URL ).param( "title", "flower" ) )
+		mockMvc.perform( get( SEARCH_URL ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 0 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "flower" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 0 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "pointy" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "fancy" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kim" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono clothes" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 4 ) ) );
 
 	}
 
@@ -79,19 +112,26 @@ public class SearchControllerTest extends AbstractTestController {
 
 		SearchDocument document = new SearchDocument();
 
-		document.setId( "p1109" );
+		searchService.clearIndex();
+
+		document.setEntity( new EntityReference( "p1109", EntityType.PRODUCT ) );
 		document.setTitle( "Sequin Kimono" );
-		document.setEntityType( EntityType.PRODUCT );
 		searchService.submitToIndex( document );
 
-		document.setId( "p1455" );
+		document.setEntity( new EntityReference( "p1455", EntityType.PRODUCT ) );
 		document.setTitle( "Fancy Kimono Hat" );
-		document.setEntityType( EntityType.PRODUCT );
 		searchService.submitToIndex( document );
 
-		document.setId( "womens_clothes" );
+		document.setEntity( new EntityReference( "p1955", EntityType.PRODUCT ) );
+		document.setTitle( "Fancy pointy hat" );
+		searchService.submitToIndex( document );
+
+		document.setEntity( new EntityReference( "womens_clothes", EntityType.CATEGORY ) );
 		document.setTitle( "Women's Clothes" );
-		document.setEntityType( EntityType.CATEGORY );
+		searchService.submitToIndex( document );
+
+		document.setEntity( new EntityReference( "womens_kimonos", EntityType.CATEGORY ) );
+		document.setTitle( "Women's Kimonos" );
 		searchService.submitToIndex( document );
 
 	}

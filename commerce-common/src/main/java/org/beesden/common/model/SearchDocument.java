@@ -1,20 +1,20 @@
 package org.beesden.common.model;
 
 import lombok.Data;
-import org.beesden.common.EntityType;
+import org.beesden.common.EntityReference;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 public class SearchDocument {
 
-	@NotEmpty
-	EntityType entityType;
-	@NotEmpty
-	private String id;
+	@NotNull
+	EntityReference entity;
 	@NotEmpty
 	private String title;
-	private String summary;
-	private String description;
-
+	private Map<String, String> facets = new HashMap<>();
 
 }

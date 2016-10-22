@@ -31,15 +31,27 @@ public class Application {
 		};
 	}
 
-	@Bean
+	@Bean( name = "taxonomy" )
 	@Profile( { "!test" } )
-	public Directory fsDirectory() throws IOException {
+	public Directory facetDirectory() throws IOException {
+		return FSDirectory.open( new File( "/lucene/test" ).toPath() );
+	}
+
+	@Bean( name = "index" )
+	@Profile( { "!test" } )
+	public Directory indexDirectory() throws IOException {
 		return FSDirectory.open( new File( "/lucene" ).toPath() );
 	}
 
-	@Bean
+	@Bean( name = "taxonomy" )
 	@Profile( { "test" } )
-	public Directory ramDirectory() throws IOException {
+	public Directory testFacetDirectory() throws IOException {
+		return new RAMDirectory();
+	}
+
+	@Bean( name = "index" )
+	@Profile( { "test" } )
+	public Directory testIndexDirectory() throws IOException {
 		return new RAMDirectory();
 	}
 

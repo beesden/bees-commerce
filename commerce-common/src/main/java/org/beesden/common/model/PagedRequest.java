@@ -18,6 +18,10 @@ public class PagedRequest {
 
 	private String sort;
 
+	public int getStartIndex() {
+		return results * ( page - 1 );
+	}
+
 	public PageRequest toPageable() {
 
 		if ( sort != null ) {

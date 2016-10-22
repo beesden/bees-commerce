@@ -1,10 +1,13 @@
 package org.beesden.search.model;
 
 import lombok.Data;
+import org.beesden.common.model.PagedRequest;
 
 @Data
-public class SearchForm {
+public class SearchForm extends PagedRequest {
 
-	private String title;
+	private String term;
+	private String id[];
+	private String type[];
 
 }
