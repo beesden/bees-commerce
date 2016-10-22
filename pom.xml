@@ -35,9 +35,9 @@
 
         <!-- Service APIs -->
         <module>commerce-shop</module>
+        <module>search</module>
         <!--
         <module>content</module>
-        <module>search</module>
         <module>reviews</module>
         -->
 

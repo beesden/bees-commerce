@@ -1,9 +1,9 @@
 package org.beesden.commerce.controller;
 
 import org.beesden.commerce.service.CategoryService;
+import org.beesden.common.model.Category;
 import org.beesden.common.model.PagedRequest;
 import org.beesden.common.model.PagedResponse;
-import org.beesden.common.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

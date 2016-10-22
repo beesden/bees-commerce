@@ -1,4 +1,4 @@
-package org.beesden.commerce.controller;
+package org.beesden.search.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.beesden.common.exception.NotFoundException;
@@ -54,6 +54,7 @@ public class ApiControllerAdvice {
 	@ResponseStatus( HttpStatus.INTERNAL_SERVER_ERROR )
 	void handleException( Exception exception ) {
 		log.error( exception.getMessage() );
+		exception.printStackTrace();
 	}
 
 }

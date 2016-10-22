@@ -1,8 +1,8 @@
 package org.beesden.commerce.service;
 
+import org.beesden.common.model.Category;
 import org.beesden.common.model.PagedRequest;
 import org.beesden.common.model.PagedResponse;
-import org.beesden.common.model.Category;
 
 public interface CategoryService {
 

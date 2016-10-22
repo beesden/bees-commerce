@@ -1,4 +1,4 @@
-package org.beesden.commerce.controller;
+package org.beesden.search.controller;
 
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-public abstract class AbstractControllerTest {
+public abstract class AbstractTestController {
 
 	MediaType contentType = new MediaType( MediaType.APPLICATION_JSON.getType(),
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName( "utf8" ) );

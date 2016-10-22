@@ -8,7 +8,6 @@ import org.beesden.common.model.Category;
 
 import javax.persistence.*;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @Entity

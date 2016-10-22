@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.beesden.common.model.Product;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data

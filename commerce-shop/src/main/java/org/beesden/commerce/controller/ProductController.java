@@ -1,10 +1,10 @@
 package org.beesden.commerce.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.beesden.commerce.service.ProductService;
 import org.beesden.common.model.PagedRequest;
 import org.beesden.common.model.PagedResponse;
 import org.beesden.common.model.Product;
-import org.beesden.commerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
