@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,6 +28,58 @@ public class SearchControllerTest extends AbstractTestController {
 
 	@Autowired
 	private SearchService searchService;
+
+	@Test
+	public void facetedSearchTest() throws Exception {
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:blue" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.facets[0].fields.blue", Matchers.equalTo( 2 ) ) )
+				.andExpect( jsonPath( "$.facets", Matchers.hasSize( 2 ) ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:red" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.facets[0].fields.blue", Matchers.equalTo( 2 ) ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:RED" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.facets", Matchers.hasSize( 1 ) ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 0 ) ) );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "facet", "size:LG" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.facets[1].fields.blue", Matchers.equalTo( 1 ) ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
+
+		System.out.println(
+				mockMvc.perform(
+						get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:blue" )
+								.param( "facet", "size:LG" ) ).andReturn().getResponse().getContentAsString() );
+
+		mockMvc.perform(
+				get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:blue" ).param( "facet", "size:LG" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.facets[0].fields.blue", Matchers.equalTo( 1 ) ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
+
+		mockMvc.perform(
+				get( SEARCH_URL ).param( "id", "p1109" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
+
+		mockMvc.perform(
+				get( SEARCH_URL ).param( "term", "*" ).param( "type", "product" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
+
+		mockMvc.perform(
+				get( SEARCH_URL ).param( "term", "*" ).param( "type", "PRODUCT" ) )
+				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
+
+	}
 
 	@Test
 	public void indexDocumentTest() throws Exception {
@@ -116,22 +169,39 @@ public class SearchControllerTest extends AbstractTestController {
 
 		document.setEntity( new EntityReference( "p1109", EntityType.PRODUCT ) );
 		document.setTitle( "Sequin Kimono" );
+		document.setFacets( new HashMap<>() );
+		document.addFacet( "colour", "red" );
+		document.addFacet( "colour", "blue" );
+		document.addFacet( "size", "M" );
+		document.addFacet( "size", "SM" );
+		document.addFacet( "size", "LG" );
 		searchService.submitToIndex( document );
 
 		document.setEntity( new EntityReference( "p1455", EntityType.PRODUCT ) );
 		document.setTitle( "Fancy Kimono Hat" );
+		document.setFacets( new HashMap<>() );
+		document.addFacet( "colour", "blue" );
+		document.addFacet( "colour", "pink" );
+		document.addFacet( "size", "SM" );
+		document.addFacet( "size", "XS" );
 		searchService.submitToIndex( document );
 
 		document.setEntity( new EntityReference( "p1955", EntityType.PRODUCT ) );
 		document.setTitle( "Fancy pointy hat" );
+		document.setFacets( new HashMap<>() );
+		document.addFacet( "colour", "red" );
+		document.addFacet( "size", "XL" );
+		document.addFacet( "size", "LG" );
 		searchService.submitToIndex( document );
 
 		document.setEntity( new EntityReference( "womens_clothes", EntityType.CATEGORY ) );
 		document.setTitle( "Women's Clothes" );
+		document.setFacets( new HashMap<>() );
 		searchService.submitToIndex( document );
 
 		document.setEntity( new EntityReference( "womens_kimonos", EntityType.CATEGORY ) );
 		document.setTitle( "Women's Kimonos" );
+		document.setFacets( new HashMap<>() );
 		searchService.submitToIndex( document );
 
 	}

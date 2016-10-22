@@ -7,7 +7,8 @@ import org.beesden.common.model.PagedRequest;
 public class SearchForm extends PagedRequest {
 
 	private String term;
-	private String id[];
-	private String type[];
+	private String[] id;
+	private String[] type;
+	private String[] facet;
 
 }

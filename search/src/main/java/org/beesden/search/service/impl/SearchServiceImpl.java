@@ -6,10 +6,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.facet.FacetField;
-import org.apache.lucene.facet.Facets;
-import org.apache.lucene.facet.FacetsCollector;
-import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.*;
 import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
@@ -41,6 +38,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Random;
 
 @Service
@@ -88,7 +86,7 @@ public class SearchServiceImpl implements SearchService {
 
 			// Filter by ID
 			if ( searchForm.getId() != null && searchForm.getId().length > 0 ) {
-				query.add( new TermQuery( new Term( "id", String.join( " ", searchForm.getId() ) ) ),
+				query.add( new TermQuery( new Term( "id", String.join( " ", searchForm.getId() ).toLowerCase() ) ),
 						BooleanClause.Occur.MUST );
 			}
 
@@ -103,24 +101,46 @@ public class SearchServiceImpl implements SearchService {
 
 			// Filter by type
 			if ( searchForm.getType() != null && searchForm.getType().length > 0 ) {
-				query.add( new TermQuery( new Term( "type", String.join( " ", searchForm.getType() ) ) ),
+				query.add( new TermQuery( new Term( "type", String.join( " ", searchForm.getType() ).toLowerCase() ) ),
 						BooleanClause.Occur.MUST );
 			}
 
-			// Perform search
-			TopDocs results = searcher.search( query.build(), searchForm.getResults() * searchForm.getPage() );
+			TopDocs results;
+
+			if ( searchForm.getFacet() != null ) {
+				// Perform faceted search
+				DrillDownQuery facetedQuery = new DrillDownQuery( facetConfig, query.build() );
+				Arrays.stream( searchForm.getFacet() )
+						.forEach( facet -> {
+							String[] facetParts = facet.split( ":" );
+							if ( facetParts.length == 2 ) {
+								facetedQuery.add( facetParts[ 0 ], facetParts[ 1 ] );
+							}
+						} );
+
+				DrillSideways ds = new DrillSideways( searcher, facetConfig, taxoReader );
+				DrillSideways.DrillSidewaysResult facetedResult = ds
+						.search( facetedQuery, searchForm.getResults() * searchForm.getPage() );
+				results = facetedResult.hits;
+				facetedResult.facets.getAllDims( 10 ).forEach( resultWrapper::addFacet );
+
+			} else {
+				// Perform normal search
+				results = searcher.search( query.build(), searchForm.getResults() * searchForm.getPage() );
+
+				// Collect facets seperately
+				FacetsCollector fc = new FacetsCollector();
+				FacetsCollector.search( searcher, query.build(), 10, fc );
+				Facets facets = new FastTaxonomyFacetCounts( taxoReader, facetConfig, fc );
+				facets.getAllDims( 10 ).forEach( resultWrapper::addFacet );
+			}
+
 			resultWrapper.setTotal( results.totalHits );
 
 			// Convert results
 			for ( int i = searchForm.getStartIndex(); i < results.scoreDocs.length; i++ ) {
 				resultWrapper.addResult( new SearchResult( searcher.doc( results.scoreDocs[ i ].doc ) ) );
 			}
-
-			// Collect facets
-			FacetsCollector fc = new FacetsCollector();
-			FacetsCollector.search( searcher, new MatchAllDocsQuery(), 10, fc );
-			Facets facets = new FastTaxonomyFacetCounts( taxoReader, facetConfig, fc );
-			resultWrapper.addFacet( facets.getTopChildren( 50, "colour" ) );
 
 		} catch ( ParseException e ) {
 			throw new SearchQueryException( "There was an error building the search query" );
@@ -134,8 +154,6 @@ public class SearchServiceImpl implements SearchService {
 	@PostConstruct
 	public void populateIndex() throws Exception {
 
-		SearchDocument document = new SearchDocument();
-
 		clearIndex();
 
 		// Create a huge index!
@@ -143,17 +161,23 @@ public class SearchServiceImpl implements SearchService {
 		Random rn = new Random();
 
 		for ( int i = 3000; i < 5000; i++ ) {
+			SearchDocument document = new SearchDocument();
 			document.setEntity( new EntityReference( "p" + i, EntityType.PRODUCT ) );
 			document.setTitle( new BigInteger( 130, random ).toString( 32 ) );
 			int col = rn.nextInt( 5 );
-			document.getFacets().put( "colour",
+			document.addFacet( "colour",
 					col == 0 ? "red" : col == 1 ? "yellow" : col == 2 ? "blue" : col == 3 ? "pink" : col == 4 ? "green" :
 							"purple" );
+			col = rn.nextInt( 5 );
+			document.addFacet( "size",
+					col == 0 ? "XS" : col == 1 ? "M" : col == 2 ? "LG" : col == 3 ? "XL" : col == 4 ? "SM" :
+							"" );
 			submitToIndex( document );
 		}
 
 		String[] categories = { "Accessories", "All Accessories", "Jackets & Coats", "Jewellery", "All Sale", "All Shoes", "Skirts", "Tops", "Trousers & Shorts", "Bags", "Boots", "Cardigans", "Casual", "Clothing", "Clutch Bags", "Coats", "Dresses", "Flat Shoes", "Formal", "Gifts", "Hats & Gloves", "High Heels", "Jackets", "Playsuits & Jumpsuits", "Cardigans & Jumpers", "Tops", "Dresses", "Lace Dresses", "Maxi Dresses", "New Vintage", "New In", "Accessories", "Clothing", "Sale", "Accessories", "Clothing", "Coats & Jackets", "Denim", "Dresses", "Shoes", "Skirts", "Tops", "Trousers & Shorts", "Scarves", "Shoes", "Tights & Socks", "Watches", "Wraps and Capes" };
 		for ( String c : categories ) {
+			SearchDocument document = new SearchDocument();
 			document.setEntity( new EntityReference( c.replace( " ", "_" ).replace( "[^\\w_]", "" ).toLowerCase(),
 					EntityType.CATEGORY ) );
 			document.setTitle( c );
@@ -181,8 +205,9 @@ public class SearchServiceImpl implements SearchService {
 
 			// Populate additional fields
 			searchDocument.getFacets().entrySet().forEach( f -> {
-				if ( f.getKey() != null && f.getValue() != null ) {
-					document.add( new FacetField( f.getKey(), f.getValue() ) );
+				facetConfig.setMultiValued( f.getKey(), true );
+				if ( f.getValue() != null ) {
+					f.getValue().forEach( val -> document.add( new FacetField( f.getKey(), val ) ) );
 				}
 			} );
 
