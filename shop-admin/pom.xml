@@ -4,12 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>shop-admin</artifactId>
-    <version>${beesden.commerce.version}</version>
     <name>shop-admin</name>
 
     <parent>
         <groupId>org.beesden</groupId>
-        <version>${beesden.commerce.version}</version>
+        <version>1.0.0</version>
         <artifactId>commerce</artifactId>
     </parent>
 
@@ -93,7 +92,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>install -d</arguments>
+                            <arguments>install</arguments>
                         </configuration>
                     </execution>
                     <execution>

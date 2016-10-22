@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
 	private ProductRepository productRepository;
@@ -42,10 +43,10 @@ public class ProductServiceImpl implements ProductService {
 		productRepository.deleteByProductKey( productKey );
 	}
 
-	@Transactional
+	@Override
 	public Product getProduct( String productKey ) {
 
-		ProductDTO product = productRepository.getOneByProductKey( productKey );
+		ProductDTO product = productRepository.findOneByProductKey( productKey );
 		if ( product == null ) {
 			throw new NotFoundException( EntityType.PRODUCT, productKey );
 		}
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
-	@Transactional
+	@Override
 	public PagedResponse<Product> listProducts( PagedRequest pagination ) {
 
 		Page<ProductDTO> pagedProducts = productRepository.findAll( pagination.toPageable() );
@@ -70,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product updateProduct( String productKey, Product product ) {
 
-		ProductDTO updatedProduct = productRepository.getOneByProductKey( productKey );
+		ProductDTO updatedProduct = productRepository.findOneByProductKey( productKey );
 		if ( updatedProduct == null ) {
 			throw new NotFoundException( EntityType.PRODUCT, productKey );
 		}

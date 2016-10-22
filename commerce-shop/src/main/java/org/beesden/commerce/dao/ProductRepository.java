@@ -7,6 +7,6 @@ public interface ProductRepository extends JpaRepository<ProductDTO, Long> {
 
 	void deleteByProductKey( String productKey );
 
-	ProductDTO getOneByProductKey( String productKey );
+	ProductDTO findOneByProductKey( String productKey );
 
 }

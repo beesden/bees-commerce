@@ -6,10 +6,10 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
+// @Entity
 @Data
 @EqualsAndHashCode( callSuper = true )
-@Table( name = "bees_product_price" )
+// @Table( name = "bees_product_price" )
 public class Price extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;

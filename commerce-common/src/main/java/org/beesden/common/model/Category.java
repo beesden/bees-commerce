@@ -3,10 +3,8 @@ package org.beesden.common.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.util.Set;
-
 @Data
-public class Product {
+public class Category {
 
 	@NotEmpty
 	private String id;

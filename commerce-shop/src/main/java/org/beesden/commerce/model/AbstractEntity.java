@@ -14,20 +14,20 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@MappedSuperclass
 @Data
+@MappedSuperclass
 public abstract class AbstractEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@CreatedDate
-	private LocalDateTime created;
+//	@CreatedDate
+//	private LocalDateTime created;
 
 	@CreatedBy
 	private String createdBy;
 
-	@LastModifiedDate
-	private LocalDateTime lastEdited;
+//	@LastModifiedDate
+//	private LocalDateTime lastEdited;
 
 	@LastModifiedBy
 	private String lastEditedBy;
@@ -40,13 +40,13 @@ public abstract class AbstractEntity implements Serializable {
 	 * Populate timestamps.
 	 */
 	public void updateTimestamps() {
-		if ( created == null ) {
-			created = LocalDateTime.now();
-		}
-		if ( createdBy == null ) {
-			createdBy = "testuser";
-		}
-		lastEdited = LocalDateTime.now();
+//		if ( created == null ) {
+//			created = LocalDateTime.now();
+//		}
+//		if ( createdBy == null ) {
+//			createdBy = "testuser";
+//		}
+//		lastEdited = LocalDateTime.now();
 		lastEditedBy = "testUser";
 	}
 }

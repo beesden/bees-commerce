@@ -19,7 +19,7 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
-	@RequestMapping( method = RequestMethod.PUT )
+	@RequestMapping( method = RequestMethod.POST )
 	@ResponseStatus( HttpStatus.CREATED )
 	public Product createProduct( @Valid @RequestBody Product product ) {
 		return productService.createProduct( product );

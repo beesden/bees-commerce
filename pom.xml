@@ -1,10 +1,11 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.beesden</groupId>
     <artifactId>commerce</artifactId>
-    <version>${beesden.commerce.version}</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -14,8 +15,10 @@
         <beesden.commerce.version>1.0.0</beesden.commerce.version>
         <spring.boot.version>1.4.1.RELEASE</spring.boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>5.0.5.Final</hibernate.version>
+        <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate.validator.version>5.2.4.Final</hibernate.validator.version>
+        <mysql.version>5.1.31</mysql.version>
+        <hsql.version>2.3.3</hsql.version>
     </properties>
 
     <dependencies>

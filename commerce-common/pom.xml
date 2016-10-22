@@ -4,14 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>commerce-common</artifactId>
-    <version>${beesden.commerce.version}</version>
     <name>commerce-common</name>
 
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.beesden</groupId>
-        <version>${beesden.commerce.version}</version>
+        <version>1.0.0</version>
         <artifactId>commerce</artifactId>
     </parent>
 

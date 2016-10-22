@@ -7,10 +7,10 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity
+// @Entity
 @Data
 @EqualsAndHashCode( callSuper = true )
-@Table( name = "bees_product_variant" )
+// @Table( name = "bees_variant" )
 public class Variant extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -27,7 +27,6 @@ public class Variant extends AbstractEntity {
 	@JoinColumn( name = "variantId", nullable = false )
 	private Set<Price> prices;
 
-	@JsonIgnore
 	@ManyToOne( fetch = FetchType.LAZY )
 	@JoinColumn( name = "productId", nullable = false )
 	private ProductDTO productDTO;
