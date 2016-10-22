@@ -32,34 +32,25 @@ public class SearchControllerTest extends AbstractTestController {
 	@Test
 	public void facetedSearchTest() throws Exception {
 
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:blue" ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono" ).param( "facet", "colour:red" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.facets[0].fields.blue", Matchers.equalTo( 2 ) ) )
 				.andExpect( jsonPath( "$.facets", Matchers.hasSize( 2 ) ) )
-				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
 
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:red" ) )
-				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
-				.andExpect( jsonPath( "$.facets[0].fields.blue", Matchers.equalTo( 2 ) ) )
-				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
-
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:RED" ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono" ).param( "facet", "colour:RED" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.facets", Matchers.hasSize( 1 ) ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 0 ) ) );
 
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "facet", "size:LG" ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono" ).param( "facet", "size:LG" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.facets[1].fields.blue", Matchers.equalTo( 1 ) ) )
-				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
-
-		System.out.println(
-				mockMvc.perform(
-						get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:blue" )
-								.param( "facet", "size:LG" ) ).andReturn().getResponse().getContentAsString() );
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
 
 		mockMvc.perform(
-				get( SEARCH_URL ).param( "term", "*" ).param( "facet", "colour:blue" ).param( "facet", "size:LG" ) )
+				get( SEARCH_URL ).param( "term", "kimono" ).param( "facet", "colour:blue" )
+						.param( "facet", "size:LG" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.facets[0].fields.blue", Matchers.equalTo( 1 ) ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
@@ -70,12 +61,12 @@ public class SearchControllerTest extends AbstractTestController {
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
 
 		mockMvc.perform(
-				get( SEARCH_URL ).param( "term", "*" ).param( "type", "product" ) )
+				get( SEARCH_URL ).param( "type", "product" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
 
 		mockMvc.perform(
-				get( SEARCH_URL ).param( "term", "*" ).param( "type", "PRODUCT" ) )
+				get( SEARCH_URL ).param( "type", "PRODUCT" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
 
@@ -111,15 +102,15 @@ public class SearchControllerTest extends AbstractTestController {
 	@Test
 	public void performPaginationTest() throws Exception {
 
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
-				.andExpect( jsonPath( "$.results", Matchers.hasSize( 5 ) ) );
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
 
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "results", "2" ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono" ).param( "results", "2" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 2 ) ) );
 
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "*" ).param( "results", "2" ).param( "page", "3" ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono" ).param( "results", "2" ).param( "page", "2" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) );
 
@@ -148,13 +139,13 @@ public class SearchControllerTest extends AbstractTestController {
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
 
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "kim" ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimoo" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
 				.andExpect( jsonPath( "$.results", Matchers.hasSize( 3 ) ) );
 
-		mockMvc.perform( get( SEARCH_URL ).param( "term", "kimono clothes" ) )
+		mockMvc.perform( get( SEARCH_URL ).param( "term", "black kimono" ) )
 				.andExpect( status().isOk() ).andExpect( content().contentType( contentType ) )
-				.andExpect( jsonPath( "$.results", Matchers.hasSize( 4 ) ) );
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 0 ) ) );
 
 	}
 

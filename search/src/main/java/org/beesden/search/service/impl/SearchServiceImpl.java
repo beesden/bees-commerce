@@ -3,9 +3,7 @@ package org.beesden.search.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.facet.*;
 import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
@@ -16,8 +14,6 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.beesden.common.EntityReference;
@@ -26,7 +22,6 @@ import org.beesden.common.model.SearchDocument;
 import org.beesden.search.exception.SearchAddIndexException;
 import org.beesden.search.exception.SearchDeleteIndexException;
 import org.beesden.search.exception.SearchException;
-import org.beesden.search.exception.SearchQueryException;
 import org.beesden.search.model.SearchForm;
 import org.beesden.search.model.SearchResult;
 import org.beesden.search.model.SearchResultWrapper;
@@ -92,10 +87,7 @@ public class SearchServiceImpl implements SearchService {
 
 			// Provide fuzzy searching for search terms
 			if ( searchForm.getTerm() != null ) {
-				MultiFieldQueryParser queryParser = new MultiFieldQueryParser(
-						new String[]{ "title" }, analyzer );
-				queryParser.setAllowLeadingWildcard( true );
-				query.add( queryParser.parse( "*" + searchForm.getTerm().replaceAll( " ", "* *" ) + "*" ),
+				query.add( new FuzzyQuery( new Term( "title", searchForm.getTerm() ) ),
 						BooleanClause.Occur.MUST );
 			}
 
@@ -142,8 +134,6 @@ public class SearchServiceImpl implements SearchService {
 				resultWrapper.addResult( new SearchResult( searcher.doc( results.scoreDocs[ i ].doc ) ) );
 			}
 
-		} catch ( ParseException e ) {
-			throw new SearchQueryException( "There was an error building the search query" );
 		} catch ( IOException e ) {
 			throw new SearchException( "Error performing search" );
 		}
@@ -199,15 +189,19 @@ public class SearchServiceImpl implements SearchService {
 
 			Document document = new Document();
 
-			document.add( new TextField( "id", searchDocument.getEntity().getId(), Field.Store.YES ) );
-			document.add( new TextField( "type", searchDocument.getEntity().getType().name(), Field.Store.YES ) );
+			document.add( new StringField( "id", searchDocument.getEntity().getId(), Field.Store.YES ) );
+			document.add( new StringField( "type", searchDocument.getEntity().getType().name().toLowerCase(),
+					Field.Store.YES ) );
 			document.add( new TextField( "title", searchDocument.getTitle(), Field.Store.YES ) );
 
 			// Populate additional fields
 			searchDocument.getFacets().entrySet().forEach( f -> {
 				facetConfig.setMultiValued( f.getKey(), true );
 				if ( f.getValue() != null ) {
-					f.getValue().forEach( val -> document.add( new FacetField( f.getKey(), val ) ) );
+					f.getValue().forEach( val -> {
+						document.add( new FacetField( f.getKey(), val ) );
+						document.add( new StoredField( f.getKey(), val ) );
+					} );
 				}
 			} );
 

@@ -1,18 +1,16 @@
 package org.beesden.search.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.beesden.common.exception.NotFoundException;
+import org.beesden.common.controller.BaseControllerAdvice;
 import org.beesden.common.model.ResponseMessage;
-import org.springframework.data.mapping.PropertyReferenceException;
+import org.beesden.search.exception.SearchAddIndexException;
+import org.beesden.search.exception.SearchDeleteIndexException;
+import org.beesden.search.exception.SearchException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Handle all errors within the application in one class. If something goes wrong during execution,
@@ -22,39 +20,27 @@ import java.util.stream.Collectors;
  */
 @ControllerAdvice
 @Slf4j
-public class ApiControllerAdvice {
+public class ApiControllerAdvice extends BaseControllerAdvice {
+
+	@ExceptionHandler
+	@ResponseBody
+	@ResponseStatus( HttpStatus.NOT_ACCEPTABLE )
+	ResponseMessage handleSearchAddIndexException( SearchAddIndexException exception ) {
+		return new ResponseMessage( "search.error", exception.getEntity() );
+	}
 
 	@ExceptionHandler
 	@ResponseBody
 	@ResponseStatus( HttpStatus.BAD_REQUEST )
-	Set<ResponseMessage> handleArgumentException( MethodArgumentNotValidException exception ) {
-		return exception.getBindingResult()
-				.getFieldErrors()
-				.stream()
-				.map( error -> new ResponseMessage( error.getField() + "." + error.getCode(), error.getArguments() ) )
-				.collect( Collectors.toSet() );
+	ResponseMessage handleSearchDeleteIndexException( SearchDeleteIndexException exception ) {
+		return new ResponseMessage( "search.error" );
 	}
 
 	@ExceptionHandler
 	@ResponseBody
 	@ResponseStatus( HttpStatus.NOT_FOUND )
-	ResponseMessage handleException( NotFoundException exception ) {
-		return new ResponseMessage( "not.found", exception.getEntity() );
-	}
-
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus( HttpStatus.INTERNAL_SERVER_ERROR )
-	ResponseMessage handleException( PropertyReferenceException exception ) {
-		return new ResponseMessage( "invalid.reference", exception.getPropertyName() );
-	}
-
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus( HttpStatus.INTERNAL_SERVER_ERROR )
-	void handleException( Exception exception ) {
-		log.error( exception.getMessage() );
-		exception.printStackTrace();
+	ResponseMessage handleSearchException( SearchException exception ) {
+		return new ResponseMessage( "search.error" );
 	}
 
 }

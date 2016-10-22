@@ -1,7 +1,7 @@
 package org.beesden.commerce.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.beesden.common.exception.NotFoundException;
+import org.beesden.common.controller.BaseControllerAdvice;
 import org.beesden.common.model.ResponseMessage;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @ControllerAdvice
 @Slf4j
-public class ApiControllerAdvice {
+public class ApiControllerAdvice extends BaseControllerAdvice {
 
 	@ExceptionHandler
 	@ResponseBody
@@ -37,23 +37,9 @@ public class ApiControllerAdvice {
 
 	@ExceptionHandler
 	@ResponseBody
-	@ResponseStatus( HttpStatus.NOT_FOUND )
-	ResponseMessage handleException( NotFoundException exception ) {
-		return new ResponseMessage( "not.found", exception.getEntity() );
-	}
-
-	@ExceptionHandler
-	@ResponseBody
 	@ResponseStatus( HttpStatus.INTERNAL_SERVER_ERROR )
 	ResponseMessage handleException( PropertyReferenceException exception ) {
 		return new ResponseMessage( "invalid.reference", exception.getPropertyName() );
-	}
-
-	@ExceptionHandler
-	@ResponseBody
-	@ResponseStatus( HttpStatus.INTERNAL_SERVER_ERROR )
-	void handleException( Exception exception ) {
-		log.error( exception.getMessage() );
 	}
 
 }
