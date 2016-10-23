@@ -1,5 +1,6 @@
 package org.beesden.search.controller;
 
+import org.beesden.common.EntityReference;
 import org.beesden.common.model.SearchDocument;
 import org.beesden.search.model.SearchForm;
 import org.beesden.search.model.SearchResultWrapper;
@@ -11,26 +12,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping( value = "/" )
 public class SearchController {
 
 	@Autowired
 	private SearchService searchService;
-
-	@RequestMapping( method = RequestMethod.DELETE )
-	@ResponseStatus( HttpStatus.NO_CONTENT )
-	public void clearIndex() {
-		searchService.clearIndex();
-	}
 
 	@RequestMapping( method = RequestMethod.GET )
 	public SearchResultWrapper performSearch( @Valid SearchForm searchForm ) {
 		return searchService.performSearch( searchForm );
 	}
 
-	@RequestMapping( value = "/{indexId}", method = RequestMethod.DELETE )
+	@RequestMapping( method = RequestMethod.DELETE )
 	@ResponseStatus( HttpStatus.NO_CONTENT )
-	public void removeFromIndex( @PathVariable String indexId, @Valid @RequestBody SearchDocument searchDocument ) {
-		searchService.removeFromIndex( searchDocument );
+	public void removeFromIndex( @Valid @RequestBody EntityReference entity ) {
+		searchService.removeFromIndex( entity );
 	}
 
 	@RequestMapping( method = RequestMethod.POST )

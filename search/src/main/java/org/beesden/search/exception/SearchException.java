@@ -5,7 +5,7 @@ package org.beesden.search.exception;
  */
 public class SearchException extends RuntimeException {
 
-	public SearchException( String message ) {
-		super( message );
+	public SearchException( String message, Throwable e ) {
+		super( message, e );
 	}
 }

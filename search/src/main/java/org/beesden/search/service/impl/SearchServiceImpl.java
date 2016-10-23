@@ -19,8 +19,7 @@ import org.apache.lucene.store.Directory;
 import org.beesden.common.EntityReference;
 import org.beesden.common.EntityType;
 import org.beesden.common.model.SearchDocument;
-import org.beesden.search.exception.SearchAddIndexException;
-import org.beesden.search.exception.SearchDeleteIndexException;
+import org.beesden.search.exception.SearchEntityException;
 import org.beesden.search.exception.SearchException;
 import org.beesden.search.model.SearchForm;
 import org.beesden.search.model.SearchResult;
@@ -62,7 +61,7 @@ public class SearchServiceImpl implements SearchService {
 			writer.close();
 
 		} catch ( IOException e ) {
-			throw new SearchDeleteIndexException( "Error clearing the index" );
+			throw new SearchException( "Error clearing the index", e );
 		}
 	}
 
@@ -120,7 +119,7 @@ public class SearchServiceImpl implements SearchService {
 				// Perform normal search
 				results = searcher.search( query.build(), searchForm.getResults() * searchForm.getPage() );
 
-				// Collect facets seperately
+				// Collect facets separately
 				FacetsCollector fc = new FacetsCollector();
 				FacetsCollector.search( searcher, query.build(), 10, fc );
 				Facets facets = new FastTaxonomyFacetCounts( taxoReader, facetConfig, fc );
@@ -135,7 +134,7 @@ public class SearchServiceImpl implements SearchService {
 			}
 
 		} catch ( IOException e ) {
-			throw new SearchException( "Error performing search" );
+			throw new SearchException( "Error performing search", e );
 		}
 
 		return resultWrapper;
@@ -176,12 +175,30 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
-	public void removeFromIndex( SearchDocument searchDocument ) {
+	public void removeFromIndex( EntityReference entity ) {
+
+		try {
+			IndexWriter writer = new IndexWriter( index, new IndexWriterConfig( analyzer ) );
+
+			// Construct query
+			BooleanQuery.Builder query = new BooleanQuery.Builder();
+			query.add( new TermQuery( new Term( "id", entity.getId() ) ), BooleanClause.Occur.MUST );
+			query.add( new TermQuery( new Term( "type", entity.getType().name().toLowerCase() ) ),
+					BooleanClause.Occur.MUST );
+
+			writer.deleteDocuments( query.build() );
+			writer.close();
+
+		} catch ( IOException e ) {
+			throw new SearchEntityException( "Error removing entity from index", entity, e );
+		}
 
 	}
 
 	@Override
 	public void submitToIndex( SearchDocument searchDocument ) {
+
+		removeFromIndex( searchDocument.getEntity() );
 
 		try {
 			IndexWriter writer = new IndexWriter( index, new IndexWriterConfig( analyzer ) );
@@ -211,7 +228,7 @@ public class SearchServiceImpl implements SearchService {
 			writer.close();
 
 		} catch ( IOException e ) {
-			throw new SearchAddIndexException( searchDocument );
+			throw new SearchEntityException( "Error adding entity to index", searchDocument.getEntity(), e );
 		}
 	}
 

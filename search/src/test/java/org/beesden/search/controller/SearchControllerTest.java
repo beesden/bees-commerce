@@ -15,8 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith( SpringRunner.class )
@@ -77,6 +76,17 @@ public class SearchControllerTest extends AbstractTestController {
 
 		SearchDocument document = new SearchDocument();
 		document.setEntity( new EntityReference( "accessories", EntityType.CATEGORY ) );
+		document.setTitle( "Some accessories" );
+
+		mockMvc.perform(
+				post( SEARCH_URL ).contentType( contentType ).content( json( document ) ) )
+				.andExpect( status().isCreated() );
+
+		mockMvc.perform( get( SEARCH_URL ).param( "id", document.getEntity().getId() ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 1 ) ) )
+				.andExpect( jsonPath( "$.results[0].title", Matchers.equalTo( document.getTitle() ) ) )
+				.andExpect( status().isOk() );
+
 		document.setTitle( "All accessories" );
 
 		mockMvc.perform(
@@ -88,15 +98,13 @@ public class SearchControllerTest extends AbstractTestController {
 				.andExpect( jsonPath( "$.results[0].title", Matchers.equalTo( document.getTitle() ) ) )
 				.andExpect( status().isOk() );
 
-		// TODO - fix this test!
-		searchService.clearIndex();
-		populateIndex();
+		mockMvc.perform(
+				delete( SEARCH_URL ).contentType( contentType ).content( json( document.getEntity() ) ) )
+				.andExpect( status().isNoContent() );
 
-		//		mockMvc.perform( delete( SEARCH_URL + "/" + document ) )
-		//				.andExpect( status().isNoContent() );
-		//
-		//		mockMvc.perform( get( SEARCH_URL + "/" + TEST_CATEGORY_3.getCategoryId() ) )
-		//				.andExpect( jsonPath( "$.results", Matchers.hasSize( 0 ) ) );
+		mockMvc.perform( get( SEARCH_URL ).param( "id", document.getEntity().getId() ) )
+				.andExpect( jsonPath( "$.results", Matchers.hasSize( 0 ) ) )
+				.andExpect( status().isOk() );
 	}
 
 	@Test
