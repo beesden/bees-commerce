@@ -2,10 +2,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>search</artifactId>
-    <name>search</name>
-
     <packaging>jar</packaging>
 
     <properties>
@@ -34,15 +31,15 @@
 
         <!-- Common files -->
         <dependency>
-            <groupId>org.beesden</groupId>
-            <artifactId>commerce-common</artifactId>
+            <groupId>org.beesden.commerce</groupId>
+            <artifactId>common</artifactId>
             <version>1.0.0</version>
         </dependency>
 
         <!-- Spring boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
@@ -76,8 +73,6 @@
     </dependencies>
 
     <build>
-
-        <finalName>Commerce Shop</finalName>
 
         <plugins>
 

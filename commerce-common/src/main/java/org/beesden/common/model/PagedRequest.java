@@ -18,6 +18,16 @@ public class PagedRequest {
 
 	private String sort;
 
+	public PagedRequest( int page, int results, String sort ) {
+		if ( page > 1 ) {
+			this.page = page;
+		}
+		if ( results > 0 ) {
+			this.results = Math.min( results, 60 );
+		}
+		this.sort = sort;
+	}
+
 	public int getStartIndex() {
 		return results * ( page - 1 );
 	}

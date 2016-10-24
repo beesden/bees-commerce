@@ -1,4 +1,4 @@
-package org.beesden.search.exception;
+package org.beesden.commerce.search.exception;
 
 /**
  * An exception which is thrown when an error occurs whilst a search query is being performed.

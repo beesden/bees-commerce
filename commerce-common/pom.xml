@@ -2,23 +2,32 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>commerce-common</artifactId>
-    <name>commerce-common</name>
-
+    <artifactId>common</artifactId>
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>org.beesden</groupId>
+        <groupId>org.beesden.commerce</groupId>
         <version>1.0.0</version>
         <artifactId>commerce</artifactId>
     </parent>
 
     <dependencies>
         <dependency>
+            <groupId>org.beesden.commerce</groupId>
+            <artifactId>idl</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>0.9.3</version>
         </dependency>
 
         <dependency>
@@ -35,7 +44,4 @@
 
     </dependencies>
 
-    <build>
-        <finalName>Commerce common</finalName>
-    </build>
 </project>

@@ -2,9 +2,8 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>shop-admin</artifactId>
-    <name>shop-admin</name>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.beesden</groupId>
@@ -35,8 +34,6 @@
     </dependencies>
 
     <build>
-
-        <finalName>bees-cms</finalName>
 
         <plugins>
 

@@ -3,7 +3,7 @@ package org.beesden.common.exception;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
-import org.beesden.common.EntityType;
+import org.beesden.commerce.common.EntityType;
 
 public class NotFoundException extends RuntimeException {
 
