@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>org.beesden</groupId>
+        <groupId>org.beesden.commerce</groupId>
         <version>1.0.0</version>
         <artifactId>commerce</artifactId>
     </parent>

@@ -1,6 +1,5 @@
 package org.beesden.commerce.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.beesden.common.controller.BaseControllerAdvice;
 import org.beesden.common.model.ResponseMessage;
 import org.springframework.data.mapping.PropertyReferenceException;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
  * @author Pulse Innovations Ltd
  */
 @ControllerAdvice
-@Slf4j
 public class ApiControllerAdvice extends BaseControllerAdvice {
 
 	@ExceptionHandler

@@ -1,10 +1,10 @@
 package org.beesden.commerce.service.impl;
 
+import org.beesden.commerce.common.EntityType;
 import org.beesden.commerce.dao.CategoryRepository;
 import org.beesden.commerce.dao.ProductRepository;
 import org.beesden.commerce.model.CategoryDTO;
 import org.beesden.commerce.service.CategoryService;
-import org.beesden.common.EntityType;
 import org.beesden.common.exception.NotFoundException;
 import org.beesden.common.model.Category;
 import org.beesden.common.model.PagedRequest;

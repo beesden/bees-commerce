@@ -1,6 +1,5 @@
 package org.beesden.commerce.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.beesden.commerce.service.ProductService;
 import org.beesden.common.model.PagedRequest;
 import org.beesden.common.model.PagedResponse;
@@ -13,7 +12,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping( "/products" )
-@Slf4j
 public class ProductController {
 
 	@Autowired

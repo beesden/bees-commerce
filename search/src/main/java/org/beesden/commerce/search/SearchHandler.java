@@ -1,6 +1,5 @@
 package org.beesden.commerce.search;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
@@ -29,8 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
-public class SearchService implements Search.Iface {
+public class SearchHandler implements Search.Iface {
 
 	private FacetsConfig facetConfig = new FacetsConfig();
 	private Analyzer analyzer = new StandardAnalyzer();
@@ -38,7 +36,7 @@ public class SearchService implements Search.Iface {
 	private Directory taxoIndex;
 
 	@Autowired
-	public SearchService( Directory index, Directory taxonomy ) {
+	public SearchHandler( Directory index, Directory taxonomy ) {
 		this.index = index;
 		this.taxoIndex = taxonomy;
 	}

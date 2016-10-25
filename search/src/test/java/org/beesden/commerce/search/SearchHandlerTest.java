@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith( SpringRunner.class )
 @SpringBootTest
 @ActiveProfiles( "test" )
-public class SearchServiceTest {
+public class SearchHandlerTest {
 
 	@Autowired
-	private SearchService searchService;
+	private SearchHandler searchService;
 
 	@Test
 	public void facetsTest() throws Exception {
