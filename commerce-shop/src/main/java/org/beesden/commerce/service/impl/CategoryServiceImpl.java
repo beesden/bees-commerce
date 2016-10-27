@@ -1,12 +1,12 @@
 package org.beesden.commerce.service.impl;
 
-import org.beesden.commerce.common.EntityType;
 import org.beesden.commerce.dao.CategoryRepository;
 import org.beesden.commerce.dao.ProductRepository;
 import org.beesden.commerce.model.CategoryDTO;
 import org.beesden.commerce.service.CategoryService;
 import org.beesden.common.exception.NotFoundException;
 import org.beesden.common.model.Category;
+import org.beesden.common.model.EntityType;
 import org.beesden.common.model.PagedRequest;
 import org.beesden.common.model.PagedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 		CategoryDTO category = categoryRepository.getOneByCategoryId( categoryId );
 		if ( category == null ) {
-			throw new NotFoundException( EntityType.PRODUCT, categoryId );
+			throw new NotFoundException( EntityType.CATEGORY, categoryId );
 		}
 
 		return category.toCategory();
@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 		CategoryDTO updatedCategory = categoryRepository.getOneByCategoryId( categoryId );
 		if ( updatedCategory == null ) {
-			throw new NotFoundException( EntityType.PRODUCT, categoryId );
+			throw new NotFoundException( EntityType.CATEGORY, categoryId );
 		}
 
 		updatedCategory.update( category );

@@ -15,12 +15,12 @@ import org.apache.lucene.store.Directory;
 import org.beesden.commerce.search.exception.SearchEntityException;
 import org.beesden.commerce.search.exception.SearchException;
 import org.beesden.common.Utils;
+import org.beesden.common.client.SearchClient;
 import org.beesden.common.model.EntityReference;
 import org.beesden.common.model.search.SearchDocument;
 import org.beesden.common.model.search.SearchForm;
 import org.beesden.common.model.search.SearchResult;
 import org.beesden.common.model.search.SearchResultWrapper;
-import org.beesden.common.service.SearchClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

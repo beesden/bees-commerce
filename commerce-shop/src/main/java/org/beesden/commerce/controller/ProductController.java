@@ -1,11 +1,11 @@
 package org.beesden.commerce.controller;
 
-import org.beesden.commerce.search.SearchForm;
 import org.beesden.commerce.service.ProductService;
+import org.beesden.common.client.SearchClient;
 import org.beesden.common.model.PagedRequest;
 import org.beesden.common.model.PagedResponse;
 import org.beesden.common.model.Product;
-import org.beesden.common.service.SearchClient;
+import org.beesden.common.model.search.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
