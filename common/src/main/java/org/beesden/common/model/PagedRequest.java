@@ -1,6 +1,7 @@
 package org.beesden.common.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import javax.validation.constraints.Min;
 
 @Data
+@NoArgsConstructor
 public class PagedRequest {
 
 	@Min( 1 )

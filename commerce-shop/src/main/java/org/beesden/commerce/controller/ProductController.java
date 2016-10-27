@@ -1,9 +1,11 @@
 package org.beesden.commerce.controller;
 
+import org.beesden.commerce.search.SearchForm;
 import org.beesden.commerce.service.ProductService;
 import org.beesden.common.model.PagedRequest;
 import org.beesden.common.model.PagedResponse;
 import org.beesden.common.model.Product;
+import org.beesden.common.service.SearchClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,9 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private SearchClient searchClient;
 
 	@RequestMapping( method = RequestMethod.POST )
 	@ResponseStatus( HttpStatus.CREATED )
@@ -36,6 +41,7 @@ public class ProductController {
 
 	@RequestMapping( method = RequestMethod.GET )
 	public PagedResponse<Product> listProducts( PagedRequest pagination ) {
+		System.out.println( searchClient.performSearch( new SearchForm() ) );
 		return productService.listProducts( pagination );
 	}
 

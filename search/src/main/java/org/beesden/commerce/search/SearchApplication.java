@@ -6,6 +6,7 @@ import org.apache.lucene.store.RAMDirectory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 
 @EnableDiscoveryClient
+@EnableFeignClients
 @SpringBootApplication
 public class SearchApplication {
 

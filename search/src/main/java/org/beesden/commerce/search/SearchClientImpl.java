@@ -12,11 +12,15 @@ import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
-import org.beesden.commerce.common.EntityReference;
 import org.beesden.commerce.search.exception.SearchEntityException;
 import org.beesden.commerce.search.exception.SearchException;
 import org.beesden.common.Utils;
-import org.beesden.common.model.PagedRequest;
+import org.beesden.common.model.EntityReference;
+import org.beesden.common.model.search.SearchDocument;
+import org.beesden.common.model.search.SearchForm;
+import org.beesden.common.model.search.SearchResult;
+import org.beesden.common.model.search.SearchResultWrapper;
+import org.beesden.common.service.SearchClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class SearchHandler implements Search.Iface {
+public class SearchClientImpl implements SearchClient {
 
 	private FacetsConfig facetConfig = new FacetsConfig();
 	private Analyzer analyzer = new StandardAnalyzer();
@@ -36,7 +40,7 @@ public class SearchHandler implements Search.Iface {
 	private Directory taxoIndex;
 
 	@Autowired
-	public SearchHandler( Directory index, Directory taxonomy ) {
+	public SearchClientImpl( Directory index, Directory taxonomy ) {
 		this.index = index;
 		this.taxoIndex = taxonomy;
 	}
@@ -67,8 +71,6 @@ public class SearchHandler implements Search.Iface {
 	public SearchResultWrapper performSearch( SearchForm searchForm ) {
 
 		SearchResultWrapper resultWrapper = new SearchResultWrapper();
-		PagedRequest pagedRequest = new PagedRequest( searchForm.getPage(), searchForm.getResults(),
-				searchForm.getSort() );
 
 		try {
 			DirectoryReader indexReader = DirectoryReader.open( index );
@@ -129,13 +131,13 @@ public class SearchHandler implements Search.Iface {
 
 				DrillSideways ds = new DrillSideways( searcher, facetConfig, taxoReader );
 				DrillSideways.DrillSidewaysResult facetedResult = ds
-						.search( facetedQuery, pagedRequest.getResults() * pagedRequest.getPage() );
+						.search( facetedQuery, searchForm.getResults() * searchForm.getPage() );
 				results = facetedResult.hits;
 				resultWrapper.setFacets( buildFacets( facetedResult.facets.getAllDims( 10 ) ) );
 
 			} else {
 				// Perform normal search
-				results = searcher.search( query.build(), pagedRequest.getResults() * pagedRequest.getPage() );
+				results = searcher.search( query.build(), searchForm.getResults() * searchForm.getPage() );
 
 				// Collect facets separately
 				FacetsCollector fc = new FacetsCollector();
@@ -148,7 +150,7 @@ public class SearchHandler implements Search.Iface {
 			resultWrapper.setTotal( results.totalHits );
 
 			// Convert results
-			for ( int i = pagedRequest.getStartIndex(); i < results.scoreDocs.length; i++ ) {
+			for ( int i = searchForm.getStartIndex(); i < results.scoreDocs.length; i++ ) {
 				Document document = searcher.doc( results.scoreDocs[ i ].doc );
 
 				SearchResult result = new SearchResult();
@@ -162,6 +164,8 @@ public class SearchHandler implements Search.Iface {
 				resultWrapper.getResults().add( result );
 			}
 
+		} catch ( IndexNotFoundException e ) {
+			resultWrapper.setResults( new ArrayList<>() );
 		} catch ( IOException e ) {
 			throw new SearchException( "Error performing search", e );
 		}
