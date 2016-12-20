@@ -2,7 +2,7 @@ package org.beesden.commerce.catalogue.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.beesden.common.domain.AbstractDomainEntity;
+import org.beesden.commerce.common.domain.AbstractDomainEntity;
 
 import javax.persistence.*;
 import java.util.Set;

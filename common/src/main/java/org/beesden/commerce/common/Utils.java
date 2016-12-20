@@ -1,4 +1,4 @@
-package org.beesden.common;
+package org.beesden.commerce.common;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,8 @@ import java.util.Set;
 @NoArgsConstructor( access = AccessLevel.NONE )
 public final class Utils {
 
-	public static <T> Set<T> buildSet( T... items ) {
+	@SafeVarargs
+	public static <T> Set<T> buildSet(T... items) {
 		Set<T> set = new HashSet<>();
 		Collections.addAll( set, items );
 		return set;

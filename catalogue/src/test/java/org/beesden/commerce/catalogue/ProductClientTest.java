@@ -1,10 +1,10 @@
 package org.beesden.commerce.catalogue;
 
-import org.beesden.common.client.ProductClient;
-import org.beesden.common.exception.NotFoundException;
-import org.beesden.common.model.PagedRequest;
-import org.beesden.common.model.PagedResponse;
-import org.beesden.common.model.Product;
+import org.beesden.commerce.common.client.ProductClient;
+import org.beesden.commerce.common.exception.NotFoundException;
+import org.beesden.commerce.common.model.PagedRequest;
+import org.beesden.commerce.common.model.PagedResponse;
+import org.beesden.commerce.common.model.Product;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

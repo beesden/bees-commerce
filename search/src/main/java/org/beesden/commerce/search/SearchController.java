@@ -12,18 +12,21 @@ import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
+import org.beesden.commerce.common.Utils;
+import org.beesden.commerce.common.model.EntityReference;
+import org.beesden.commerce.common.model.search.SearchDocument;
+import org.beesden.commerce.common.model.search.SearchForm;
+import org.beesden.commerce.common.model.search.SearchResult;
+import org.beesden.commerce.common.model.search.SearchResultWrapper;
 import org.beesden.commerce.search.exception.SearchEntityException;
 import org.beesden.commerce.search.exception.SearchException;
-import org.beesden.common.Utils;
-import org.beesden.common.client.SearchClient;
-import org.beesden.common.model.EntityReference;
-import org.beesden.common.model.search.SearchDocument;
-import org.beesden.common.model.search.SearchForm;
-import org.beesden.common.model.search.SearchResult;
-import org.beesden.common.model.search.SearchResultWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,8 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service
-public class SearchClientImpl implements SearchClient {
+@RestController
+public class SearchController {
 
 	private FacetsConfig facetConfig = new FacetsConfig();
 	private Analyzer analyzer = new StandardAnalyzer();
@@ -40,7 +43,7 @@ public class SearchClientImpl implements SearchClient {
 	private Directory taxoIndex;
 
 	@Autowired
-	public SearchClientImpl( Directory index, Directory taxonomy ) {
+	public SearchController(Directory index, Directory taxonomy) {
 		this.index = index;
 		this.taxoIndex = taxonomy;
 	}
@@ -52,7 +55,7 @@ public class SearchClientImpl implements SearchClient {
 						.collect( Collectors.toMap( fa -> fa.label, fa -> fa.value.intValue() ) ) ) );
 	}
 
-	@Override
+	@RequestMapping(method = RequestMethod.DELETE, value = "/")
 	public void clearIndex() {
 
 		try {
@@ -67,7 +70,7 @@ public class SearchClientImpl implements SearchClient {
 		}
 	}
 
-	@Override
+	@RequestMapping(method = RequestMethod.POST, value = "/")
 	public SearchResultWrapper performSearch( SearchForm searchForm ) {
 
 		SearchResultWrapper resultWrapper = new SearchResultWrapper();
@@ -173,7 +176,7 @@ public class SearchClientImpl implements SearchClient {
 		return resultWrapper;
 	}
 
-	@Override
+	@RequestMapping(method = RequestMethod.DELETE, value = "/entities")
 	public void removeFromIndex( EntityReference entity ) {
 
 		try {
@@ -194,8 +197,8 @@ public class SearchClientImpl implements SearchClient {
 
 	}
 
-	@Override
-	public void submitToIndex( SearchDocument searchDocument ) {
+	@RequestMapping(method = RequestMethod.POST, value = "/entities")
+	public void submitToIndex(@Valid @RequestBody SearchDocument searchDocument) {
 
 		removeFromIndex( searchDocument.getEntity() );
 

@@ -1,4 +1,4 @@
-package org.beesden.common.model;
+package org.beesden.commerce.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

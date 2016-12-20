@@ -1,8 +1,8 @@
-package org.beesden.common.controller;
+package org.beesden.commerce.common.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.beesden.common.exception.NotFoundException;
-import org.beesden.common.model.ResponseMessage;
+import org.beesden.commerce.common.exception.NotFoundException;
+import org.beesden.commerce.common.model.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

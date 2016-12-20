@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.beesden.common.domain.AbstractDomainEntity;
-import org.beesden.common.model.Product;
+import org.beesden.commerce.common.domain.AbstractDomainEntity;
+import org.beesden.commerce.common.model.EntityType;
+import org.beesden.commerce.common.model.Product;
+import org.beesden.commerce.common.model.Searchable;
+import org.beesden.commerce.common.model.search.SearchDocument;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -16,7 +19,7 @@ import java.util.Set;
 @Table( name = "bees_product" )
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO extends AbstractDomainEntity {
+public class ProductDTO extends AbstractDomainEntity implements Searchable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -61,6 +64,15 @@ public class ProductDTO extends AbstractDomainEntity {
 		product.setDescription( description );
 
 		return product;
+	}
+
+	@Override
+	public SearchDocument toSearchDocument() {
+		SearchDocument document = new SearchDocument(EntityType.PRODUCT, productKey);
+
+		document.setTitle(title);
+
+		return document;
 	}
 
 	/**

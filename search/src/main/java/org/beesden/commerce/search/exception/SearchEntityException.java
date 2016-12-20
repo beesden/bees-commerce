@@ -1,7 +1,7 @@
 package org.beesden.commerce.search.exception;
 
 import lombok.Getter;
-import org.beesden.common.model.EntityReference;
+import org.beesden.commerce.common.model.EntityReference;
 
 /**
  * An exception which is thrown when an error occurs when adding an entity to the index.

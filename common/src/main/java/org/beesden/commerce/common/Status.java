@@ -1,4 +1,4 @@
-package org.beesden.common;
+package org.beesden.commerce.common;
 
 public enum Status {
 

@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.beesden.common.domain.AbstractDomainEntity;
-import org.beesden.common.model.Category;
+import org.beesden.commerce.common.domain.AbstractDomainEntity;
+import org.beesden.commerce.common.model.Category;
 
 import javax.persistence.*;
 import java.util.Set;

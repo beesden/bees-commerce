@@ -1,7 +1,7 @@
-package org.beesden.common.domain;
+package org.beesden.commerce.common.domain;
 
 import lombok.Data;
-import org.beesden.common.Status;
+import org.beesden.commerce.common.Status;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;

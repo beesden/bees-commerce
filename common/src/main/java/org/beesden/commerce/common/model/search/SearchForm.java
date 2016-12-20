@@ -5,15 +5,17 @@
  *
  * @generated
  */
-package org.beesden.common.model.search;
+package org.beesden.commerce.common.model.search;
 
 import lombok.Data;
-import org.beesden.common.model.EntityType;
-import org.beesden.common.model.PagedRequest;
+import lombok.EqualsAndHashCode;
+import org.beesden.commerce.common.model.EntityType;
+import org.beesden.commerce.common.model.PagedRequest;
 
 import java.util.Set;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class SearchForm extends PagedRequest {
 
 	private String term;

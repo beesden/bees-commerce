@@ -5,7 +5,7 @@
  *
  * @generated
  */
-package org.beesden.common.model.search;
+package org.beesden.commerce.common.model.search;
 
 import lombok.Data;
 

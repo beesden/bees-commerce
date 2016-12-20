@@ -1,12 +1,12 @@
 package org.beesden.commerce.search;
 
-import org.beesden.common.Utils;
-import org.beesden.common.client.SearchClient;
-import org.beesden.common.model.EntityReference;
-import org.beesden.common.model.EntityType;
-import org.beesden.common.model.search.SearchDocument;
-import org.beesden.common.model.search.SearchForm;
-import org.beesden.common.model.search.SearchResultWrapper;
+import org.beesden.commerce.common.Utils;
+import org.beesden.commerce.common.client.SearchClient;
+import org.beesden.commerce.common.model.EntityReference;
+import org.beesden.commerce.common.model.EntityType;
+import org.beesden.commerce.common.model.search.SearchDocument;
+import org.beesden.commerce.common.model.search.SearchForm;
+import org.beesden.commerce.common.model.search.SearchResultWrapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

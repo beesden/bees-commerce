@@ -13,18 +13,3 @@ public class CatalogueApplication {
 		SpringApplication.run( CatalogueApplication.class, args );
 	}
 }
-
-//@Controller
-//class CatalogueController {
-//
-//	@Autowired
-//	private SearchClient searchClient;
-//
-//	@RequestMapping( "/search" )
-//	@ResponseBody
-//	public SearchResultWrapper contributors() {
-//		return searchClient.performSearch( new SearchForm() );
-//	}
-//
-//}
-

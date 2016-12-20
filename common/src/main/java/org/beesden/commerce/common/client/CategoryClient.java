@@ -1,13 +1,17 @@
-package org.beesden.common.client;
+package org.beesden.commerce.common.client;
 
-import org.beesden.common.model.Category;
-import org.beesden.common.model.PagedRequest;
-import org.beesden.common.model.PagedResponse;
-import org.springframework.web.bind.annotation.*;
+import org.beesden.commerce.common.model.Category;
+import org.beesden.commerce.common.model.PagedRequest;
+import org.beesden.commerce.common.model.PagedResponse;
+import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
-@RestController
+@FeignClient
 @RequestMapping( "/categories" )
 public interface CategoryClient {
 

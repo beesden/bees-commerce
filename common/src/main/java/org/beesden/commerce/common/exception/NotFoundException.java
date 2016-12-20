@@ -1,8 +1,8 @@
-package org.beesden.common.exception;
+package org.beesden.commerce.common.exception;
 
 import lombok.Getter;
-import org.beesden.common.model.EntityReference;
-import org.beesden.common.model.EntityType;
+import org.beesden.commerce.common.model.EntityReference;
+import org.beesden.commerce.common.model.EntityType;
 
 public class NotFoundException extends RuntimeException {
 

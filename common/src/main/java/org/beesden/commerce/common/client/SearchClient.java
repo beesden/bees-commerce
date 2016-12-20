@@ -1,9 +1,9 @@
-package org.beesden.common.client;
+package org.beesden.commerce.common.client;
 
-import org.beesden.common.model.EntityReference;
-import org.beesden.common.model.search.SearchDocument;
-import org.beesden.common.model.search.SearchForm;
-import org.beesden.common.model.search.SearchResultWrapper;
+import org.beesden.commerce.common.model.EntityReference;
+import org.beesden.commerce.common.model.search.SearchDocument;
+import org.beesden.commerce.common.model.search.SearchForm;
+import org.beesden.commerce.common.model.search.SearchResultWrapper;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
