@@ -71,7 +71,7 @@ public class SearchController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/")
-	public SearchResultWrapper performSearch( SearchForm searchForm ) {
+	public SearchResultWrapper performSearch(@Valid @RequestBody SearchForm searchForm) {
 
 		SearchResultWrapper resultWrapper = new SearchResultWrapper();
 
@@ -177,7 +177,7 @@ public class SearchController {
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/entities")
-	public void removeFromIndex( EntityReference entity ) {
+	public void removeFromIndex(@Valid @RequestBody EntityReference entity) {
 
 		try {
 			IndexWriter writer = new IndexWriter( index, new IndexWriterConfig( analyzer ) );

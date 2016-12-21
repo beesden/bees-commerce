@@ -1,7 +1,8 @@
-package org.beesden.commerce.catalogue.client;
+package org.beesden.commerce.catalogue.service.impl;
 
 import org.beesden.commerce.catalogue.dao.ProductRepository;
 import org.beesden.commerce.catalogue.domain.ProductDTO;
+import org.beesden.commerce.catalogue.service.ProductService;
 import org.beesden.commerce.common.client.SearchClient;
 import org.beesden.commerce.common.exception.NotFoundException;
 import org.beesden.commerce.common.model.EntityType;
@@ -23,13 +24,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class ProductController {
+public class ProductServiceImpl implements ProductService {
 
 	private ProductRepository productRepository;
 	private SearchClient searchClient;
 
 	@Autowired
-	public ProductController(ProductRepository productRepository, SearchClient searchClient) {
+	public ProductServiceImpl(ProductRepository productRepository, SearchClient searchClient) {
 		this.productRepository = productRepository;
 		this.searchClient = searchClient;
 	}
@@ -63,7 +64,10 @@ public class ProductController {
 	public PagedResponse<Product> listProducts(@Valid PagedRequest pagination) {
 
 		Page<ProductDTO> pagedProducts = productRepository.findAll(pagination.toPageable());
-		List<Product> productList = pagedProducts.getContent().stream().map(ProductDTO::toProduct).collect(Collectors.toList());
+		List<Product> productList = pagedProducts.getContent()
+												 .stream()
+												 .map(ProductDTO::toProduct)
+												 .collect(Collectors.toList());
 
 		return new PagedResponse<>(productList, pagedProducts.getTotalElements());
 	}
