@@ -3,7 +3,7 @@
 <html lang="" data-ng-app="cms">
 
 <head>
-    <title data-ng-bind="( pageTitle || 'Welcome' ) + ' | Pulse CMS'">Pulse CMS</title>
+    <title data-ng-bind="( pageTitle || 'Welcome' ) + ' | Beesden Shop Admin'">Beesden Shop Admin</title>
 
     <meta charset="utf-8">
     <meta name="description" content="">

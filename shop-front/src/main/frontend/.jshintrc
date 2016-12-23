@@ -1,0 +1,18 @@
+{
+  "curly": true,
+  "globalstrict": true,
+  "forin": true,
+  "funcscope": true,
+  "maxdepth": 4,
+  "devel": false,
+  "globals": {
+    "angular": false,
+    "describe": false,
+    "it": false,
+    "expect": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "module": false,
+    "inject": false
+  }
+}
