@@ -15,4 +15,5 @@ public interface CategoryService {
 	PagedResponse<Category> listCategories(PagedRequest pagination);
 
 	String updateCategory(String categoryId, Category category);
+
 }

@@ -28,10 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,7 +47,7 @@ public class SearchController {
 
 	private Map<String, Map<String, Integer>> buildFacets(List<FacetResult> facets) {
 		return facets.stream()
-					 .filter(facet -> facet != null)
+					 .filter(Objects::nonNull)
 					 .collect(Collectors.toMap(facet -> facet.dim, facet -> Arrays.stream(facet.labelValues)
 																				  .collect(Collectors.toMap(fa -> fa.label, fa -> fa.value
 																						  .intValue()))));

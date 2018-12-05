@@ -1,9 +1,25 @@
 # bees-commerce
-Sample cloud based e-commerce software using a range of technologies.
-All applications can be built via `mvn clean install`
+
+Suite of eCommerce microservices.
+
+## Installation Steps
+
+### Docker
+```
+# Build packages and dependencies
+$ docker run -it --name bees-commerce-builder -v "$PWD":/usr/src/app -v bees-commerce_m2:/root/.m2 -w /usr/src/app --rm maven mvn clean install
+
+# Run applications
+docker-compose up [services]
+
+```
+
+## Available services
  
 ## commerce-shop
+
 *Spring Boot / Spring Data.*
+
  Main e-commerce API for managing products, categories and orders.
  
 ## search
