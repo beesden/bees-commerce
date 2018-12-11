@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: search
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_SERVER:http://localhost:8761/eureka}
+
+logging:
+  level:
+    org.springframework.web: WARN
+    org.hibernate: WARN
+
+lucene:
+  directory: ${LUCENE_HOME:./lucene}
+
+server:
+  port: 0

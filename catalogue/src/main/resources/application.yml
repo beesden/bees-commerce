@@ -19,8 +19,8 @@ eureka:
 logging:
   level:
     com.netflix: WARN
-    org.springframework.web: INFO
-    org.hibernate: OFF
+    org.springframework.web: WARN
+    org.hibernate: WARN
 
 server:
   port: 0

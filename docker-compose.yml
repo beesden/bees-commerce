@@ -24,7 +24,6 @@ services:
       - "3306:3306"
 
   catalogue:
-    build: ./catalogue
     command: java -jar catalogue.jar
     depends_on:
       - register
@@ -40,3 +39,19 @@ services:
     volumes:
       - ./catalogue/target:/app
     working_dir: /app
+
+  search:
+    command: java -jar search.jar
+    depends_on:
+    - register
+    environment:
+      DISCOVERY_SERVER: 'http://register:8761/eureka'
+      LUCENE_HOME: /lucene
+    image: java:8
+    volumes:
+    - ./search/target:/app
+    - search_index:/lucene
+    working_dir: /app
+
+volumes:
+  search_index:

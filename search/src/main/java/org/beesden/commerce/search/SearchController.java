@@ -206,12 +206,12 @@ public class SearchController {
 
 			// Populate additional fields
 			if (searchDocument.getFacets() != null) {
-				searchDocument.getFacets().entrySet().forEach(f -> {
-					facetConfig.setMultiValued(f.getKey(), true);
-					if (Utils.notNullOrEmpty(f.getValue())) {
-						f.getValue().forEach(val -> {
-							document.add(new FacetField(f.getKey(), val));
-							document.add(new StoredField(f.getKey(), val));
+				searchDocument.getFacets().forEach((key, value) -> {
+					facetConfig.setMultiValued(key, true);
+					if (Utils.notNullOrEmpty(value)) {
+						value.forEach(val -> {
+							document.add(new FacetField(key, val));
+							document.add(new StoredField(key, val));
 						});
 					}
 				});
