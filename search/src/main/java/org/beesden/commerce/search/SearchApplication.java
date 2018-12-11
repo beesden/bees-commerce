@@ -32,7 +32,7 @@ public class SearchApplication {
 
     @Bean(name = "taxonomy")
     public Directory facetDirectory() throws IOException {
-        return FSDirectory.open(new File(indexDirectory + "/taxonocçmy").toPath());
+        return FSDirectory.open(new File(indexDirectory + "/taxonomy").toPath());
     }
 
 }
