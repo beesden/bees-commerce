@@ -26,7 +26,6 @@ public class SearchApplication {
 
     @Bean(name = "index")
     public Directory indexDirectory() throws IOException {
-        System.out.println(indexDirectory);
         return FSDirectory.open(new File(indexDirectory + "/index").toPath());
     }
 
