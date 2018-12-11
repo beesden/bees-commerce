@@ -4,7 +4,7 @@ import org.beesden.commerce.common.model.EntityReference;
 import org.beesden.commerce.common.model.search.SearchDocument;
 import org.beesden.commerce.common.model.search.SearchForm;
 import org.beesden.commerce.common.model.search.SearchResultWrapper;
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

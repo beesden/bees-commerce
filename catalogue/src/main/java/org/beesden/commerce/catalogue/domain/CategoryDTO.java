@@ -1,11 +1,11 @@
-package org.beesden.commerce.content.domain;
+package org.beesden.commerce.catalogue.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.beesden.commerce.common.model.commerce.Category;
 import org.beesden.commerce.common.domain.AbstractDomainEntity;
-import org.beesden.commerce.content.model.Category;
 
 import javax.persistence.*;
 import java.util.Set;

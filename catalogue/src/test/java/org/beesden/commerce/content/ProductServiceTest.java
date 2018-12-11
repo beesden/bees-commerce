@@ -3,7 +3,7 @@
 //import org.beesden.commerce.common.exception.NotFoundException;
 //import org.beesden.commerce.common.model.PagedRequest;
 //import org.beesden.commerce.common.model.PagedResponse;
-//import org.beesden.commerce.content.model.Product;
+//import Product;
 //import org.junit.*;
 //import org.junit.Before;
 //import org.junit.Test;

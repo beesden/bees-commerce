@@ -39,7 +39,7 @@ public class ContentServiceImpl implements ContentService {
 
 	@Override
 	public void deleteContent(long contentId) {
-		contentRepository.delete(contentId);
+//		contentRepository.delete(contentId);
 	}
 
 	@Override

@@ -7,6 +7,8 @@
  */
 package org.beesden.commerce.common.model.search;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.beesden.commerce.common.model.EntityReference;
@@ -17,7 +19,9 @@ import java.util.Map;
 import java.util.Set;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class SearchDocument {
 
     private EntityReference entity;

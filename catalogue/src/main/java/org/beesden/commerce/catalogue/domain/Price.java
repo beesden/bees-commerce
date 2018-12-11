@@ -1,4 +1,4 @@
-package org.beesden.commerce.content.domain;
+package org.beesden.commerce.catalogue.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

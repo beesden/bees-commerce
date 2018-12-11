@@ -1,0 +1,10 @@
+org/beesden/commerce/content/domain/ContentFieldDTO.class
+org/beesden/commerce/content/service/ContentService.class
+org/beesden/commerce/content/dao/ContentRepository.class
+org/beesden/commerce/content/service/impl/ContentServiceImpl.class
+org/beesden/commerce/content/domain/ContentDTO.class
+org/beesden/commerce/content/dao/ContentTypeRepository.class
+org/beesden/commerce/content/domain/ContentTypeDTO.class
+org/beesden/commerce/content/domain/ContentFieldValueDTO.class
+org/beesden/commerce/content/dao/ContentFieldRepository.class
+org/beesden/commerce/content/model/Content.class
