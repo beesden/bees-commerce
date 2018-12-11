@@ -21,12 +21,12 @@
 //import static org.assertj.core.api.Assertions.assertThat;
 //
 //@RunWith( SpringRunner.class )
-//public class SearchControllerTest {
+//api class SearchControllerTest {
 //
 //	private SearchController searchController = new SearchController(new RAMDirectory(), new RAMDirectory());
 //
 //	@Test
-//	public void facetsTest() throws Exception {
+//	api void facetsTest() throws Exception {
 //
 //		SearchForm searchForm = new SearchForm();
 //		SearchResultWrapper results;
@@ -69,7 +69,7 @@
 //	}
 //
 //	@Test
-//	public void indexDocumentTest() {
+//	api void indexDocumentTest() {
 //
 //		SearchDocument document = new SearchDocument();
 //		document.setEntity( new EntityReference( EntityType.CATEGORY, "accessories" ) );
@@ -102,7 +102,7 @@
 //	}
 //
 //	@Test
-//	public void keywordSearchTest() {
+//	api void keywordSearchTest() {
 //
 //		SearchForm searchForm = new SearchForm();
 //		SearchResultWrapper results;
@@ -135,7 +135,7 @@
 //	}
 //
 //	@Test
-//	public void paginationTest() {
+//	api void paginationTest() {
 //
 //		SearchForm searchForm = new SearchForm();
 //		SearchResultWrapper results;
@@ -160,7 +160,7 @@
 //	}
 //
 //	@PostConstruct
-//	public void populateIndex() {
+//	api void populateIndex() {
 //
 //		searchController.clearIndex();
 //		SearchDocument document = new SearchDocument();

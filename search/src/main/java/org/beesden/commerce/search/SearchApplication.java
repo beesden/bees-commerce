@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import java.io.File;
 import java.io.IOException;
 
-@EnableDiscoveryClient
 @EnableFeignClients
 @SpringBootApplication
 public class SearchApplication {

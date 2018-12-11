@@ -13,6 +13,7 @@ import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.beesden.commerce.common.Utils;
+import org.beesden.commerce.common.client.SearchClient;
 import org.beesden.commerce.common.model.EntityReference;
 import org.beesden.commerce.common.model.search.SearchDocument;
 import org.beesden.commerce.common.model.search.SearchForm;
@@ -32,7 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-public class SearchController {
+public class SearchController implements SearchClient {
 
     private FacetsConfig facetConfig = new FacetsConfig();
     private Analyzer analyzer = new StandardAnalyzer();
@@ -53,7 +54,6 @@ public class SearchController {
                                 .intValue()))));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/")
     public void clearIndex() {
 
         try {
@@ -68,7 +68,6 @@ public class SearchController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/")
     public SearchResultWrapper performSearch(@Valid @RequestBody SearchForm searchForm) {
 
         SearchResultWrapper resultWrapper = new SearchResultWrapper();
@@ -168,7 +167,6 @@ public class SearchController {
         return resultWrapper;
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/entities")
     public void removeFromIndex(@Valid @RequestBody EntityReference entity) {
 
         try {
@@ -188,7 +186,6 @@ public class SearchController {
 
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/entities")
     public void submitToIndex(@Valid @RequestBody SearchDocument searchDocument) {
 
         removeFromIndex(searchDocument.getEntity());

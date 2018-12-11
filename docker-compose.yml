@@ -8,9 +8,9 @@ services:
       DISCOVERY_PORT: 8761
     image: java:8
     ports:
-      - "8761:8761"
+    - "8761:8761"
     volumes:
-      - ./service-register/target:/app
+    - ./service-register/target:/app
     working_dir: /app
 
   database:
@@ -21,13 +21,13 @@ services:
       MYSQL_DATABASE: 'bees_commerce'
     image: mysql:5
     ports:
-      - "3306:3306"
+    - "3306:3306"
 
   catalogue:
     command: java -jar catalogue.jar
     depends_on:
-      - register
-      - database
+    - register
+    - database
     environment:
       DATABASE_HOST: 'database'
       DATABASE_PORT: '3306'
@@ -37,7 +37,7 @@ services:
       DISCOVERY_SERVER: 'http://register:8761/eureka'
     image: java:8
     volumes:
-      - ./catalogue/target:/app
+    - ./catalogue/target:/app
     working_dir: /app
 
   search:
@@ -51,6 +51,17 @@ services:
     volumes:
     - ./search/target:/app
     - search_index:/lucene
+    working_dir: /app
+
+  public_api:
+    command: java -jar public-api.jar
+    depends_on:
+    - register
+    environment:
+      DISCOVERY_SERVER: 'http://register:8761/eureka'
+    image: java:8
+    volumes:
+    - ./search/public-api:/app
     working_dir: /app
 
 volumes:

@@ -18,13 +18,13 @@
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@ActiveProfiles("test")
 //@Transactional
-//public class CategoryServiceTest {
+//api class CategoryServiceTest {
 //
 //    private Category category1 = new Category();
 //    private Category category2 = new Category();
 //    private Category category3 = new Category();
 //
-//    public void beforeEach() {
+//    api void beforeEach() {
 //        // Category 1
 //        category1.setId("accessories");
 //        category1.setTitle("Test Accessories");
@@ -42,7 +42,7 @@
 //    private CategoryController categoryController;
 //
 //    @Test(expected = NotFoundException.class)
-//    public void categoryNotFound() throws Exception {
+//    api void categoryNotFound() throws Exception {
 //        categoryController.getCategory("NOPE");
 //    }
 //
@@ -51,7 +51,7 @@
 ////    }
 ////
 ////    @Test
-////    public void createCategory() throws Exception {
+////    api void createCategory() throws Exception {
 ////        categoryClient.createCategory(category3);
 ////        Category createdCategory = categoryClient.getCategory(category3.getId());
 ////
@@ -60,19 +60,19 @@
 ////    }
 ////
 ////    @Test
-////    public void deleteCategory() throws Exception {
+////    api void deleteCategory() throws Exception {
 ////        categoryClient.deleteCategory(category1.getId());
 ////        Assert.assertEquals(1, countCategories());
 ////    }
 ////
 ////    @Test
-////    public void getCategory() throws Exception {
+////    api void getCategory() throws Exception {
 ////        Category category = categoryClient.getCategory(category1.getId());
 ////        Assert.assertTrue(category1.equals(category));
 ////    }
 ////
 ////    @Test
-////    public void listCategories() throws Exception {
+////    api void listCategories() throws Exception {
 ////        PagedResponse<Category> categoryList = categoryClient.listCategories(new PagedRequest());
 ////
 ////        Assert.assertEquals(categoryList.getTotal(), 2);
@@ -81,13 +81,13 @@
 ////    }
 ////
 ////    @Before
-////    public void setup() throws Exception {
+////    api void setup() throws Exception {
 ////        categoryClient.createCategory(category1);
 ////        categoryClient.createCategory(category2);
 ////    }
 ////
 ////    @Test
-////    public void updateCategory() throws Exception {
+////    api void updateCategory() throws Exception {
 ////        Category category = categoryClient.getCategory(category1.getId());
 ////        Assert.assertTrue(category1.equals(category));
 ////

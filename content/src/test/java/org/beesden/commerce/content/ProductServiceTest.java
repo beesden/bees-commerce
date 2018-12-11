@@ -19,7 +19,7 @@
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ActiveProfiles( "test" )
 //@Transactional
-//public class ProductServiceTest {
+//api class ProductServiceTest {
 //
 //	private static final Product TEST_PRODUCT_1 = new Product();
 //	private static final Product TEST_PRODUCT_2 = new Product();
@@ -47,7 +47,7 @@
 //	}
 //
 //	@Test
-//	public void createProduct() throws Exception {
+//	api void createProduct() throws Exception {
 //		productClient.createProduct( TEST_PRODUCT_3 );
 //		Product createdProduct = productClient.getProduct( TEST_PRODUCT_3.getId() );
 //
@@ -56,19 +56,19 @@
 //	}
 //
 //	@Test
-//	public void deleteProduct() throws Exception {
+//	api void deleteProduct() throws Exception {
 //		productClient.deleteProduct( TEST_PRODUCT_1.getId() );
 //		Assert.assertEquals( 1, countProducts() );
 //	}
 //
 //	@Test
-//	public void getProduct() throws Exception {
+//	api void getProduct() throws Exception {
 //		Product product = productClient.getProduct( TEST_PRODUCT_1.getId() );
 //		Assert.assertTrue( TEST_PRODUCT_1.equals( product ) );
 //	}
 //
 //	@Test
-//	public void listProducts() throws Exception {
+//	api void listProducts() throws Exception {
 //		PagedResponse<Product> productList = productClient.listProducts( new PagedRequest() );
 //
 //		Assert.assertEquals( productList.getTotal(), 2 );
@@ -77,18 +77,18 @@
 //	}
 //
 //	@Test( expected = NotFoundException.class )
-//	public void productNotFound() throws Exception {
+//	api void productNotFound() throws Exception {
 //		productClient.getProduct( "NOPE" );
 //	}
 //
 //	@Before
-//	public void setup() throws Exception {
+//	api void setup() throws Exception {
 //		productClient.createProduct( TEST_PRODUCT_1 );
 //		productClient.createProduct( TEST_PRODUCT_2 );
 //	}
 //
 //	@Test
-//	public void updateProduct() throws Exception {
+//	api void updateProduct() throws Exception {
 //		Product product = productClient.getProduct( TEST_PRODUCT_1.getId() );
 //		Assert.assertTrue( TEST_PRODUCT_1.equals( product ) );
 //

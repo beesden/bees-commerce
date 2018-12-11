@@ -18,7 +18,7 @@
 //@SpringBootTest( webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT )
 //@ActiveProfiles( "test" )
 //@Transactional
-//public class CategoryServiceTest {
+//api class CategoryServiceTest {
 //
 //	private static final Content TEST_CATEGORY_1 = new Content();
 //	private static final Content TEST_CATEGORY_2 = new Content();
@@ -42,7 +42,7 @@
 //	private CategoryClient categoryClient;
 //
 //	@Test( expected = NotFoundException.class )
-//	public void categoryNotFound() throws Exception {
+//	api void categoryNotFound() throws Exception {
 //		categoryClient.getCategory( "NOPE" );
 //	}
 //
@@ -51,7 +51,7 @@
 //	}
 //
 //	@Test
-//	public void createCategory() throws Exception {
+//	api void createCategory() throws Exception {
 //		categoryClient.createCategory( TEST_CATEGORY_3 );
 //		Content createdCategory = categoryClient.getCategory( TEST_CATEGORY_3.getId() );
 //
@@ -60,19 +60,19 @@
 //	}
 //
 //	@Test
-//	public void deleteCategory() throws Exception {
+//	api void deleteCategory() throws Exception {
 //		categoryClient.deleteCategory( TEST_CATEGORY_1.getId() );
 //		Assert.assertEquals( 1, countCategories() );
 //	}
 //
 //	@Test
-//	public void getCategory() throws Exception {
+//	api void getCategory() throws Exception {
 //		Content category = categoryClient.getCategory( TEST_CATEGORY_1.getId() );
 //		Assert.assertTrue( TEST_CATEGORY_1.equals( category ) );
 //	}
 //
 //	@Test
-//	public void listCategories() throws Exception {
+//	api void listCategories() throws Exception {
 //		PagedResponse<Content> categoryList = categoryClient.listCategories( new PagedRequest() );
 //
 //		Assert.assertEquals( categoryList.getTotal(), 2 );
@@ -81,13 +81,13 @@
 //	}
 //
 //	@Before
-//	public void setup() throws Exception {
+//	api void setup() throws Exception {
 //		categoryClient.createCategory( TEST_CATEGORY_1 );
 //		categoryClient.createCategory( TEST_CATEGORY_2 );
 //	}
 //
 //	@Test
-//	public void updateCategory() throws Exception {
+//	api void updateCategory() throws Exception {
 //		Content category = categoryClient.getCategory( TEST_CATEGORY_1.getId() );
 //		Assert.assertTrue( TEST_CATEGORY_1.equals( category ) );
 //

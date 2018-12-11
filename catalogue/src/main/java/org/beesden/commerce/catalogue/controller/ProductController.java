@@ -2,6 +2,7 @@ package org.beesden.commerce.catalogue.controller;
 
 import org.beesden.commerce.catalogue.dao.ProductRepository;
 import org.beesden.commerce.catalogue.domain.ProductDTO;
+import org.beesden.commerce.common.client.ProductClient;
 import org.beesden.commerce.common.exception.NotFoundException;
 import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;

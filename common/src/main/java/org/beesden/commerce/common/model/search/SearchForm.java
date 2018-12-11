@@ -7,6 +7,7 @@
  */
 package org.beesden.commerce.common.model.search;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.beesden.commerce.common.model.EntityType;
