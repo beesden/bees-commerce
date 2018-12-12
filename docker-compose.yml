@@ -50,6 +50,7 @@ services:
     image: java:8
     volumes:
     - ./search/target:/app
+    - search_index:/lucene
     working_dir: /app
 
   public-api:
