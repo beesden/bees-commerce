@@ -13,78 +13,76 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/product")
-public class ProductController {
+public class ProductController implements ProductClient {
 
-	private ProductRepository productRepository;
+    private ProductRepository productRepository;
 
-	@Autowired
-	ProductController(ProductRepository productRepository) {
-		this.productRepository = productRepository;
-	}
+    @Autowired
+    ProductController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String createProduct(@Valid @RequestBody Product product) {
+    public void createProduct(@Valid @RequestBody Product product) {
 
-		ProductDTO createdProduct = new ProductDTO();
-		createdProduct.update(product);
-		createdProduct.updateTimestamps();
+        ProductDTO target = productRepository.findOneByProductKey(product.getId());
+        if (target == null) {
+            target = new ProductDTO();
+            target.setCreated(LocalDateTime.now());
+            target.setCreatedBy("testuser");
+        }
 
-		createdProduct = productRepository.save(createdProduct);
-		return createdProduct.getProductKey();
+        target.update(product);
+        productRepository.save(target);
 
-	}
+    }
 
-	@RequestMapping(value = "/{productKey}", method = RequestMethod.DELETE)
-	public void deleteProduct(@PathVariable String productKey) {
+    public void deleteProduct(@PathVariable String productKey) {
 
-		productRepository.deleteByProductKey(productKey);
+        productRepository.deleteByProductKey(productKey);
 
-	}
+    }
 
-	@RequestMapping(value = "/{productKey}", method = RequestMethod.GET)
-	public Product getProduct(@PathVariable String productKey) {
+    public Product getProduct(@PathVariable String productKey) {
 
-		ProductDTO product = productRepository.findOneByProductKey(productKey);
-		// todo - abstract
-		if (product == null) {
-			throw new NotFoundException(EntityType.PRODUCT, productKey);
-		}
+        ProductDTO product = productRepository.findOneByProductKey(productKey);
+        // todo - abstract
+        if (product == null) {
+            throw new NotFoundException(EntityType.PRODUCT, productKey);
+        }
 
-		return product.toProduct();
+        return product.toProduct();
 
-	}
+    }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public PagedResponse<Product> listProducts(@Valid PagedRequest pagination) {
+    public PagedResponse<Product> listProducts(@Valid PagedRequest pagination) {
 
-		Page<ProductDTO> pagedProducts = productRepository.findAll(pagination.toPageable());
-		List<Product> productList = pagedProducts.getContent()
-				.stream()
-				.map(ProductDTO::toProduct)
-				.collect(Collectors.toList());
+        Page<ProductDTO> pagedProducts = productRepository.findAll(pagination.toPageable());
+        List<Product> productList = pagedProducts.getContent()
+                .stream()
+                .map(ProductDTO::toProduct)
+                .collect(Collectors.toList());
 
-		return new PagedResponse<>(productList, pagedProducts.getTotalElements());
+        return new PagedResponse<>(productList, pagedProducts.getTotalElements());
 
-	}
+    }
 
-	@RequestMapping(value = "/{productKey}", method = RequestMethod.PUT)
-	public void updateProduct(@PathVariable String productKey, @Valid @RequestBody Product product) {
+    public void updateProduct(@PathVariable String productKey, @Valid @RequestBody Product product) {
 
-		ProductDTO target = productRepository.findOneByProductKey(productKey);
-		// todo - abstract
-		if (target == null) {
-			throw new NotFoundException(EntityType.PRODUCT, productKey);
-		}
+        ProductDTO target = productRepository.findOneByProductKey(productKey);
+        // todo - abstract
+        if (target == null) {
+            throw new NotFoundException(EntityType.PRODUCT, productKey);
+        }
 
-		target.update(product);
-		target.updateTimestamps();
-		productRepository.save(target);
+        target.update(product);
+        productRepository.save(target);
 
-	}
+    }
 
 }

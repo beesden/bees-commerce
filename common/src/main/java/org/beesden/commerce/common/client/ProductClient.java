@@ -5,17 +5,16 @@ import org.beesden.commerce.common.model.PagedResponse;
 import org.beesden.commerce.common.model.commerce.Product;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
-@FeignClient("http://product-client")
+@FeignClient("catalogue-client/product")
 public interface ProductClient {
 
     @RequestMapping(method = RequestMethod.POST)
-    String createProduct(Product product);
+    void createProduct(Product product);
 
     @RequestMapping(value = "/{productKey}", method = RequestMethod.DELETE)
     void deleteProduct(@PathVariable("productKey") String productKey);

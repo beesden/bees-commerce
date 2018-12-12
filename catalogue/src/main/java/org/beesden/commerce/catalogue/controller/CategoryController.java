@@ -2,6 +2,8 @@ package org.beesden.commerce.catalogue.controller;
 
 import org.beesden.commerce.catalogue.dao.CategoryRepository;
 import org.beesden.commerce.catalogue.domain.CategoryDTO;
+import org.beesden.commerce.catalogue.domain.ProductDTO;
+import org.beesden.commerce.common.client.CategoryClient;
 import org.beesden.commerce.common.exception.NotFoundException;
 import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;
@@ -12,12 +14,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/category")
-public class CategoryController {
+public class CategoryController implements CategoryClient  {
 
 	private CategoryRepository categoryRepository;
 
@@ -26,40 +29,39 @@ public class CategoryController {
 		this.categoryRepository = categoryRepository;
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String createCategory(@Valid @RequestBody Category category) {
+	public void createCategory(@Valid @RequestBody Category category) {
 
-		CategoryDTO createdCategory = new CategoryDTO();
-		createdCategory.update(category);
-		createdCategory.updateTimestamps();
+		CategoryDTO target = categoryRepository.findOneByCategoryId(category.getId());
+		if (target == null) {
+			target = new CategoryDTO();
+			target.setCreated(LocalDateTime.now());
+			target.setCreatedBy("testuser");
+		}
 
-		createdCategory = categoryRepository.save(createdCategory);
-		return createdCategory.getCategoryId();
-
-	}
-
-	@RequestMapping(value = "/{categoryKey}", method = RequestMethod.DELETE)
-	public void deleteCategory(@PathVariable String categoryKey) {
-
-		categoryRepository.deleteByCategoryId(categoryKey);
+		target.update(category);
+		categoryRepository.save(target);
 
 	}
 
-	@RequestMapping(value = "/{categoryKey}", method = RequestMethod.GET)
-	public Category getCategory(@PathVariable String categoryKey) {
+	public void deleteCategory(@PathVariable String categoryId) {
 
-		CategoryDTO category = categoryRepository.findOneByCategoryId(categoryKey);
+		categoryRepository.deleteByCategoryId(categoryId);
+
+	}
+
+	public Category getCategory(@PathVariable String categoryId) {
+
+		CategoryDTO category = categoryRepository.findOneByCategoryId(categoryId);
 		// todo - abstract
 		if (category == null) {
-			throw new NotFoundException(EntityType.CATEGORY, categoryKey);
+			throw new NotFoundException(EntityType.CATEGORY, categoryId);
 		}
 
 		return category.toCategory();
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public PagedResponse<Category> listCategorys(@Valid PagedRequest pagination) {
+	public PagedResponse<Category> listCategories(@Valid PagedRequest pagination) {
 
 		Page<CategoryDTO> pagedCategorys = categoryRepository.findAll(pagination.toPageable());
 		List<Category> categoryList = pagedCategorys.getContent()
@@ -71,17 +73,15 @@ public class CategoryController {
 
 	}
 
-	@RequestMapping(value = "/{categoryKey}", method = RequestMethod.PUT)
-	public void updateCategory(@PathVariable String categoryKey, @Valid @RequestBody Category category) {
+	public void updateCategory(@PathVariable String categoryId, @Valid @RequestBody Category category) {
 
-		CategoryDTO target = categoryRepository.findOneByCategoryId(categoryKey);
+		CategoryDTO target = categoryRepository.findOneByCategoryId(categoryId);
 		// todo - abstract
 		if (target == null) {
-			throw new NotFoundException(EntityType.CATEGORY, categoryKey);
+			throw new NotFoundException(EntityType.CATEGORY, categoryId);
 		}
 
 		target.update(category);
-		target.updateTimestamps();
 		categoryRepository.save(target);
 
 	}

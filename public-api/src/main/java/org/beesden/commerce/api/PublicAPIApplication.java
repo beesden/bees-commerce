@@ -1,5 +1,6 @@
 package org.beesden.commerce.api;
 
+import org.beesden.commerce.common.client.CategoryClient;
 import org.beesden.commerce.common.client.ProductClient;
 import org.beesden.commerce.common.client.SearchClient;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages={"org.beesden.commerce.common", "org.beesden.commerce.api"})
 @EnableFeignClients(clients = {
         SearchClient.class,
+        CategoryClient.class,
         ProductClient.class
 })
 @SpringBootApplication

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: catalogue
+    name: catalogue-client
   datasource:
     url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:bees_commerce}
     username: ${DATABASE_USER:dbuser}

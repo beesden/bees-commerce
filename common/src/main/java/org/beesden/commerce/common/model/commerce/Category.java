@@ -1,6 +1,8 @@
 package org.beesden.commerce.common.model.commerce;
 
 import lombok.Data;
+import org.beesden.commerce.common.model.EntityReference;
+import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.Searchable;
 import org.beesden.commerce.common.model.search.SearchDocument;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -19,6 +21,7 @@ public class Category implements Searchable {
     public SearchDocument toSearchDocument() {
         return SearchDocument.builder()
                 .title(title)
+                .entity(new EntityReference(EntityType.CATEGORY, id))
                 .build();
     }
 

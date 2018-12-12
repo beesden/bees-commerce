@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
-@FeignClient( "http://search-client" )
+@FeignClient("search-client")
 public interface SearchClient {
 
-	@RequestMapping( method = RequestMethod.DELETE, value = "/" )
-	void clearIndex();
+    @RequestMapping(method = RequestMethod.DELETE, value = "/")
+    void clearIndex();
 
-	@RequestMapping( method = RequestMethod.POST, value = "/" )
-	SearchResultWrapper performSearch( @Valid @RequestBody SearchForm searchForm );
+    @RequestMapping(method = RequestMethod.POST, value = "/")
+    SearchResultWrapper performSearch(@Valid @RequestBody SearchForm searchForm);
 
-	@RequestMapping( method = RequestMethod.DELETE, value = "/entities" )
-	void removeFromIndex( @Valid @RequestBody EntityReference entity );
+    @RequestMapping(method = RequestMethod.DELETE, value = "/results")
+    void removeFromIndex(@Valid @RequestBody EntityReference entity);
 
-	@RequestMapping( method = RequestMethod.POST, value = "/entities" )
-	void submitToIndex( @Valid @RequestBody SearchDocument searchDocument );
+    @RequestMapping(method = RequestMethod.POST, value = "/results")
+    void submitToIndex(@Valid @RequestBody SearchDocument searchDocument);
 
 }

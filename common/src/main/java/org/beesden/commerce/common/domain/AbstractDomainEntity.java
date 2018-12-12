@@ -36,17 +36,8 @@ public abstract class AbstractDomainEntity implements Serializable {
 	@Enumerated( EnumType.STRING )
 	private Status status = Status.DRAFT;
 
-	/**
-	 * Populate timestamps.
-	 */
-	public void updateTimestamps() {
-//		if ( created == null ) {
-//			created = LocalDateTime.now();
-//		}
-//		if ( createdBy == null ) {
-//			createdBy = "testuser";
-//		}
-//		lastEdited = LocalDateTime.now();
-		lastEditedBy = "testUser";
+	public void updateTimestamps(String user) {
+		lastEdited = LocalDateTime.now();
+		lastEditedBy = user;
 	}
 }
