@@ -1,4 +1,4 @@
-package org.beesden.commerce.api.controller;
+package org.beesden.commerce.web.api;
 
 import org.beesden.commerce.common.client.ProductClient;
 import org.beesden.commerce.common.client.SearchClient;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/product")
-public class ProductController {
+@RequestMapping(path = "/api/v1/product")
+public class ProductAPIController {
 
     @Autowired
     SearchClient searchClient;
@@ -19,7 +19,7 @@ public class ProductController {
     @Autowired
     ProductClient productClient;
 
-    @RequestMapping(path = "/{productKey}", method = RequestMethod.GET)
+    @RequestMapping(path = "/product/{productKey}", method = RequestMethod.GET)
     public Product getProduct(@PathVariable String productKey) {
         return productClient.getProduct(productKey);
     }

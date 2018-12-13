@@ -9,6 +9,7 @@ import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
 import org.beesden.commerce.common.model.commerce.Category;
+import org.beesden.commerce.common.util.RequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -61,15 +62,15 @@ public class CategoryController implements CategoryClient  {
 
 	}
 
-	public PagedResponse<Category> listCategories(@Valid PagedRequest pagination) {
+	public PagedResponse<Category> listCategories(@Valid @RequestObject PagedRequest pagination) {
 
-		Page<CategoryDTO> pagedCategorys = categoryRepository.findAll(pagination.toPageable());
-		List<Category> categoryList = pagedCategorys.getContent()
+		Page<CategoryDTO> pagedCategories = categoryRepository.findAll(pagination.toPageable());
+		List<Category> categoryList = pagedCategories.getContent()
 				.stream()
 				.map(CategoryDTO::toCategory)
 				.collect(Collectors.toList());
 
-		return new PagedResponse<>(categoryList, pagedCategorys.getTotalElements());
+		return new PagedResponse<>(categoryList, pagedCategories.getTotalElements());
 
 	}
 

@@ -1,12 +1,12 @@
 package org.beesden.commerce.common.client;
 
+import feign.QueryMap;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
 import org.beesden.commerce.common.model.commerce.Category;
+import org.beesden.commerce.common.util.RequestObject;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -14,7 +14,7 @@ import javax.validation.Valid;
 public interface CategoryClient {
 
     @RequestMapping(method = RequestMethod.POST)
-    void createCategory(Category category);
+    void createCategory(@RequestBody Category category);
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.DELETE)
     void deleteCategory(@PathVariable("categoryId") String categoryId);
@@ -23,9 +23,9 @@ public interface CategoryClient {
     Category getCategory(@PathVariable("categoryId") String categoryId);
 
     @RequestMapping(method = RequestMethod.GET)
-    PagedResponse<Category> listCategories(@Valid PagedRequest pagination);
+    PagedResponse<Category> listCategories(@Valid @RequestParam("pagination") PagedRequest pagination);
 
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.PUT)
-    void updateCategory(@PathVariable("categoryId") String categoryId, Category category);
+    void updateCategory(@PathVariable("categoryId") String categoryId, @RequestBody Category category);
 
 }

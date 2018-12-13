@@ -1,22 +1,16 @@
-package org.beesden.commerce.api.controller;
+package org.beesden.commerce.web.api;
 
 import org.beesden.commerce.common.client.CategoryClient;
 import org.beesden.commerce.common.client.ProductClient;
 import org.beesden.commerce.common.client.SearchClient;
-import org.beesden.commerce.common.model.EntityType;
-import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.commerce.Category;
 import org.beesden.commerce.common.model.commerce.Product;
 import org.beesden.commerce.common.model.search.SearchDocument;
-import org.beesden.commerce.common.model.search.SearchForm;
-import org.beesden.commerce.common.model.search.SearchResultWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.Collections;
 import java.util.HashMap;
 
