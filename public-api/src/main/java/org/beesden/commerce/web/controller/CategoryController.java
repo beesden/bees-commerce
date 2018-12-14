@@ -1,8 +1,6 @@
 package org.beesden.commerce.web.controller;
 
 import org.beesden.commerce.common.model.PagedRequest;
-import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.Category;
 import org.beesden.commerce.web.model.APICategory;
 import org.beesden.commerce.web.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView viewCategories(@Valid PagedRequest request) {
 
-        ModelAndView model = new ModelAndView("category.list");
+        ModelAndView model = new ModelAndView("category_list");
         model.addObject("categories", categoryService.listCategories(request));
         return model;
 
@@ -33,8 +31,16 @@ public class CategoryController {
     @RequestMapping(path = "/{categoryId}", method = RequestMethod.GET)
     public ModelAndView viewCategory(@PathVariable String categoryId, @Valid PagedRequest request) {
 
-        ModelAndView model = new ModelAndView("category.view");
-        model.addObject("category", categoryService.getCategory(categoryId, request));
+        ModelAndView model = new ModelAndView();
+        APICategory category = categoryService.getCategory(categoryId, request);
+
+        if (category != null) {
+            model.addObject("category", category);
+            model.setViewName("category_view");
+        } else {
+            model.setViewName("category_empty");
+        }
+
         return model;
 
     }
