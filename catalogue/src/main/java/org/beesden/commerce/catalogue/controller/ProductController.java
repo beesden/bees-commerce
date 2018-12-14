@@ -4,6 +4,7 @@ import org.beesden.commerce.catalogue.dao.ProductRepository;
 import org.beesden.commerce.catalogue.domain.ProductDTO;
 import org.beesden.commerce.common.client.ProductClient;
 import org.beesden.commerce.common.exception.NotFoundException;
+import org.beesden.commerce.common.exception.UniqueEntityException;
 import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
@@ -35,6 +36,8 @@ public class ProductController implements ProductClient {
             target = new ProductDTO();
             target.setCreated(LocalDateTime.now());
             target.setCreatedBy("testuser");
+        } else {
+            throw new UniqueEntityException(EntityType.PRODUCT, target.getProductKey());
         }
 
         target.update(product);
