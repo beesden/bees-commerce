@@ -2,7 +2,7 @@ spring:
   application:
     name: public-api
   freemarker:
-    template-loader-path: classpath:/templates
+    template-loader-path: classpath:/templated/
     suffix: .ftl
 
 eureka:
@@ -22,7 +22,7 @@ feign:
 logging:
   level:
     com.netflix: WARN
-    org.springframework.web: WARN
+    org.springframework.web: DEBUG
     org.hibernate: WARN
 
 server:
