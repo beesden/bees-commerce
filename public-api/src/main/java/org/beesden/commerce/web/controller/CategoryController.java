@@ -16,8 +16,12 @@ import javax.validation.Valid;
 @RequestMapping(path = "/categories")
 public class CategoryController {
 
+    private CategoryService categoryService;
+
     @Autowired
-    CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView viewCategories(@Valid PagedRequest request) {
@@ -25,7 +29,7 @@ public class CategoryController {
         ModelAndView model = new ModelAndView();
 
         model.addObject("categories", categoryService.listCategories(request));
-        model.setViewName("category.list");
+        model.setViewName("category/list");
 
         return model;
 
@@ -39,9 +43,9 @@ public class CategoryController {
 
         if (category != null) {
             model.addObject("category", category);
-            model.setViewName("category.view");
+            model.setViewName("category/view");
         } else {
-            model.setViewName("category.empty");
+            model.setViewName("category/empty");
         }
 
         return model;

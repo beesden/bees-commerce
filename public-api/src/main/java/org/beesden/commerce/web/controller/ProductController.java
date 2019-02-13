@@ -2,26 +2,62 @@ package org.beesden.commerce.web.controller;
 
 import org.beesden.commerce.common.client.ProductClient;
 import org.beesden.commerce.common.client.SearchClient;
+import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.commerce.Product;
+import org.beesden.commerce.web.model.APICategory;
+import org.beesden.commerce.web.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping(path = "/product")
 public class ProductController {
 
-    @Autowired
-    SearchClient searchClient;
+    private CategoryService categoryService;
+    private ProductClient productClient;
 
     @Autowired
-    ProductClient productClient;
-
-    @RequestMapping(path = "/product/{productKey}", method = RequestMethod.GET)
-    public Product viewProduct(@PathVariable String productKey) {
-        return productClient.getProduct(productKey);
+    public ProductController(CategoryService categoryService, ProductClient productClient) {
+        this.categoryService = categoryService;
+        this.productClient = productClient;
     }
 
+    @RequestMapping(path = "/products/{productKey}", method = RequestMethod.GET)
+    public ModelAndView viewProduct(@PathVariable String productKey) {
+
+        ModelAndView model = new ModelAndView();
+        Product product = productClient.getProduct(productKey);
+
+        if (product != null) {
+            model.addObject("product", product);
+            model.setViewName("product/details");
+        } else {
+            model.setViewName("product/empty");
+        }
+
+        return model;
+
+    }
+
+    @RequestMapping(path = "/categories/{categoryId}/{productKey}", method = RequestMethod.GET)
+    public ModelAndView viewProduct(@PathVariable String categoryId, @PathVariable String productKey) {
+
+        ModelAndView model = new ModelAndView();
+        Product product = productClient.getProduct(productKey);
+
+        if (product != null) {
+            APICategory category = categoryService.getCategory(categoryId, new PagedRequest(0, 6, null));
+            model.addObject("category", category);
+            model.addObject("product", product);
+            model.setViewName("product/details");
+        } else {
+            model.setViewName("product/empty");
+        }
+
+        return model;
+
+    }
 }

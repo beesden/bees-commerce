@@ -7,7 +7,7 @@ Suite of eCommerce microservices.
 ### Docker
 ```
 # Build packages and dependencies
-$ docker run -it --name bees-commerce-builder -v "$PWD":/usr/src/app -v bees-commerce_m2:/root/.m2 -w /usr/src/app --rm maven mvn clean install
+docker run -v $(pwd):/build -v ~/.m2:/root/.m2 --name bees-commerce-builder maven:3.6.0-jdk-8-slim mvn -f /build clean install
 
 # Run applications
 docker-compose up [services]

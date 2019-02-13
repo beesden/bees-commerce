@@ -35,12 +35,6 @@ public class CategoryDTO extends AbstractDomainEntity {
     @Column
     private String title;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "bees_product_category",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<ProductDTO> products;
-
     /**
      * Convert the DTO to a category object.
      *

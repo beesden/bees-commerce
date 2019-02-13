@@ -2,7 +2,7 @@ spring:
   application:
     name: public-api
   freemarker:
-    template-loader-path: classpath:/templated/
+    template-loader-path: classpath:/templates/
     suffix: .ftl
 
 eureka:

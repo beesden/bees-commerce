@@ -61,6 +61,7 @@ public class SearchController implements SearchClient {
             IndexWriter writer = new IndexWriter(index, config);
 
             writer.deleteAll();
+            writer.commit();
             writer.close();
 
         } catch (IOException e) {
@@ -178,6 +179,7 @@ public class SearchController implements SearchClient {
             query.add(new TermQuery(new Term("type", entity.getType().name())), BooleanClause.Occur.MUST);
 
             writer.deleteDocuments(query.build());
+            writer.commit();
             writer.close();
 
         } catch (IOException e) {
@@ -215,7 +217,9 @@ public class SearchController implements SearchClient {
 
             writer.addDocument(facetConfig.build(taxoWriter, document));
 
+            taxoWriter.commit();
             taxoWriter.close();
+            writer.commit();
             writer.close();
 
         } catch (IOException e) {
