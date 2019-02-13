@@ -78,9 +78,19 @@
 
 
     <aside class="related-products" data-js="product__recent" data-product__id="${product.id}">
-        <#--
-        <product:relations type="RP_YOU_MAY_ALSO_LIKE" />
-        -->
+        <h2>Related products</h2>
+
+        <section class="product-grid">
+            <#list category.products.results as related>
+                <#if product.id != related.id>
+                    <a class="product-link" href="/categories/${category.data.id}/${related.id}">
+                        <img class="product-image" src="/assets/catalogue/${related.id}_1.jpg" alt="${related.title}"/>
+                        <span class="title">${related.title}</span>
+                        <span class="price">£25.00</span>
+                    </a>
+                </#if>
+            </#list>
+        </section>
     </aside>
 
 </@layoutDefault>
