@@ -9,6 +9,9 @@
     --color-title: #000;
     --color-text: #555;
     --color-primary: #D50058;
+
+    --font-title: 'Nunito Sans', sans-serif;
+    --font-text: 'Lato', sans-serif;
 }
 @font-face {
     font-family: 'icons';
@@ -20,7 +23,7 @@
 body {
     background: #f5f5f5;
     color: var(--color-text);
-    font: 100%/1.5 'Lato', sans-serif;
+    font: 100%/1.5 var(--font-text);
     min-width: 390px;
     overflow-y: scroll
 }
@@ -694,7 +697,7 @@ h1, h2, h3 {
 }
 
 h1 {
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: var(--font-title);
     font-weight: 300;
     font-size: 1.8rem;
     color: #333;
@@ -1843,7 +1846,7 @@ legend {
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    grid-gap: 1rem;
+    grid-gap: 2rem;
     padding: 1rem 0;
 }
 
@@ -1860,12 +1863,14 @@ legend {
 
 .product-link .title {
     color: var(--color-title);
+    font-family: var(--font-title);
     display: block;
+    margin-top: .5rem;
 }
 
 .product-link .price {
     color: var(--color-primary);
     display: block;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
 }
