@@ -26,9 +26,13 @@
         </div>
 
         <div class="column search-results">
-            <ol class="row product-grid" start="1">
+            <section class="product-grid">
                 <#list category.products.results as product>
-                    ${product.title}
+                    <a class="product-link" href="/categories/${category.data.id}/${product.id}">
+                        <img class="product-image" src="/assets/catalogue/${product.id}_1.jpg" alt="${product.title}"/>
+                        <span class="title">${product.title}</span>
+                        <span class="price">£25.00</span>
+                    </a>
                 </#list>
                 <#--
                 <c:forEach items="${results}" var="product">
@@ -36,7 +40,7 @@
                     <search:product imageSize="medium" product="${product}"/>
                 </c:forEach>
                 -->
-            </ol>
+            </section>
         </div>
 
         <div class="column catalogue-info">

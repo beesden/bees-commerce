@@ -1,0 +1,55 @@
+.product {
+    display: flex;
+    flex-direction: row-reverse;
+    font-family: 'Lato', sans-serif;
+    padding: 1rem 0;
+    width: 100%;
+}
+
+.product__details {
+    flex: 350px 0 0;
+}
+
+.product__price {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin:0 0 1rem;
+}
+
+.product__add {
+    background: var(--color-primary);
+    color: #fff;
+    width: 100%;
+    border: 0;
+    padding: 1rem;
+    font: inherit;
+    text-transform: uppercase;
+}
+
+.product__subtitle {
+    margin: 2rem 0 0;
+}
+
+.product__image {
+    flex: 1;
+    padding: 0 2rem 0 1rem;
+}
+
+.product__image img {
+    width: 100%;
+}
+
+.product__alt-images {
+    flex: 80px 0 0;
+}
+
+.product__alt-images ol {
+    list-style: none;
+}
+
+.product__alt-images img {
+    width: 100%;
+    display: block;
+    margin-bottom: 1rem;
+}
