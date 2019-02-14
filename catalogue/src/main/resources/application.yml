@@ -16,6 +16,11 @@ eureka:
     service-url:
       defaultZone: ${DISCOVERY_SERVER:http://localhost:8761/eureka}
 
+feign.client.config:
+  default:
+    connectTimeout: 30000
+    readTimeout: 30000
+
 logging:
   level:
     com.netflix: WARN

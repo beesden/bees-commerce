@@ -1,5 +1,6 @@
 package org.beesden.commerce.catalogue.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.beesden.commerce.catalogue.dao.ProductRepository;
 import org.beesden.commerce.catalogue.domain.Category;
 import org.beesden.commerce.catalogue.domain.Product;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/bootstrap")
 public class BootstrapController {
@@ -42,6 +44,7 @@ public class BootstrapController {
 
             ProductResource productResource = product.toProduct();
             Set<String> categories = product.getCategories().stream().map(Category::getCategoryId).collect(Collectors.toSet());
+            log.info("Product " + products.indexOf(product) + " of " + products.size() + ": " + product.getTitle());
 
             SearchDocument document = productResource.toSearchDocument();
             document.setFacets(new HashMap<>());

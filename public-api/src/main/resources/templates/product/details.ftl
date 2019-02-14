@@ -6,7 +6,7 @@
         <ol>
             <li><a href="/">Home</a></li>
             <#if category??>
-                <li><a href="/categories/${category.data.id}">${category.data.title}</a></li>
+                <li><a href="/categories/${category.id}">${category.title}</a></li>
             <#else>
                 <li><a href="/categories">View all</a></li>
             </#if>
@@ -81,14 +81,12 @@
         <h2>Related products</h2>
 
         <section class="product-grid">
-            <#list category.products.results as related>
-                <#if product.id != related.id>
-                    <a class="product-link" href="/categories/${category.data.id}/${related.id}">
-                        <img class="product-image" src="/assets/catalogue/${related.id}_1.jpg" alt="${related.title}"/>
-                        <span class="title">${related.title}</span>
-                        <span class="price">£25.00</span>
-                    </a>
-                </#if>
+            <#list relatedProducts.results as related>
+                <a class="product-link" href="/categories/${category.id}/${related.id}">
+                    <img class="product-image" src="/assets/catalogue/${related.id}_1.jpg" alt="${related.title}"/>
+                    <span class="title">${related.title}</span>
+                    <span class="price">£25.00</span>
+                </a>
             </#list>
         </section>
     </aside>

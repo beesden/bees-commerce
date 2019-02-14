@@ -49,8 +49,9 @@ public class ProductController {
 
         if (product != null) {
             CategoryResults category = categoryService.getCategory(categoryId, new PagedRequest(0, 6, null));
-            model.addObject("category", category);
             model.addObject("product", product);
+            model.addObject("category", category.getCategory());
+            model.addObject("relatedProducts", category.getProducts());
             model.setViewName("product/details");
         } else {
             model.setViewName("product/empty");

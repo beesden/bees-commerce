@@ -39,10 +39,11 @@ public class CategoryController {
     public ModelAndView viewCategory(@PathVariable String categoryId, @Valid PagedRequest request) {
 
         ModelAndView model = new ModelAndView();
-        CategoryResults results = categoryService.getCategory(categoryId, request);
+        CategoryResults response = categoryService.getCategory(categoryId, request);
 
-        if (results != null) {
-            model.addObject("results", results);
+        if (response != null) {
+            model.addObject("category", response.getCategory());
+            model.addObject("products", response.getProducts());
             model.setViewName("category/view");
         } else {
             model.setViewName("category/empty");

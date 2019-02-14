@@ -21,7 +21,7 @@ services:
       MYSQL_DATABASE: 'bees_commerce'
     image: mysql:5
     volumes:
-      - database_data:/data/mysql
+      - database_data:/var/lib/mysql
     ports:
       - "3306:3306"
 
@@ -48,7 +48,7 @@ services:
       - register
     environment:
       DISCOVERY_SERVER: 'http://register:8761/eureka'
-      LUCENE_HOME: /lucene
+      LUCENE_HOME: /lucene/index
     image: java:8
     volumes:
       - ./search/target:/app

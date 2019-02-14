@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Locale;
 
 @Service
 public class CategoryService {
@@ -33,9 +34,16 @@ public class CategoryService {
 
     public CategoryResults getCategory(String categoryId, PagedRequest request) {
 
-        try {
-            CategoryResource category = categoryClient.getCategory(categoryId);
+        CategoryResource category;
+        SearchResultWrapper products;
 
+        try {
+            category = categoryClient.getCategory(categoryId);
+        } catch (FeignException e) {
+            return null;
+        }
+
+        try {
             SearchForm searchForm = new SearchForm();
             searchForm.setPage(request.getPage());
             searchForm.setResults(request.getResults());
@@ -43,13 +51,13 @@ public class CategoryService {
             searchForm.setTypes(Collections.singleton(EntityType.PRODUCT));
             searchForm.setFacets(Collections.singleton("category:" + categoryId));
 
-            SearchResultWrapper products = searchClient.performSearch(searchForm);
-
-            return new CategoryResults(category, products);
+            products = searchClient.performSearch(searchForm);
 
         } catch (FeignException e) {
-            return null;
+            products = new SearchResultWrapper();
         }
+
+        return new CategoryResults(category, products);
     }
 
 }
