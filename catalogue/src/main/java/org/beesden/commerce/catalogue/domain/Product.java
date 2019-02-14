@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.beesden.commerce.common.model.commerce.Product;
+import org.beesden.commerce.common.model.commerce.ProductResource;
 import org.beesden.commerce.common.domain.AbstractDomainEntity;
 
 import javax.persistence.*;
@@ -16,7 +16,7 @@ import java.util.Set;
 @Table(name = "bees_product")
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO extends AbstractDomainEntity {
+public class Product extends AbstractDomainEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class ProductDTO extends AbstractDomainEntity {
     @JoinTable(name = "bees_product_category",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<CategoryDTO> categories;
+    private Set<Category> categories;
 
     @ElementCollection
     @CollectionTable(name = "bees_product_references", joinColumns = @JoinColumn(name = "product_id"))
@@ -55,27 +55,27 @@ public class ProductDTO extends AbstractDomainEntity {
      *
      * @return product
      */
-    public Product toProduct() {
-        Product product = new Product();
+    public ProductResource toProduct() {
+        ProductResource productResource = new ProductResource();
 
-        product.setId(productKey);
-        product.setTitle(title);
-        product.setSummary(summary);
-        product.setDescription(description);
+        productResource.setId(productKey);
+        productResource.setTitle(title);
+        productResource.setSummary(summary);
+        productResource.setDescription(description);
 
-        return product;
+        return productResource;
     }
 
     /**
-     * Update the DTO with data from a product object.
+     * Update the DTO with data from a productResource object.
      *
-     * @param product product object
+     * @param productResource productResource object
      */
-    public void update(Product product) {
-        productKey = product.getId();
-        title = product.getTitle();
-        summary = product.getSummary();
-        description = product.getDescription();
+    public void update(ProductResource productResource) {
+        productKey = productResource.getId();
+        title = productResource.getTitle();
+        summary = productResource.getSummary();
+        description = productResource.getDescription();
         updateTimestamps("testuser");
     }
 }

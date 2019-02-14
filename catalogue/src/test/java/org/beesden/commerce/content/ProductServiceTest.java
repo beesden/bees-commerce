@@ -3,7 +3,7 @@
 //import org.beesden.commerce.common.exception.NotFoundException;
 //import org.beesden.commerce.common.model.PagedRequest;
 //import org.beesden.commerce.common.model.PagedResponse;
-//import Product;
+//import ProductResource;
 //import org.junit.*;
 //import org.junit.Before;
 //import org.junit.Test;
@@ -21,22 +21,22 @@
 //@Transactional
 //api class ProductServiceTest {
 //
-//	private static final Product TEST_PRODUCT_1 = new Product();
-//	private static final Product TEST_PRODUCT_2 = new Product();
-//	private static final Product TEST_PRODUCT_3 = new Product();
+//	private static final ProductResource TEST_PRODUCT_1 = new ProductResource();
+//	private static final ProductResource TEST_PRODUCT_2 = new ProductResource();
+//	private static final ProductResource TEST_PRODUCT_3 = new ProductResource();
 //
 //	static {
-//		// Product 1
+//		// ProductResource 1
 //		TEST_PRODUCT_1.setId( "p3556" );
-//		TEST_PRODUCT_1.setTitle( "Test Product 1555" );
-//		// Product 2
+//		TEST_PRODUCT_1.setTitle( "Test ProductResource 1555" );
+//		// ProductResource 2
 //		TEST_PRODUCT_2.setId( "p2885" );
 //		TEST_PRODUCT_2.setDescription( "This product has a description" );
-//		TEST_PRODUCT_2.setTitle( "Test Product 1555" );
-//		// Product 3
+//		TEST_PRODUCT_2.setTitle( "Test ProductResource 1555" );
+//		// ProductResource 3
 //		TEST_PRODUCT_3.setId( "p1555" );
 //		TEST_PRODUCT_3.setSummary( "This product has a summary" );
-//		TEST_PRODUCT_3.setTitle( "Test Product 1555" );
+//		TEST_PRODUCT_3.setTitle( "Test ProductResource 1555" );
 //	}
 //
 //	@Autowired
@@ -49,7 +49,7 @@
 //	@Test
 //	api void createProduct() throws Exception {
 //		productClient.createProduct( TEST_PRODUCT_3 );
-//		Product createdProduct = productClient.getProduct( TEST_PRODUCT_3.getId() );
+//		ProductResource createdProduct = productClient.getProduct( TEST_PRODUCT_3.getId() );
 //
 //		Assert.assertTrue( TEST_PRODUCT_3.equals( createdProduct ) );
 //		Assert.assertEquals( 3, countProducts() );
@@ -63,13 +63,13 @@
 //
 //	@Test
 //	api void getProduct() throws Exception {
-//		Product product = productClient.getProduct( TEST_PRODUCT_1.getId() );
+//		ProductResource product = productClient.getProduct( TEST_PRODUCT_1.getId() );
 //		Assert.assertTrue( TEST_PRODUCT_1.equals( product ) );
 //	}
 //
 //	@Test
 //	api void listProducts() throws Exception {
-//		PagedResponse<Product> productList = productClient.listProducts( new PagedRequest() );
+//		PagedResponse<ProductResource> productList = productClient.listProducts( new PagedRequest() );
 //
 //		Assert.assertEquals( productList.getTotal(), 2 );
 //		Assert.assertEquals( productList.getResults().get( 0 ), TEST_PRODUCT_1 );
@@ -89,14 +89,14 @@
 //
 //	@Test
 //	api void updateProduct() throws Exception {
-//		Product product = productClient.getProduct( TEST_PRODUCT_1.getId() );
+//		ProductResource product = productClient.getProduct( TEST_PRODUCT_1.getId() );
 //		Assert.assertTrue( TEST_PRODUCT_1.equals( product ) );
 //
 //		product.setSummary( "This is an updated summary" );
 //		product.setDescription( "This is an updated description" );
 //
 //		productClient.updateProduct( product.getId(), product );
-//		Product updatedProduct = productClient.getProduct( TEST_PRODUCT_1.getId() );
+//		ProductResource updatedProduct = productClient.getProduct( TEST_PRODUCT_1.getId() );
 //		Assert.assertTrue( product.equals( updatedProduct ) );
 //	}
 //}

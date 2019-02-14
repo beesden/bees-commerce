@@ -4,7 +4,7 @@
 //import org.beesden.commerce.common.exception.NotFoundException;
 //import org.beesden.commerce.common.model.PagedRequest;
 //import org.beesden.commerce.common.model.PagedResponse;
-//import org.beesden.commerce.common.model.commerce.Category;
+//import org.beesden.commerce.common.model.commerce.CategoryResource;
 //import org.junit.Assert;
 //import org.junit.Before;
 //import org.junit.Test;
@@ -20,22 +20,22 @@
 //@Transactional
 //api class CategoryServiceTest {
 //
-//    private Category category1 = new Category();
-//    private Category category2 = new Category();
-//    private Category category3 = new Category();
+//    private CategoryResource category1 = new CategoryResource();
+//    private CategoryResource category2 = new CategoryResource();
+//    private CategoryResource category3 = new CategoryResource();
 //
 //    api void beforeEach() {
-//        // Category 1
+//        // CategoryResource 1
 //        category1.setId("accessories");
 //        category1.setTitle("Test Accessories");
-//        // Category 2
+//        // CategoryResource 2
 //        category2.setId("dresses_and_shirts");
-//        category2.setDescription("This category has a description");
+//        category2.setDescription("This categoryResource has a description");
 //        category2.setTitle("Test dresses and shirts");
-//        // Category 3
+//        // CategoryResource 3
 //        category3.setId("1545");
-//        category3.setSummary("This category has a summary");
-//        category3.setTitle("Test Category 1555");
+//        category3.setSummary("This categoryResource has a summary");
+//        category3.setTitle("Test CategoryResource 1555");
 //    }
 //
 //    @Autowired
@@ -53,7 +53,7 @@
 ////    @Test
 ////    api void createCategory() throws Exception {
 ////        categoryClient.createCategory(category3);
-////        Category createdCategory = categoryClient.getCategory(category3.getId());
+////        CategoryResource createdCategory = categoryClient.getCategory(category3.getId());
 ////
 ////        Assert.assertTrue(category3.equals(createdCategory));
 ////        Assert.assertEquals(3, countCategories());
@@ -67,13 +67,13 @@
 ////
 ////    @Test
 ////    api void getCategory() throws Exception {
-////        Category category = categoryClient.getCategory(category1.getId());
-////        Assert.assertTrue(category1.equals(category));
+////        CategoryResource categoryResource = categoryClient.getCategory(category1.getId());
+////        Assert.assertTrue(category1.equals(categoryResource));
 ////    }
 ////
 ////    @Test
 ////    api void listCategories() throws Exception {
-////        PagedResponse<Category> categoryList = categoryClient.listCategories(new PagedRequest());
+////        PagedResponse<CategoryResource> categoryList = categoryClient.listCategories(new PagedRequest());
 ////
 ////        Assert.assertEquals(categoryList.getTotal(), 2);
 ////        Assert.assertEquals(categoryList.getResults().get(0), category1);
@@ -88,14 +88,14 @@
 ////
 ////    @Test
 ////    api void updateCategory() throws Exception {
-////        Category category = categoryClient.getCategory(category1.getId());
-////        Assert.assertTrue(category1.equals(category));
+////        CategoryResource categoryResource = categoryClient.getCategory(category1.getId());
+////        Assert.assertTrue(category1.equals(categoryResource));
 ////
-////        category.setSummary("This is an updated summary");
-////        category.setDescription("This is an updated description");
+////        categoryResource.setSummary("This is an updated summary");
+////        categoryResource.setDescription("This is an updated description");
 ////
-////        categoryClient.updateCategory(category.getId(), category);
-////        Category updatedCategory = categoryClient.getCategory(category1.getId());
-////        Assert.assertTrue(category.equals(updatedCategory));
+////        categoryClient.updateCategory(categoryResource.getId(), categoryResource);
+////        CategoryResource updatedCategory = categoryClient.getCategory(category1.getId());
+////        Assert.assertTrue(categoryResource.equals(updatedCategory));
 ////    }
 //}

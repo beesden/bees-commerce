@@ -1,10 +1,9 @@
 package org.beesden.commerce.web.controller;
 
 import org.beesden.commerce.common.client.ProductClient;
-import org.beesden.commerce.common.client.SearchClient;
 import org.beesden.commerce.common.model.PagedRequest;
-import org.beesden.commerce.common.model.commerce.Product;
-import org.beesden.commerce.web.model.APICategory;
+import org.beesden.commerce.common.model.commerce.ProductResource;
+import org.beesden.commerce.web.model.CategoryResults;
 import org.beesden.commerce.web.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +28,7 @@ public class ProductController {
     public ModelAndView viewProduct(@PathVariable String productKey) {
 
         ModelAndView model = new ModelAndView();
-        Product product = productClient.getProduct(productKey);
+        ProductResource product = productClient.getProduct(productKey);
 
         if (product != null) {
             model.addObject("product", product);
@@ -46,10 +45,10 @@ public class ProductController {
     public ModelAndView viewProduct(@PathVariable String categoryId, @PathVariable String productKey) {
 
         ModelAndView model = new ModelAndView();
-        Product product = productClient.getProduct(productKey);
+        ProductResource product = productClient.getProduct(productKey);
 
         if (product != null) {
-            APICategory category = categoryService.getCategory(categoryId, new PagedRequest(0, 6, null));
+            CategoryResults category = categoryService.getCategory(categoryId, new PagedRequest(0, 6, null));
             model.addObject("category", category);
             model.addObject("product", product);
             model.setViewName("product/details");

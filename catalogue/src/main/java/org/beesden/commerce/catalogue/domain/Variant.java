@@ -29,7 +29,7 @@ public class Variant extends AbstractDomainEntity {
 
 	@ManyToOne( fetch = FetchType.LAZY )
 	@JoinColumn( name = "productId", nullable = false )
-	private ProductDTO productDTO;
+	private Product product;
 
 	@Column
 	private String sku;

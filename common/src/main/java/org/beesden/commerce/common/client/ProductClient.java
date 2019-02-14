@@ -2,7 +2,7 @@ package org.beesden.commerce.common.client;
 
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.Product;
+import org.beesden.commerce.common.model.commerce.ProductResource;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,18 +14,18 @@ import javax.validation.Valid;
 public interface ProductClient {
 
     @RequestMapping(method = RequestMethod.POST)
-    void createProduct(Product product);
+    void createProduct(ProductResource productResource);
 
     @RequestMapping(value = "/{productKey}", method = RequestMethod.DELETE)
     void deleteProduct(@PathVariable("productKey") String productKey);
 
     @RequestMapping(value = "/{productKey}", method = RequestMethod.GET)
-    Product getProduct(@PathVariable("productKey") String productKey);
+    ProductResource getProduct(@PathVariable("productKey") String productKey);
 
     @RequestMapping(method = RequestMethod.GET)
-    PagedResponse<Product> listProducts(@Valid PagedRequest pagination);
+    PagedResponse<ProductResource> listProducts(@Valid PagedRequest pagination);
 
     @RequestMapping(value = "/{productKey}", method = RequestMethod.PUT)
-    void updateProduct(@PathVariable("productKey") String productKey, Product product);
+    void updateProduct(@PathVariable("productKey") String productKey, ProductResource productResource);
 
 }

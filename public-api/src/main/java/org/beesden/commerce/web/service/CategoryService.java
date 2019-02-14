@@ -6,38 +6,35 @@ import org.beesden.commerce.common.client.SearchClient;
 import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.Category;
+import org.beesden.commerce.common.model.commerce.CategoryResource;
 import org.beesden.commerce.common.model.search.SearchForm;
 import org.beesden.commerce.common.model.search.SearchResultWrapper;
-import org.beesden.commerce.web.model.APICategory;
+import org.beesden.commerce.web.model.CategoryResults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.Collections;
 
 @Service
 public class CategoryService {
 
-    @Autowired
-    SearchClient searchClient;
+    private final SearchClient searchClient;
+    private final CategoryClient categoryClient;
 
     @Autowired
-    CategoryClient categoryClient;
+    public CategoryService(SearchClient searchClient, CategoryClient categoryClient) {
+        this.searchClient = searchClient;
+        this.categoryClient = categoryClient;
+    }
 
-    public PagedResponse<Category> listCategories(PagedRequest request) {
+    public PagedResponse<CategoryResource> listCategories(PagedRequest request) {
         return categoryClient.listCategories(request);
     }
 
-    public APICategory getCategory(String categoryId, PagedRequest request) {
+    public CategoryResults getCategory(String categoryId, PagedRequest request) {
 
         try {
-            Category category = categoryClient.getCategory(categoryId);
+            CategoryResource category = categoryClient.getCategory(categoryId);
 
             SearchForm searchForm = new SearchForm();
             searchForm.setPage(request.getPage());
@@ -48,7 +45,7 @@ public class CategoryService {
 
             SearchResultWrapper products = searchClient.performSearch(searchForm);
 
-            return new APICategory(category, products);
+            return new CategoryResults(category, products);
 
         } catch (FeignException e) {
             return null;

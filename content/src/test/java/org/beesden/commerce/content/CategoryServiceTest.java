@@ -30,11 +30,11 @@
 //		TEST_CATEGORY_1.setTitle( "Test Accessories" );
 //		// Content 2
 //		TEST_CATEGORY_2.setId( "dresses_and_shirts" );
-//		TEST_CATEGORY_2.setDescription( "This category has a description" );
+//		TEST_CATEGORY_2.setDescription( "This categoryResource has a description" );
 //		TEST_CATEGORY_2.setTitle( "Test dresses and shirts" );
 //		// Content 3
 //		TEST_CATEGORY_3.setId( "1545" );
-//		TEST_CATEGORY_3.setSummary( "This category has a summary" );
+//		TEST_CATEGORY_3.setSummary( "This categoryResource has a summary" );
 //		TEST_CATEGORY_3.setTitle( "Test Content 1555" );
 //	}
 //
@@ -67,8 +67,8 @@
 //
 //	@Test
 //	api void getCategory() throws Exception {
-//		Content category = categoryClient.getCategory( TEST_CATEGORY_1.getId() );
-//		Assert.assertTrue( TEST_CATEGORY_1.equals( category ) );
+//		Content categoryResource = categoryClient.getCategory( TEST_CATEGORY_1.getId() );
+//		Assert.assertTrue( TEST_CATEGORY_1.equals( categoryResource ) );
 //	}
 //
 //	@Test
@@ -88,14 +88,14 @@
 //
 //	@Test
 //	api void updateCategory() throws Exception {
-//		Content category = categoryClient.getCategory( TEST_CATEGORY_1.getId() );
-//		Assert.assertTrue( TEST_CATEGORY_1.equals( category ) );
+//		Content categoryResource = categoryClient.getCategory( TEST_CATEGORY_1.getId() );
+//		Assert.assertTrue( TEST_CATEGORY_1.equals( categoryResource ) );
 //
-//		category.setSummary( "This is an updated summary" );
-//		category.setDescription( "This is an updated description" );
+//		categoryResource.setSummary( "This is an updated summary" );
+//		categoryResource.setDescription( "This is an updated description" );
 //
-//		categoryClient.updateCategory( category.getId(), category );
+//		categoryClient.updateCategory( categoryResource.getId(), categoryResource );
 //		Content updatedCategory = categoryClient.getCategory( TEST_CATEGORY_1.getId() );
-//		Assert.assertTrue( category.equals( updatedCategory ) );
+//		Assert.assertTrue( categoryResource.equals( updatedCategory ) );
 //	}
 //}

@@ -1,7 +1,7 @@
 package org.beesden.commerce.web.controller;
 
 import org.beesden.commerce.common.model.PagedRequest;
-import org.beesden.commerce.web.model.APICategory;
+import org.beesden.commerce.web.model.CategoryResults;
 import org.beesden.commerce.web.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,10 +39,10 @@ public class CategoryController {
     public ModelAndView viewCategory(@PathVariable String categoryId, @Valid PagedRequest request) {
 
         ModelAndView model = new ModelAndView();
-        APICategory category = categoryService.getCategory(categoryId, request);
+        CategoryResults results = categoryService.getCategory(categoryId, request);
 
-        if (category != null) {
-            model.addObject("category", category);
+        if (results != null) {
+            model.addObject("results", results);
             model.setViewName("category/view");
         } else {
             model.setViewName("category/empty");

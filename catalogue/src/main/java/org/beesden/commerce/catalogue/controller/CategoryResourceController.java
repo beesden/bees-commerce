@@ -1,14 +1,14 @@
 package org.beesden.commerce.catalogue.controller;
 
 import org.beesden.commerce.catalogue.dao.CategoryRepository;
-import org.beesden.commerce.catalogue.domain.CategoryDTO;
+import org.beesden.commerce.catalogue.domain.Category;
 import org.beesden.commerce.common.client.CategoryClient;
 import org.beesden.commerce.common.exception.NotFoundException;
 import org.beesden.commerce.common.exception.UniqueEntityException;
 import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.Category;
+import org.beesden.commerce.common.model.commerce.CategoryResource;
 import org.beesden.commerce.common.util.RequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,40 +24,38 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/category")
-public class CategoryController implements CategoryClient {
+public class CategoryResourceController implements CategoryClient {
 
     private CategoryRepository categoryRepository;
 
     @Autowired
-    CategoryController(CategoryRepository categoryRepository) {
+    CategoryResourceController(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
-    public void createCategory(@Valid @RequestBody Category category) {
+    public void createCategory(@Valid @RequestBody CategoryResource categoryResource) {
 
-        CategoryDTO target = categoryRepository.findOneByCategoryId(category.getId());
-        if (target == null) {
-            target = new CategoryDTO();
-            target.setCreated(LocalDateTime.now());
-            target.setCreatedBy("testuser");
+        Category category = categoryRepository.findOneByCategoryId(categoryResource.getId());
+        if (category == null) {
+            category = new Category();
+            category.setCreated(LocalDateTime.now());
+            category.setCreatedBy("testuser");
         } else {
-            throw new UniqueEntityException(EntityType.CATEGORY, target.getCategoryId());
+            throw new UniqueEntityException(EntityType.CATEGORY, category.getCategoryId());
         }
 
-        target.update(category);
-        categoryRepository.save(target);
+        category.update(categoryResource);
+        categoryRepository.save(category);
 
     }
 
     public void deleteCategory(@PathVariable String categoryId) {
-
         categoryRepository.deleteByCategoryId(categoryId);
-
     }
 
-    public Category getCategory(@PathVariable String categoryId) {
+    public CategoryResource getCategory(@PathVariable String categoryId) {
 
-        CategoryDTO category = categoryRepository.findOneByCategoryId(categoryId);
+        Category category = categoryRepository.findOneByCategoryId(categoryId);
         // todo - abstract
         if (category == null) {
             throw new NotFoundException(EntityType.CATEGORY, categoryId);
@@ -67,28 +65,28 @@ public class CategoryController implements CategoryClient {
 
     }
 
-    public PagedResponse<Category> listCategories(@Valid @RequestObject PagedRequest pagination) {
+    public PagedResponse<CategoryResource> listCategories(@Valid @RequestObject PagedRequest pagination) {
 
-        Page<CategoryDTO> pagedCategories = categoryRepository.findAll(pagination.toPageable());
-        List<Category> categoryList = pagedCategories.getContent()
+        Page<Category> categories = categoryRepository.findAll(pagination.toPageable());
+        List<CategoryResource> categoryResourceList = categories.getContent()
                 .stream()
-                .map(CategoryDTO::toCategory)
+                .map(Category::toCategory)
                 .collect(Collectors.toList());
 
-        return new PagedResponse<>(categoryList, pagedCategories.getTotalElements());
+        return new PagedResponse<>(categoryResourceList, categories.getTotalElements());
 
     }
 
-    public void updateCategory(@PathVariable String categoryId, @Valid @RequestBody Category category) {
+    public void updateCategory(@PathVariable String categoryId, @Valid @RequestBody CategoryResource categoryResource) {
 
-        CategoryDTO target = categoryRepository.findOneByCategoryId(categoryId);
+        Category category = categoryRepository.findOneByCategoryId(categoryId);
         // todo - abstract
-        if (target == null) {
+        if (category == null) {
             throw new NotFoundException(EntityType.CATEGORY, categoryId);
         }
 
-        target.update(category);
-        categoryRepository.save(target);
+        category.update(categoryResource);
+        categoryRepository.save(category);
 
     }
 
