@@ -22,7 +22,7 @@
             <p class="product__price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 £25.00
                 <#--
-                <fmt:message key="catalogue.product.price${productPrices.maxPrice > productPrices.minPrice ? '.fromto' : productPrices.wasPrice > productPrices.minPrice ? '.wasnow' : ''}">
+                <fmt:message key="products.product.price${productPrices.maxPrice > productPrices.minPrice ? '.fromto' : productPrices.wasPrice > productPrices.minPrice ? '.wasnow' : ''}">
                     <fmt:param><fmt:formatNumber type="currency" value="${productPrices.minPrice}" currencySymbol="${pageRequest.currency}" /></fmt:param>
                     <fmt:param><fmt:formatNumber type="currency" value="${productPrices.maxPrice}" currencySymbol="${pageRequest.currency}" /></fmt:param>
                     <fmt:param><fmt:formatNumber type="currency" value="${productPrices.wasPrice}" currencySymbol="${pageRequest.currency}" /></fmt:param>
@@ -80,7 +80,7 @@
     <aside class="related-products" data-js="product__recent" data-product__id="${product.id}">
         <h2>Related products</h2>
 
-        <section class="product-grid">
+        <section class="product-scroll">
             <#list relatedProducts.results as related>
                 <a class="product-link" href="/categories/${category.id}/${related.id}">
                     <img class="product-image" src="/assets/catalogue/${related.id}_1.jpg" alt="${related.title}"/>

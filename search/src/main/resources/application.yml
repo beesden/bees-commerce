@@ -9,7 +9,7 @@ eureka:
 
 logging:
   level:
-    org.springframework.web: WARN
+    org.springframework: WARN
     org.hibernate: WARN
 
 lucene:

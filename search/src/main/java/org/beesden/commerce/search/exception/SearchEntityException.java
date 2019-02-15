@@ -8,12 +8,16 @@ import org.beesden.commerce.common.model.EntityReference;
  */
 public class SearchEntityException extends RuntimeException {
 
-	@Getter
-	private EntityReference entity;
+    @Getter
+    private EntityReference entity;
 
-	public SearchEntityException( String message, EntityReference entity, Throwable e ) {
-		super( message, e );
-		this.entity = entity;
-	}
+    public SearchEntityException(String message) {
+        super(message);
+    }
+
+    public SearchEntityException(String message, EntityReference entity, Throwable e) {
+        super(message, e);
+        this.entity = entity;
+    }
 
 }

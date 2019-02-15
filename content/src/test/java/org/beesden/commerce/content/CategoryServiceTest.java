@@ -1,4 +1,4 @@
-//package org.beesden.commerce.catalogue;
+//package org.beesden.commerce.products;
 //
 //import org.beesden.commerce.common.exception.NotFoundException;
 //import org.beesden.commerce.content.model.Content;

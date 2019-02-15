@@ -1,6 +1,6 @@
-//package org.beesden.commerce.catalogue;
+//package org.beesden.commerce.products;
 //
-//import org.beesden.commerce.catalogue.controller.CategoryController;
+//import org.beesden.commerce.products.controller.CategoryController;
 //import org.beesden.commerce.common.exception.NotFoundException;
 //import org.beesden.commerce.common.model.PagedRequest;
 //import org.beesden.commerce.common.model.PagedResponse;

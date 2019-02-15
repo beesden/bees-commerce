@@ -11,9 +11,9 @@
     <properties>
         <hibernate.validator.version>5.2.4.Final</hibernate.validator.version>
         <hsql.version>2.3.4</hsql.version>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>1.9</java.version>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
         <mysql.version>5.1.39</mysql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.10</version>
+            <version>1.18.6</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

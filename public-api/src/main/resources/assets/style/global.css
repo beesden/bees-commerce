@@ -13,6 +13,7 @@
     --font-title: 'Nunito Sans', sans-serif;
     --font-text: 'Lato', sans-serif;
 }
+
 @font-face {
     font-family: 'icons';
     src: url("/assets/fonts/fontawesome.eot") format("embedded-opentype"), url("/assets/fonts/fontawesome.woff") format("woff");
@@ -38,6 +39,8 @@ body {
 
 .container {
     padding: 0 2rem;
+    margin: 0 auto;
+    max-width: 1240px;
 }
 
 .js .toggleHide, .toggleShow {

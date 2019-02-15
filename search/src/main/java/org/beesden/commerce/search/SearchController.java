@@ -1,5 +1,6 @@
 package org.beesden.commerce.search;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
@@ -23,22 +24,22 @@ import org.beesden.commerce.search.exception.SearchEntityException;
 import org.beesden.commerce.search.exception.SearchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 public class SearchController implements SearchClient {
 
-    private FacetsConfig facetConfig = new FacetsConfig();
-    private Analyzer analyzer = new StandardAnalyzer();
-    private Directory index;
-    private Directory taxoIndex;
+    private final FacetsConfig facetConfig = new FacetsConfig();
+    private final Analyzer analyzer = new StandardAnalyzer();
+    private final Directory index;
+    private final Directory taxoIndex;
 
     @Autowired
     public SearchController(Directory index, Directory taxonomy) {
@@ -46,26 +47,51 @@ public class SearchController implements SearchClient {
         this.taxoIndex = taxonomy;
     }
 
+    private <T extends TwoPhaseCommit & Closeable> void commitChanges(T writer) {
+        if (writer != null) {
+            try {
+                writer.commit();
+                writer.close();
+            } catch (IOException e) {
+                try {
+                    writer.rollback();
+                } catch (IOException el) {
+                    el.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private <T extends Closeable> void closeReader(T reader) {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private Map<String, Map<String, Integer>> buildFacets(List<FacetResult> facets) {
         return facets.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(facet -> facet.dim, facet -> Arrays.stream(facet.labelValues)
-                        .collect(Collectors.toMap(fa -> fa.label, fa -> fa.value
-                                .intValue()))));
+                        .collect(Collectors.toMap(fa -> fa.label, fa -> fa.value.intValue()))));
     }
 
     public void clearIndex() {
 
+        IndexWriter writer = null;
+
         try {
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            IndexWriter writer = new IndexWriter(index, config);
-
+            writer = new IndexWriter(index, config);
             writer.deleteAll();
-            writer.commit();
-            writer.close();
 
         } catch (IOException e) {
             throw new SearchException("Error clearing the index", e);
+        } finally {
+            commitChanges(writer);
         }
     }
 
@@ -73,12 +99,14 @@ public class SearchController implements SearchClient {
 
         SearchResultWrapper resultWrapper = new SearchResultWrapper();
 
-        try {
-            DirectoryReader indexReader = DirectoryReader.open(index);
-            IndexSearcher searcher = new IndexSearcher(indexReader);
-            TaxonomyReader taxoReader = new DirectoryTaxonomyReader(taxoIndex);
+        DirectoryReader indexReader = null;
+        TaxonomyReader taxoReader = null;
 
-            // Construct base query
+        try {
+            indexReader = DirectoryReader.open(index);
+            taxoReader = new DirectoryTaxonomyReader(taxoIndex);
+
+            IndexSearcher searcher = new IndexSearcher(indexReader);
             BooleanQuery.Builder query = new BooleanQuery.Builder();
 
             // Filter by ID
@@ -146,23 +174,29 @@ public class SearchController implements SearchClient {
             resultWrapper.setTotal(results.totalHits);
 
             // Convert results
-            for (ScoreDoc scoreDoc: results.scoreDocs) {
-                Document document = searcher.doc(scoreDoc.doc);
+            Arrays.stream(results.scoreDocs).skip(searchForm.getStartIndex()).forEach(score -> {
+                try {
+                    Document document = searcher.doc(score.doc);
 
-                SearchResult result = new SearchResult();
-                result.setId(document.getField("id").stringValue());
-                result.setTitle(document.getField("title").stringValue());
-                result.setMetadata(document.getFields()
-                        .stream()
-                        .filter(field -> field.fieldType().indexOptions() == IndexOptions.NONE)
-                        .collect(Collectors.groupingBy(IndexableField::name, Collectors.mapping(IndexableField::stringValue, Collectors.toList()))));
-                resultWrapper.getResults().add(result);
-            }
+                    SearchResult result = new SearchResult();
+                    result.setId(document.getField("id").stringValue());
+                    result.setTitle(document.getField("title").stringValue());
+                    result.setMetadata(document.getFields()
+                            .stream()
+                            .filter(field -> field.fieldType().indexOptions() == IndexOptions.NONE)
+                            .collect(Collectors.groupingBy(IndexableField::name, Collectors.mapping(IndexableField::stringValue, Collectors.toList()))));
+                    resultWrapper.getResults().add(result);
+                } catch (IOException ignored) {
+                }
+            });
 
         } catch (IndexNotFoundException e) {
             resultWrapper.setResults(new ArrayList<>());
         } catch (IOException e) {
             throw new SearchException("Error performing search", e);
+        } finally {
+            closeReader(indexReader);
+            closeReader(taxoReader);
         }
 
         return resultWrapper;
@@ -170,8 +204,13 @@ public class SearchController implements SearchClient {
 
     public void removeFromIndex(@Valid @RequestBody EntityReference entity) {
 
+        if (entity == null) {
+            throw new SearchEntityException("No entitry reference provided");
+        }
+
+        IndexWriter writer = null;
         try {
-            IndexWriter writer = new IndexWriter(index, new IndexWriterConfig(analyzer));
+            writer = new IndexWriter(index, new IndexWriterConfig(analyzer));
 
             // Construct query
             BooleanQuery.Builder query = new BooleanQuery.Builder();
@@ -179,11 +218,11 @@ public class SearchController implements SearchClient {
             query.add(new TermQuery(new Term("type", entity.getType().name())), BooleanClause.Occur.MUST);
 
             writer.deleteDocuments(query.build());
-            writer.commit();
-            writer.close();
 
         } catch (IOException e) {
             throw new SearchEntityException("Error removing entity from index", entity, e);
+        } finally {
+            commitChanges(writer);
         }
 
     }
@@ -191,10 +230,12 @@ public class SearchController implements SearchClient {
     public void submitToIndex(@Valid @RequestBody SearchDocument searchDocument) {
 
         removeFromIndex(searchDocument.getEntity());
+        IndexWriter writer = null;
+        TaxonomyWriter taxoWriter = null;
 
         try {
-            IndexWriter writer = new IndexWriter(index, new IndexWriterConfig(analyzer));
-            TaxonomyWriter taxoWriter = new DirectoryTaxonomyWriter(taxoIndex);
+            writer = new IndexWriter(index, new IndexWriterConfig(analyzer));
+            taxoWriter = new DirectoryTaxonomyWriter(taxoIndex);
 
             Document document = new Document();
 
@@ -207,7 +248,7 @@ public class SearchController implements SearchClient {
                 searchDocument.getFacets().forEach((key, value) -> {
                     facetConfig.setMultiValued(key, true);
                     if (Utils.notNullOrEmpty(value)) {
-                        value.forEach(val -> {
+                        value.stream().filter(Objects::nonNull).forEach(val -> {
                             document.add(new FacetField(key, val));
                             document.add(new StoredField(key, val));
                         });
@@ -216,14 +257,11 @@ public class SearchController implements SearchClient {
             }
 
             writer.addDocument(facetConfig.build(taxoWriter, document));
-
-            taxoWriter.commit();
-            taxoWriter.close();
-            writer.commit();
-            writer.close();
-
-        } catch (IOException e) {
+        } catch (IllegalArgumentException | IOException e) {
             throw new SearchEntityException("Error adding entity to index", searchDocument.getEntity(), e);
+        } finally {
+            commitChanges(writer);
+            commitChanges(taxoWriter);
         }
     }
 

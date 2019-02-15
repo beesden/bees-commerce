@@ -1,12 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Category not found!</title>
-</head>
-<body>
+<#include "../layout/default.ftl">
 
-<h1>Category not found</h1>
+<@layoutDefault>
 
-</body>
-</html>
+    <div id="search-wrapper" class="row overlay" data-js="search-filters">
+
+        <div class="column search-title">
+            <div class="category-summary">
+                <h1>Not found</h1>
+                <div class="description">That category cannot be found.</div>
+                <img src="http://lorempixel.com/354/200/" width="354" height="200"/>
+            </div>
+        </div>
+
+    </div>
+
+
+</@layoutDefault>

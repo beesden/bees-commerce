@@ -1,7 +1,5 @@
 package org.beesden.commerce.common.exception;
 
-import lombok.Getter;
-import org.beesden.commerce.common.model.EntityReference;
 import org.beesden.commerce.common.model.EntityType;
 
 import java.text.MessageFormat;

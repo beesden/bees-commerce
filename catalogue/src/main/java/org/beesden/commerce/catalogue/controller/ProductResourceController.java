@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/product")
 public class ProductResourceController implements ProductClient {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     ProductResourceController(ProductRepository productRepository) {
@@ -54,12 +54,11 @@ public class ProductResourceController implements ProductClient {
     public ProductResource getProduct(@PathVariable String productKey) {
 
         Product product = productRepository.findOneByProductKey(productKey);
-        // todo - abstract
         if (product == null) {
             throw new NotFoundException(EntityType.PRODUCT, productKey);
         }
 
-        return product.toProduct();
+        return product.toResource();
 
     }
 
@@ -68,7 +67,7 @@ public class ProductResourceController implements ProductClient {
         Page<Product> products = productRepository.findAll(pagination.toPageable());
         List<ProductResource> productResourceList = products.getContent()
                 .stream()
-                .map(Product::toProduct)
+                .map(Product::toResource)
                 .collect(Collectors.toList());
 
         return new PagedResponse<>(productResourceList, products.getTotalElements());
@@ -78,7 +77,6 @@ public class ProductResourceController implements ProductClient {
     public void updateProduct(@PathVariable String productKey, @Valid @RequestBody ProductResource productResource) {
 
         Product product = productRepository.findOneByProductKey(productKey);
-        // todo - abstract
         if (product == null) {
             throw new NotFoundException(EntityType.PRODUCT, productKey);
         }

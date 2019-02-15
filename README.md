@@ -37,9 +37,32 @@ RESTful API used to provide front-end eCommerce functionality, linking the catal
 
 The remaining services still need to be added n no specific order:
 
+* catalogue:
+  * product variants
+  * product attributes
+  * category hierarchy
+  * pricing
+  
+* customers
+  * account
+  * wish list
+  * address
+  * payment
+  
+* commerce  
+  * stock
+  * basket
+  * promotions
+  * shipping options
+  * order
+  
+* misc  
+  * channel
+  * currency
+  * language
+
+* Metadata
 * Content (content-managable pages)
-* Account (user / payment info)
-* Commerce (basket / payment hub / promotions / orders)
 * Ratings (ratings / reviews)
 * Recommendations (maybe?)
 * PWS (public facing ecommerce website)

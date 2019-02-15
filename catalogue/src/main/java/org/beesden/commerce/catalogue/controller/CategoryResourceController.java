@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/category")
 public class CategoryResourceController implements CategoryClient {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     CategoryResourceController(CategoryRepository categoryRepository) {
@@ -56,7 +56,6 @@ public class CategoryResourceController implements CategoryClient {
     public CategoryResource getCategory(@PathVariable String categoryId) {
 
         Category category = categoryRepository.findOneByCategoryId(categoryId);
-        // todo - abstract
         if (category == null) {
             throw new NotFoundException(EntityType.CATEGORY, categoryId);
         }
@@ -80,7 +79,6 @@ public class CategoryResourceController implements CategoryClient {
     public void updateCategory(@PathVariable String categoryId, @Valid @RequestBody CategoryResource categoryResource) {
 
         Category category = categoryRepository.findOneByCategoryId(categoryId);
-        // todo - abstract
         if (category == null) {
             throw new NotFoundException(EntityType.CATEGORY, categoryId);
         }

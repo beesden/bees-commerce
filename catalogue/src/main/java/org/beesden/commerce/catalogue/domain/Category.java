@@ -1,20 +1,17 @@
 package org.beesden.commerce.catalogue.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.beesden.commerce.common.model.commerce.CategoryResource;
 import org.beesden.commerce.common.domain.AbstractDomainEntity;
+import org.beesden.commerce.common.model.commerce.CategoryResource;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "bees_category")
-@AllArgsConstructor
-@NoArgsConstructor
 public class Category extends AbstractDomainEntity {
 
     @Id
@@ -33,6 +30,10 @@ public class Category extends AbstractDomainEntity {
 
     @Column
     private String title;
+
+    @ManyToMany
+    @JoinTable(name = "bees_category_ancestors", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "parent_category_id"))
+    private List<Category> ancestors;
 
     /**
      * Convert the DTO to a categoryResource object.

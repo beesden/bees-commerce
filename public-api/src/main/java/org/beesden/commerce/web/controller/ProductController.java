@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class ProductController {
 
-    private CategoryService categoryService;
-    private ProductClient productClient;
+    private final CategoryService categoryService;
+    private final ProductClient productClient;
 
     @Autowired
     public ProductController(CategoryService categoryService, ProductClient productClient) {
