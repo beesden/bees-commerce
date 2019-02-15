@@ -70,7 +70,7 @@ public class ProductResourceController implements ProductClient {
                 .map(Product::toResource)
                 .collect(Collectors.toList());
 
-        return new PagedResponse<>(productResourceList, products.getTotalElements());
+        return new PagedResponse<>(pagination, productResourceList, products.getTotalElements());
 
     }
 

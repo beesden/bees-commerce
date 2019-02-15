@@ -3,6 +3,7 @@ package org.beesden.commerce.web.controller;
 import org.beesden.commerce.common.client.ProductClient;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.commerce.ProductResource;
+import org.beesden.commerce.common.model.search.SearchForm;
 import org.beesden.commerce.web.model.CategoryResults;
 import org.beesden.commerce.web.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class ProductController {
         ProductResource product = productClient.getProduct(productKey);
 
         if (product != null) {
-            CategoryResults category = categoryService.getCategory(categoryId, new PagedRequest(0, 6, null));
+            CategoryResults category = categoryService.getCategory(categoryId, new SearchForm());
             model.addObject("product", product);
             model.addObject("category", category.getCategory());
             model.addObject("relatedProducts", category.getProducts());

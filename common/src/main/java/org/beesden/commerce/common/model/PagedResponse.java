@@ -11,7 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 public class PagedResponse<T> {
 
-	private List<T> results;
-	private long total;
+    private PagedRequest request;
+    private List<T> results;
+	private Long total;
+
+	public int getTotalPages() {
+	    return (int) Math.ceil(total.doubleValue() / request.getResults().doubleValue());
+    }
 
 }

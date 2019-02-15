@@ -63,7 +63,7 @@ public class ContentServiceImpl implements ContentService {
 												   .map(ContentDTO::toContent)
 												   .collect(Collectors.toList());
 
-		return new PagedResponse<>(contentList, pagedCategories.getTotalElements());
+		return new PagedResponse<>(pagination, contentList,pagedCategories.getTotalElements());
 
 	}
 

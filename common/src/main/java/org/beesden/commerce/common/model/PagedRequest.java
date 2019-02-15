@@ -16,7 +16,7 @@ public class PagedRequest {
     private Integer page = 1;
 
     @Range(max = 60, min = 1)
-    private Integer results = 15;
+    private Integer results = 12;
 
     private String sort;
 

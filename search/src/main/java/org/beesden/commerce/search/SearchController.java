@@ -72,11 +72,21 @@ public class SearchController implements SearchClient {
         }
     }
 
-    private Map<String, Map<String, Integer>> buildFacets(List<FacetResult> facets) {
+    private List<SearchResultWrapper.SearchResultFacets> buildFacets(List<FacetResult> facets) {
+
         return facets.stream()
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(facet -> facet.dim, facet -> Arrays.stream(facet.labelValues)
-                        .collect(Collectors.toMap(fa -> fa.label, fa -> fa.value.intValue()))));
+                .map(facet -> {
+                    SearchResultWrapper.SearchResultFacets facetsWrap = new SearchResultWrapper.SearchResultFacets();
+                    facetsWrap.setName(facet.dim);
+
+                    facetsWrap.setFacets(Arrays.stream(facet.labelValues)
+                            .map(labelValue -> new SearchResultWrapper.SearchResultFacet(labelValue.label, labelValue.value.intValue()))
+                            .collect(Collectors.toList()));
+
+                    return facetsWrap;
+                })
+                .collect(Collectors.toList());
     }
 
     public void clearIndex() {
@@ -98,6 +108,7 @@ public class SearchController implements SearchClient {
     public SearchResultWrapper performSearch(@Valid @RequestBody SearchForm searchForm) {
 
         SearchResultWrapper resultWrapper = new SearchResultWrapper();
+        resultWrapper.setRequest(searchForm);
 
         DirectoryReader indexReader = null;
         TaxonomyReader taxoReader = null;

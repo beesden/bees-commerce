@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class CategoryService {
@@ -31,7 +33,7 @@ public class CategoryService {
         return categoryClient.listCategories(request);
     }
 
-    public CategoryResults getCategory(String categoryId, PagedRequest request) {
+    public CategoryResults getCategory(String categoryId, SearchForm request) {
 
         CategoryResource category;
         SearchResultWrapper products;
@@ -48,7 +50,14 @@ public class CategoryService {
             searchForm.setResults(request.getResults());
             searchForm.setSort(request.getSort());
             searchForm.setTypes(Collections.singleton(EntityType.PRODUCT));
-            searchForm.setFacets(Collections.singleton("category:" + categoryId));
+
+            Set<String> facets = request.getFacets();
+            if (facets == null) {
+                facets = new HashSet<>();
+            }
+            facets.add("category:" + categoryId);
+
+            searchForm.setFacets(facets);
 
             products = searchClient.performSearch(searchForm);
 

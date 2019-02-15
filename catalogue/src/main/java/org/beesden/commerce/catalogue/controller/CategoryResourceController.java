@@ -72,7 +72,7 @@ public class CategoryResourceController implements CategoryClient {
                 .map(Category::toCategory)
                 .collect(Collectors.toList());
 
-        return new PagedResponse<>(categoryResourceList, categories.getTotalElements());
+        return new PagedResponse<>(pagination, categoryResourceList, categories.getTotalElements());
 
     }
 

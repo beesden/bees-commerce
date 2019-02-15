@@ -1358,49 +1358,6 @@ legend {
     content: '\f021'
 }
 
-.pagination {
-    margin: 12px 0 0;
-    padding: 3px 0
-}
-
-.pagination ol {
-    border-left: 1px solid #ddd;
-    margin-top: 0
-}
-
-.pagination ol li {
-    display: inline-block
-}
-
-.pagination ol a, .pagination ol span {
-    border: 1px solid #ddd;
-    border-left: none;
-    height: 32px;
-    width: 32px;
-    text-align: center;
-    display: block
-}
-
-.pagination ol a:hover {
-    background: #f0f0f0;
-    color: #000
-}
-
-.pagination ol span {
-    background: #f0f0f0;
-    color: #888
-}
-
-.pagination ol .current span {
-    background: #fca604;
-    color: #fff;
-    font-weight: bold
-}
-
-.pagination ol .current:hover, .pagination ol span:hover {
-    cursor: default
-}
-
 .side-menu {
     margin: 0 0 24px;
     width: 189px
@@ -1846,13 +1803,51 @@ legend {
 }
 
 
-.product-grid {
+.category {
+    align-items: start;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    grid-gap: 2rem;
-    padding: 1rem 0;
+    grid-template-columns: 200px 1fr;
+    grid-gap: 1rem;
 }
 
+.category__info {
+    grid-row: 1 / 5;
+}
+
+.category__filters {
+    padding-right: 1rem;
+}
+
+.category__filters dt {
+    border-top: 1px solid #ddd;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    font-family: var(--font-title)
+}
+
+.category__filters dd {
+    color: var(--color-text);
+    font-size: 0.9rem;
+    padding: .1rem 0;
+    text-transform: capitalize;
+}
+
+.category__filters a {
+    display: flex;
+    justify-content: space-between;
+}
+
+.category__products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-gap: 1rem;
+}
+
+/**
+ * Product item
+ */
 .product-link {
     display: flex;
     flex-flow: column;
@@ -1876,4 +1871,24 @@ legend {
     display: block;
     font-size: 1.1rem;
     font-weight: 600;
+}
+
+.pagination {
+    display: flex;
+    border-left: 1px solid #ddd;
+}
+
+.pagination a {
+    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    width: 30px;
+    height: 30px;
+    border-left: 0;
+}
+
+.pagination__current {
+    background: #ddd;
 }

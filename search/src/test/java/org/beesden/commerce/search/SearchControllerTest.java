@@ -137,8 +137,10 @@ public class SearchControllerTest {
         // Facet by type
         results = searchController.performSearch(searchForm);
         assertThat(results.getTotal()).isEqualTo(3);
-        assertThat(results.getFacets().get("colour").size()).isEqualTo(3);
-        assertThat(results.getFacets().get("size").size()).isEqualTo(5);
+        assertThat(results.getFacets().get(0).getName()).isEqualTo("colour");
+        assertThat(results.getFacets().get(0).getFacets().size()).isEqualTo(3);
+        assertThat(results.getFacets().get(1).getName()).isEqualTo("size");
+        assertThat(results.getFacets().get(1).getFacets().size()).isEqualTo(5);
 
         // Facet by multiple types
         searchForm.setTypes(Set.of(EntityType.PRODUCT, EntityType.CATEGORY));
@@ -150,7 +152,8 @@ public class SearchControllerTest {
         results = searchController.performSearch(searchForm);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getFacets().size()).isEqualTo(2);
-        assertThat(results.getFacets().get("colour").size()).isEqualTo(3);
+        assertThat(results.getFacets().get(0).getName()).isEqualTo("colour");
+        assertThat(results.getFacets().get(0).getFacets().size()).isEqualTo(3);
 
         // Facet by invalid colour
         searchForm.setFacets(Set.of("colour:orange"));
@@ -175,6 +178,7 @@ public class SearchControllerTest {
         assertThat(results.getResults().size()).isEqualTo(5);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Women's Clothes");
         assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getRequest().getPage()).isEqualTo(1);
 
         // Limit results
         searchForm.setResults(2);
@@ -182,6 +186,7 @@ public class SearchControllerTest {
         assertThat(results.getResults().size()).isEqualTo(2);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Women's Clothes");
         assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getRequest().getPage()).isEqualTo(1);
 
         // Paginate results
         searchForm.setPage(3);
@@ -189,6 +194,7 @@ public class SearchControllerTest {
         assertThat(results.getResults().size()).isEqualTo(1);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Massive Pointy hat");
         assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getRequest().getPage()).isEqualTo(3);
 
     }
 
@@ -202,6 +208,7 @@ public class SearchControllerTest {
         results = searchController.performSearch(searchForm);
         assertThat(results.getResults().size()).isEqualTo(2);
         assertThat(results.getTotal()).isEqualTo(2);
+        assertThat(results.getRequest().getPage()).isEqualTo(1);
 
         // Limit results
         searchForm.setResults(1);
@@ -209,6 +216,7 @@ public class SearchControllerTest {
         assertThat(results.getResults().size()).isEqualTo(1);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Sequin kimono");
+        assertThat(results.getRequest().getPage()).isEqualTo(1);
 
         // Paginate results
         searchForm.setPage(2);
@@ -216,6 +224,7 @@ public class SearchControllerTest {
         assertThat(results.getResults().size()).isEqualTo(1);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Massive Pointy hat");
+        assertThat(results.getRequest().getPage()).isEqualTo(2);
 
     }
 
