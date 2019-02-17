@@ -3,9 +3,9 @@ package org.beesden.commerce.search;
 import org.apache.lucene.store.RAMDirectory;
 import org.beesden.commerce.common.model.EntityReference;
 import org.beesden.commerce.common.model.EntityType;
-import org.beesden.commerce.common.model.search.SearchDocument;
-import org.beesden.commerce.common.model.search.SearchForm;
-import org.beesden.commerce.common.model.search.SearchResultWrapper;
+import org.beesden.commerce.common.model.resource.SearchDocument;
+import org.beesden.commerce.common.model.SearchRequest;
+import org.beesden.commerce.common.model.resource.SearchResource;
 import org.beesden.commerce.search.exception.SearchEntityException;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +20,13 @@ import static org.assertj.core.api.Assertions.fail;
 public class SearchControllerTest {
 
     private final SearchController searchController = new SearchController(new RAMDirectory(), new RAMDirectory());
-    private SearchForm searchForm;
-    private SearchResultWrapper results;
+    private SearchRequest searchRequest;
+    private SearchResource results;
 
     @Before
     public void before() {
 
-        searchForm = new SearchForm();
+        searchRequest = new SearchRequest();
         searchController.clearIndex();
         SearchDocument document = new SearchDocument();
 
@@ -63,14 +63,14 @@ public class SearchControllerTest {
     @Test
     public void clearIndex() {
 
-        searchForm.setTerm("*");
+        searchRequest.setTerm("*");
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(5);
 
         searchController.clearIndex();
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(0);
 
     }
@@ -79,19 +79,19 @@ public class SearchControllerTest {
     public void performSearchWithIDs() {
 
         // Search for invalid results
-        searchForm.setIds(Collections.singleton("p1100"));
-        results = searchController.performSearch(searchForm);
+        searchRequest.setIds(Collections.singleton("p1100"));
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(0);
 
         // Search for single id
-        searchForm.setIds(Collections.singleton("p1109"));
-        results = searchController.performSearch(searchForm);
+        searchRequest.setIds(Collections.singleton("p1109"));
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(1);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Sequin kimono");
 
         // Search for multiple results
-        searchForm.setIds(Set.of("p1455", "test", "p1109"));
-        results = searchController.performSearch(searchForm);
+        searchRequest.setIds(Set.of("p1455", "test", "p1109"));
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Sequin kimono");
         assertThat(results.getResults().get(1).getTitle()).isEqualTo("Fancy Kimono Hat");
@@ -102,29 +102,29 @@ public class SearchControllerTest {
     public void performSearchWithKeywords() {
 
         // Search for empty results
-        searchForm.setTerm("flower");
-        results = searchController.performSearch(searchForm);
+        searchRequest.setTerm("flower");
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(0);
 
         // Search for fuzzy term
-        searchForm.setTerm("kimon");
-        results = searchController.performSearch(searchForm);
+        searchRequest.setTerm("kimon");
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
 
         // Search for weighted term
-        searchForm.setTerm("fancy hat");
-        results = searchController.performSearch(searchForm);
+        searchRequest.setTerm("fancy hat");
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getResults().get(0).getId()).isEqualTo("p1455");
 
         // Misspelled search
-        searchForm.setTerm("kimoo");
-        results = searchController.performSearch(searchForm);
+        searchRequest.setTerm("kimoo");
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
 
         // Case insensitive search
-        searchForm.setTerm("KiMOnO");
-        results = searchController.performSearch(searchForm);
+        searchRequest.setTerm("KiMOnO");
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
     }
 
@@ -132,10 +132,10 @@ public class SearchControllerTest {
     @Test
     public void performSearchWithFacets() {
 
-        searchForm.setTypes(Set.of(EntityType.PRODUCT));
+        searchRequest.setTypes(Set.of(EntityType.PRODUCT));
 
         // Facet by type
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
         assertThat(results.getFacets().get(0).getName()).isEqualTo("colour");
         assertThat(results.getFacets().get(0).getFacets().size()).isEqualTo(3);
@@ -143,27 +143,27 @@ public class SearchControllerTest {
         assertThat(results.getFacets().get(1).getFacets().size()).isEqualTo(5);
 
         // Facet by multiple types
-        searchForm.setTypes(Set.of(EntityType.PRODUCT, EntityType.CATEGORY));
-        results = searchController.performSearch(searchForm);
+        searchRequest.setTypes(Set.of(EntityType.PRODUCT, EntityType.CATEGORY));
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(5);
 
         // Facet by colour
-        searchForm.setFacets(Set.of("colour:red"));
-        results = searchController.performSearch(searchForm);
+        searchRequest.setFacets(Set.of("colour:red"));
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getFacets().size()).isEqualTo(2);
         assertThat(results.getFacets().get(0).getName()).isEqualTo("colour");
         assertThat(results.getFacets().get(0).getFacets().size()).isEqualTo(3);
 
         // Facet by invalid colour
-        searchForm.setFacets(Set.of("colour:orange"));
-        results = searchController.performSearch(searchForm);
+        searchRequest.setFacets(Set.of("colour:orange"));
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(0);
         assertThat(results.getFacets().size()).isEqualTo(1);
 
         // Facet by colour and size
-        searchForm.setFacets(Set.of("colour:red", "size:SM"));
-        results = searchController.performSearch(searchForm);
+        searchRequest.setFacets(Set.of("colour:red", "size:SM"));
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(1);
 
     }
@@ -171,26 +171,26 @@ public class SearchControllerTest {
     @Test
     public void performSearchWithPagination() {
 
-        searchForm.setTerm("*");
+        searchRequest.setTerm("*");
 
         // List all results
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getResults().size()).isEqualTo(5);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Women's Clothes");
         assertThat(results.getTotal()).isEqualTo(5);
         assertThat(results.getRequest().getPage()).isEqualTo(1);
 
         // Limit results
-        searchForm.setResults(2);
-        results = searchController.performSearch(searchForm);
+        searchRequest.setResults(2);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getResults().size()).isEqualTo(2);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Women's Clothes");
         assertThat(results.getTotal()).isEqualTo(5);
         assertThat(results.getRequest().getPage()).isEqualTo(1);
 
         // Paginate results
-        searchForm.setPage(3);
-        results = searchController.performSearch(searchForm);
+        searchRequest.setPage(3);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getResults().size()).isEqualTo(1);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Massive Pointy hat");
         assertThat(results.getTotal()).isEqualTo(5);
@@ -201,26 +201,26 @@ public class SearchControllerTest {
     @Test
     public void performSearchWithFacetsAndPagination() {
 
-        searchForm.setTypes(Set.of(EntityType.PRODUCT));
-        searchForm.setFacets(Set.of("colour:red"));
+        searchRequest.setTypes(Set.of(EntityType.PRODUCT));
+        searchRequest.setFacets(Set.of("colour:red"));
 
         // Fetch all results
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getResults().size()).isEqualTo(2);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getRequest().getPage()).isEqualTo(1);
 
         // Limit results
-        searchForm.setResults(1);
-        results = searchController.performSearch(searchForm);
+        searchRequest.setResults(1);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getResults().size()).isEqualTo(1);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Sequin kimono");
         assertThat(results.getRequest().getPage()).isEqualTo(1);
 
         // Paginate results
-        searchForm.setPage(2);
-        results = searchController.performSearch(searchForm);
+        searchRequest.setPage(2);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getResults().size()).isEqualTo(1);
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Massive Pointy hat");
@@ -231,14 +231,14 @@ public class SearchControllerTest {
     @Test
     public void removeFromIndex() {
 
-        searchForm.setTerm("*");
+        searchRequest.setTerm("*");
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(5);
 
         searchController.removeFromIndex(new EntityReference(EntityType.PRODUCT, "p1455"));
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(4);
 
     }
@@ -246,14 +246,14 @@ public class SearchControllerTest {
     @Test
     public void removeFromIndexIgnoresInvalid() {
 
-        searchForm.setTerm("*");
+        searchRequest.setTerm("*");
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(5);
 
         searchController.removeFromIndex(new EntityReference(EntityType.PRODUCT, "does-not-exist"));
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(5);
 
     }
@@ -261,9 +261,9 @@ public class SearchControllerTest {
     @Test
     public void submitToIndex() {
 
-        searchForm.setTypes(Set.of(EntityType.PRODUCT));
+        searchRequest.setTypes(Set.of(EntityType.PRODUCT));
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
 
         SearchDocument document = SearchDocument.builder()
@@ -274,7 +274,7 @@ public class SearchControllerTest {
         document.setTitle("Test Submit");
         searchController.submitToIndex(document);
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(4);
         assertThat(results.getResults().get(3).getTitle()).isEqualTo("Test Submit");
 
@@ -283,9 +283,9 @@ public class SearchControllerTest {
     @Test
     public void submitToIndexWithoutTitle() {
 
-        searchForm.setTypes(Set.of(EntityType.PRODUCT));
+        searchRequest.setTypes(Set.of(EntityType.PRODUCT));
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
 
         SearchDocument document = SearchDocument.builder()
@@ -298,7 +298,7 @@ public class SearchControllerTest {
         } catch (SearchEntityException ignored) {
         }
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
 
     }
@@ -306,9 +306,9 @@ public class SearchControllerTest {
     @Test
     public void submitToIndexWithoutEntity() {
 
-        searchForm.setTypes(Set.of(EntityType.PRODUCT));
+        searchRequest.setTypes(Set.of(EntityType.PRODUCT));
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
 
         SearchDocument document = SearchDocument.builder()
@@ -321,7 +321,7 @@ public class SearchControllerTest {
         } catch (SearchEntityException ignore) {
         }
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
 
     }
@@ -329,9 +329,9 @@ public class SearchControllerTest {
     @Test
     public void submitToIndexExistingDocument() {
 
-        searchForm.setIds(Set.of("p1455"));
+        searchRequest.setIds(Set.of("p1455"));
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(1);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Fancy Kimono Hat");
 
@@ -342,7 +342,7 @@ public class SearchControllerTest {
 
         searchController.submitToIndex(document);
 
-        results = searchController.performSearch(searchForm);
+        results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(1);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Test Update");
 

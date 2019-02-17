@@ -1,8 +1,6 @@
 package org.beesden.commerce.common.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,10 +11,10 @@ public class PagedResponse<T> {
 
     private PagedRequest request;
     private List<T> results;
-	private Long total;
+	private long total;
 
 	public int getTotalPages() {
-	    return (int) Math.ceil(total.doubleValue() / request.getResults().doubleValue());
+	    return (int) Math.ceil((double) total / (double) request.getResults());
     }
 
 }

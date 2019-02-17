@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.beesden.commerce.catalogue.dao.ProductRepository;
 import org.beesden.commerce.catalogue.domain.Product;
 import org.beesden.commerce.common.client.SearchClient;
-import org.beesden.commerce.common.model.commerce.ProductResource;
+import org.beesden.commerce.common.model.resource.ProductResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

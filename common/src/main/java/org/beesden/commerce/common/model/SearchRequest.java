@@ -1,4 +1,4 @@
-package org.beesden.commerce.common.model.search;
+package org.beesden.commerce.common.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SearchForm extends PagedRequest {
+public class SearchRequest extends PagedRequest {
 
 	private String term;
 	private Set<String> ids;

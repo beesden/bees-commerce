@@ -6,9 +6,9 @@ import org.beesden.commerce.common.client.SearchClient;
 import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.CategoryResource;
-import org.beesden.commerce.common.model.search.SearchForm;
-import org.beesden.commerce.common.model.search.SearchResultWrapper;
+import org.beesden.commerce.common.model.resource.CategoryResource;
+import org.beesden.commerce.common.model.SearchRequest;
+import org.beesden.commerce.common.model.resource.SearchResource;
 import org.beesden.commerce.web.model.CategoryResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,10 +33,10 @@ public class CategoryService {
         return categoryClient.listCategories(request);
     }
 
-    public CategoryResults getCategory(String categoryId, SearchForm request) {
+    public CategoryResults getCategory(String categoryId, SearchRequest request) {
 
         CategoryResource category;
-        SearchResultWrapper products;
+        SearchResource products;
 
         try {
             category = categoryClient.getCategory(categoryId);
@@ -45,11 +45,11 @@ public class CategoryService {
         }
 
         try {
-            SearchForm searchForm = new SearchForm();
-            searchForm.setPage(request.getPage());
-            searchForm.setResults(request.getResults());
-            searchForm.setSort(request.getSort());
-            searchForm.setTypes(Collections.singleton(EntityType.PRODUCT));
+            SearchRequest searchRequest = new SearchRequest();
+            searchRequest.setPage(request.getPage());
+            searchRequest.setResults(request.getResults());
+            searchRequest.setSort(request.getSort());
+            searchRequest.setTypes(Collections.singleton(EntityType.PRODUCT));
 
             Set<String> facets = request.getFacets();
             if (facets == null) {
@@ -57,12 +57,12 @@ public class CategoryService {
             }
             facets.add("category:" + categoryId);
 
-            searchForm.setFacets(facets);
+            searchRequest.setFacets(facets);
 
-            products = searchClient.performSearch(searchForm);
+            products = searchClient.performSearch(searchRequest);
 
         } catch (FeignException e) {
-            products = new SearchResultWrapper();
+            products = new SearchResource();
         }
 
         return new CategoryResults(category, products);

@@ -15,7 +15,7 @@
                 <#list products.facets as group>
 
                     <dt>${group.name}</dt>
-                    <#list group.facets as facet>
+                    <#list group.facets?sort_by('name') as facet>
                         <dd>
                             <a href="?facets=${group.name}:${facet.name}">
                                 <span class="facet-name">${facet.name}</span>
@@ -47,7 +47,11 @@
         <nav class="pagination">
 
             <#assign paginationStart = (products.request.page > 2)?then(products.request.page - 2, 1) />
-            <#assign paginationEnd = (paginationStart + 4 > products.totalPages)?then(products.totalPages, paginationStart + 4) />
+            <#if (paginationStart + 4) gt products.totalPages>
+                <#assign paginationEnd = products.totalPages paginationStart = (paginationEnd - 4 < 1)?then(1, paginationEnd - 4) />
+            <#else>
+                <#assign paginationEnd = paginationStart + 4 />
+            </#if>
 
             <a href="?page=${products.request.page - 1}">&lsaquo;</a>
             <#list paginationStart..paginationEnd as page>

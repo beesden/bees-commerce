@@ -1,33 +1,39 @@
 package org.beesden.commerce.common.model;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
+import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import javax.validation.constraints.Min;
-
-@Data
 @NoArgsConstructor
 public class PagedRequest {
 
-    @Min(1)
-    private Integer page = 1;
+    private static int DEFAULT_RESULTS = 12;
+    private static int MAX_RESULTS = 60;
 
-    @Range(max = 60, min = 1)
-    private Integer results = 12;
+    @Getter
+    private int page = 1;
 
+    @Getter
+    private int results = DEFAULT_RESULTS;
+
+    @Getter
+    @Setter
     private String sort;
 
     public PagedRequest(int page, int results, String sort) {
-        if (page > 1) {
-            this.page = page;
-        }
-        if (results > 0) {
-            this.results = Math.min(results, 60);
-        }
+        setPage(page);
+        setResults(results);
         this.sort = sort;
+    }
+
+    public void setPage(int page) {
+        this.page = Math.max(1, page);
+    }
+
+    public void setResults(int results) {
+        this.results = (results > MAX_RESULTS || results < 1) ? DEFAULT_RESULTS : results;
     }
 
     public int getStartIndex() {
@@ -42,4 +48,5 @@ public class PagedRequest {
             return PageRequest.of(page - 1, results);
         }
     }
+
 }

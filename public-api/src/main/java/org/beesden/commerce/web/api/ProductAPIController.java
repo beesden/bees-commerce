@@ -1,7 +1,7 @@
 package org.beesden.commerce.web.api;
 
 import org.beesden.commerce.common.client.ProductClient;
-import org.beesden.commerce.common.model.commerce.ProductResource;
+import org.beesden.commerce.common.model.resource.ProductResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

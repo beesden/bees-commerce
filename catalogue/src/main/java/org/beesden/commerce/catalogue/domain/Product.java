@@ -3,7 +3,7 @@ package org.beesden.commerce.catalogue.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.beesden.commerce.common.domain.AbstractDomainEntity;
-import org.beesden.commerce.common.model.commerce.ProductResource;
+import org.beesden.commerce.common.model.resource.ProductResource;
 
 import javax.persistence.*;
 import java.util.List;

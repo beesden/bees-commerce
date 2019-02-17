@@ -1,4 +1,4 @@
-package org.beesden.commerce.common.model.search;
+package org.beesden.commerce.common.model.resource;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SearchResultWrapper extends PagedResponse<SearchResult> {
+public class SearchResource extends PagedResponse<SearchResource.SearchResult> {
 
 	private List<SearchResultFacets> facets;
 
@@ -27,6 +27,14 @@ public class SearchResultWrapper extends PagedResponse<SearchResult> {
 	public static class SearchResultFacet {
 		private String name;
 		private int count;
+	}
+
+
+	@Data
+	public static class SearchResult {
+		private String id;
+		private String title;
+		private Map<String, List<String>> metadata;
 	}
 
 }

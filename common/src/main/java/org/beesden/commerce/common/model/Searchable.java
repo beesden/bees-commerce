@@ -1,6 +1,6 @@
 package org.beesden.commerce.common.model;
 
-import org.beesden.commerce.common.model.search.SearchDocument;
+import org.beesden.commerce.common.model.resource.SearchDocument;
 
 public interface Searchable {
 

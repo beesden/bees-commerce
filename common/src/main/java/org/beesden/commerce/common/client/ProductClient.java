@@ -2,7 +2,7 @@ package org.beesden.commerce.common.client;
 
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.ProductResource;
+import org.beesden.commerce.common.model.resource.ProductResource;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

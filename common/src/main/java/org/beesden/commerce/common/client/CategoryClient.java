@@ -2,7 +2,7 @@ package org.beesden.commerce.common.client;
 
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.CategoryResource;
+import org.beesden.commerce.common.model.resource.CategoryResource;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

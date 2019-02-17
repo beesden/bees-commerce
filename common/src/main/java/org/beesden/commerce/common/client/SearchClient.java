@@ -1,9 +1,9 @@
 package org.beesden.commerce.common.client;
 
 import org.beesden.commerce.common.model.EntityReference;
-import org.beesden.commerce.common.model.search.SearchDocument;
-import org.beesden.commerce.common.model.search.SearchForm;
-import org.beesden.commerce.common.model.search.SearchResultWrapper;
+import org.beesden.commerce.common.model.resource.SearchDocument;
+import org.beesden.commerce.common.model.SearchRequest;
+import org.beesden.commerce.common.model.resource.SearchResource;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public interface SearchClient {
     void clearIndex();
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
-    SearchResultWrapper performSearch(@Valid @RequestBody SearchForm searchForm);
+    SearchResource performSearch(@Valid @RequestBody SearchRequest searchRequest);
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/results")
     void removeFromIndex(@Valid @RequestBody EntityReference entity);

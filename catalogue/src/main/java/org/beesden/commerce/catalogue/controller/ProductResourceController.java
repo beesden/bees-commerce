@@ -8,7 +8,7 @@ import org.beesden.commerce.common.exception.UniqueEntityException;
 import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.ProductResource;
+import org.beesden.commerce.common.model.resource.ProductResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;

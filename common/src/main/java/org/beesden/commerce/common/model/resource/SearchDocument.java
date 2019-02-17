@@ -1,4 +1,4 @@
-package org.beesden.commerce.common.model.search;
+package org.beesden.commerce.common.model.resource;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

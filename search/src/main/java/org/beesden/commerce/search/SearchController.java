@@ -13,16 +13,16 @@ import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
-import org.beesden.commerce.common.Utils;
 import org.beesden.commerce.common.client.SearchClient;
 import org.beesden.commerce.common.model.EntityReference;
-import org.beesden.commerce.common.model.search.SearchDocument;
-import org.beesden.commerce.common.model.search.SearchForm;
-import org.beesden.commerce.common.model.search.SearchResult;
-import org.beesden.commerce.common.model.search.SearchResultWrapper;
+import org.beesden.commerce.common.model.resource.SearchDocument;
+import org.beesden.commerce.common.model.SearchRequest;
+import org.beesden.commerce.common.model.resource.SearchResource;
+import org.beesden.commerce.common.model.resource.SearchResource.*;
 import org.beesden.commerce.search.exception.SearchEntityException;
 import org.beesden.commerce.search.exception.SearchException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,16 +72,16 @@ public class SearchController implements SearchClient {
         }
     }
 
-    private List<SearchResultWrapper.SearchResultFacets> buildFacets(List<FacetResult> facets) {
+    private List<SearchResultFacets> buildFacets(List<FacetResult> facets) {
 
         return facets.stream()
                 .filter(Objects::nonNull)
                 .map(facet -> {
-                    SearchResultWrapper.SearchResultFacets facetsWrap = new SearchResultWrapper.SearchResultFacets();
+                    SearchResultFacets facetsWrap = new SearchResultFacets();
                     facetsWrap.setName(facet.dim);
 
                     facetsWrap.setFacets(Arrays.stream(facet.labelValues)
-                            .map(labelValue -> new SearchResultWrapper.SearchResultFacet(labelValue.label, labelValue.value.intValue()))
+                            .map(labelValue -> new SearchResultFacet(labelValue.label, labelValue.value.intValue()))
                             .collect(Collectors.toList()));
 
                     return facetsWrap;
@@ -105,10 +105,10 @@ public class SearchController implements SearchClient {
         }
     }
 
-    public SearchResultWrapper performSearch(@Valid @RequestBody SearchForm searchForm) {
+    public SearchResource performSearch(@Valid @RequestBody SearchRequest searchRequest) {
 
-        SearchResultWrapper resultWrapper = new SearchResultWrapper();
-        resultWrapper.setRequest(searchForm);
+        SearchResource resultWrapper = new SearchResource();
+        resultWrapper.setRequest(searchRequest);
 
         DirectoryReader indexReader = null;
         TaxonomyReader taxoReader = null;
@@ -121,17 +121,17 @@ public class SearchController implements SearchClient {
             BooleanQuery.Builder query = new BooleanQuery.Builder();
 
             // Filter by ID
-            if (Utils.notNullOrEmpty(searchForm.getIds())) {
+            if (!CollectionUtils.isEmpty(searchRequest.getIds())) {
                 BooleanQuery.Builder idQuery = new BooleanQuery.Builder();
-                searchForm.getIds()
+                searchRequest.getIds()
                         .forEach(id -> idQuery.add(new TermQuery(new Term("id", id)), BooleanClause.Occur.SHOULD));
                 query.add(idQuery.build(), BooleanClause.Occur.MUST);
             }
 
             // Provide fuzzy searching for search terms
-            if (searchForm.getTerm() != null) {
+            if (searchRequest.getTerm() != null) {
                 BooleanQuery.Builder termQuery = new BooleanQuery.Builder();
-                String searchTerm = searchForm.getTerm().toLowerCase();
+                String searchTerm = searchRequest.getTerm().toLowerCase();
 
                 // Adds weight to exact match
                 termQuery.add(new WildcardQuery(new Term("title", searchTerm)), BooleanClause.Occur.SHOULD);
@@ -145,19 +145,19 @@ public class SearchController implements SearchClient {
             }
 
             // Filter by type
-            if (Utils.notNullOrEmpty(searchForm.getTypes())) {
+            if (!CollectionUtils.isEmpty(searchRequest.getTypes())) {
                 BooleanQuery.Builder typeQuery = new BooleanQuery.Builder();
-                searchForm.getTypes()
+                searchRequest.getTypes()
                         .forEach(type -> typeQuery.add(new TermQuery(new Term("type", type.name())), BooleanClause.Occur.SHOULD));
                 query.add(typeQuery.build(), BooleanClause.Occur.MUST);
             }
 
             TopDocs results;
 
-            if (Utils.notNullOrEmpty(searchForm.getFacets())) {
+            if (!CollectionUtils.isEmpty(searchRequest.getFacets())) {
                 // Perform faceted search
                 DrillDownQuery facetedQuery = new DrillDownQuery(facetConfig, query.build());
-                searchForm.getFacets().forEach(facet -> {
+                searchRequest.getFacets().forEach(facet -> {
                     String[] facetParts = facet.split(":");
                     if (facetParts.length == 2) {
                         facetedQuery.add(facetParts[0], facetParts[1]);
@@ -165,14 +165,14 @@ public class SearchController implements SearchClient {
                 });
 
                 DrillSideways ds = new DrillSideways(searcher, facetConfig, taxoReader);
-                DrillSideways.DrillSidewaysResult facetedResult = ds.search(facetedQuery, searchForm.getResults() * searchForm
+                DrillSideways.DrillSidewaysResult facetedResult = ds.search(facetedQuery, searchRequest.getResults() * searchRequest
                         .getPage());
                 results = facetedResult.hits;
                 resultWrapper.setFacets(buildFacets(facetedResult.facets.getAllDims(10)));
 
             } else {
                 // Perform normal search
-                results = searcher.search(query.build(), searchForm.getResults() * searchForm.getPage());
+                results = searcher.search(query.build(), searchRequest.getResults() * searchRequest.getPage());
 
                 // Collect facets separately
                 FacetsCollector fc = new FacetsCollector();
@@ -182,10 +182,10 @@ public class SearchController implements SearchClient {
             }
 
             resultWrapper.setResults(new ArrayList<>());
-            resultWrapper.setTotal(results.totalHits);
+            resultWrapper.setTotal((long) results.totalHits);
 
             // Convert results
-            Arrays.stream(results.scoreDocs).skip(searchForm.getStartIndex()).forEach(score -> {
+            Arrays.stream(results.scoreDocs).skip(searchRequest.getStartIndex()).forEach(score -> {
                 try {
                     Document document = searcher.doc(score.doc);
 
@@ -258,7 +258,7 @@ public class SearchController implements SearchClient {
             if (searchDocument.getFacets() != null) {
                 searchDocument.getFacets().forEach((key, value) -> {
                     facetConfig.setMultiValued(key, true);
-                    if (Utils.notNullOrEmpty(value)) {
+                    if (!CollectionUtils.isEmpty(value)) {
                         value.stream().filter(Objects::nonNull).forEach(val -> {
                             document.add(new FacetField(key, val));
                             document.add(new StoredField(key, val));

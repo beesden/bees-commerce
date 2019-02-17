@@ -1,7 +1,7 @@
 package org.beesden.commerce.web.controller;
 
 import org.beesden.commerce.common.model.PagedRequest;
-import org.beesden.commerce.common.model.search.SearchForm;
+import org.beesden.commerce.common.model.SearchRequest;
 import org.beesden.commerce.web.model.CategoryResults;
 import org.beesden.commerce.web.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class CategoryController {
     }
 
     @RequestMapping(path = "/{categoryId}", method = RequestMethod.GET)
-    public ModelAndView viewCategory(@PathVariable String categoryId, @Valid SearchForm request) {
+    public ModelAndView viewCategory(@PathVariable String categoryId, @Valid SearchRequest request) {
 
         ModelAndView model = new ModelAndView();
         CategoryResults response = categoryService.getCategory(categoryId, request);

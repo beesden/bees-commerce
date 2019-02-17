@@ -2,8 +2,8 @@ package org.beesden.commerce.web.api;
 
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
-import org.beesden.commerce.common.model.commerce.CategoryResource;
-import org.beesden.commerce.common.model.search.SearchForm;
+import org.beesden.commerce.common.model.resource.CategoryResource;
+import org.beesden.commerce.common.model.SearchRequest;
 import org.beesden.commerce.web.model.CategoryResults;
 import org.beesden.commerce.web.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class CategoryAPIController {
     }
 
     @RequestMapping(path = "/{categoryId}", method = RequestMethod.GET)
-    public CategoryResults getCategory(@PathVariable String categoryId, @Valid SearchForm request) {
+    public CategoryResults getCategory(@PathVariable String categoryId, @Valid SearchRequest request) {
         return categoryService.getCategory(categoryId, request);
     }
 
