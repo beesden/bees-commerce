@@ -6,7 +6,7 @@ services:
     command: java -jar service-register.jar
     environment:
       DISCOVERY_PORT: 8761
-    image: java:8
+    image: openjdk:10-slim
     ports:
       - "8761:8761"
     volumes:
@@ -47,7 +47,7 @@ services:
       DATABASE_PASS: 'dbpass'
       DATABASE_NAME: 'bees_commerce'
       DISCOVERY_SERVER: 'http://register:8761/eureka'
-    image: java:8
+    image: openjdk:10-slim
     volumes:
       - ./products/target:/app
     working_dir: /app
@@ -59,7 +59,7 @@ services:
     environment:
       DISCOVERY_SERVER: 'http://register:8761/eureka'
       LUCENE_HOME: /lucene/index
-    image: java:8
+    image: openjdk:10-slim
     volumes:
       - ./search/target:/app
       - search_index:/lucene
@@ -72,7 +72,7 @@ services:
     environment:
       DISCOVERY_SERVER: 'http://register:8761/eureka'
       PUBLIC_PORT: 2000
-    image: java:8
+    image: openjdk:10-slim
     ports:
       - '2000:2000'
     volumes:

@@ -13,12 +13,15 @@ import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.util.BytesRef;
 import org.beesden.commerce.common.client.SearchClient;
 import org.beesden.commerce.common.model.EntityReference;
-import org.beesden.commerce.common.model.resource.SearchDocument;
 import org.beesden.commerce.common.model.SearchRequest;
+import org.beesden.commerce.common.model.resource.SearchDocument;
 import org.beesden.commerce.common.model.resource.SearchResource;
-import org.beesden.commerce.common.model.resource.SearchResource.*;
+import org.beesden.commerce.common.model.resource.SearchResource.SearchResult;
+import org.beesden.commerce.common.model.resource.SearchResource.SearchResultFacet;
+import org.beesden.commerce.common.model.resource.SearchResource.SearchResultFacets;
 import org.beesden.commerce.search.exception.SearchEntityException;
 import org.beesden.commerce.search.exception.SearchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,6 +132,21 @@ public class SearchController implements SearchClient {
                 query.add(idQuery.build(), BooleanClause.Occur.MUST);
             }
 
+            // Sort results
+            Sort sort = new Sort(SortField.FIELD_SCORE);
+            SearchRequest.SearchSortField searchSort = searchRequest.getSortField();
+            switch (searchSort) {
+                case TITLE:
+                    sort.setSort(SortField.FIELD_SCORE, new SortField(searchSort.getValue(), SortField.Type.STRING, false));
+                    break;
+                case DATE:
+                case VALUE:
+                    SortField sortField = new SortField(searchSort.getValue(), SortField.Type.LONG, false);
+                    sortField.setMissingValue(Long.MAX_VALUE);
+                    sort.setSort(SortField.FIELD_SCORE, sortField);
+                    break;
+            }
+
             // Provide fuzzy searching for search terms
             if (searchRequest.getTerm() != null) {
                 BooleanQuery.Builder termQuery = new BooleanQuery.Builder();
@@ -165,14 +184,13 @@ public class SearchController implements SearchClient {
                 });
 
                 DrillSideways ds = new DrillSideways(searcher, facetConfig, taxoReader);
-                DrillSideways.DrillSidewaysResult facetedResult = ds.search(facetedQuery, searchRequest.getResults() * searchRequest
-                        .getPage());
+                DrillSideways.DrillSidewaysResult facetedResult = ds.search(facetedQuery, null, null, searchRequest.getEndIndex(), sort, false, false);
                 results = facetedResult.hits;
                 resultWrapper.setFacets(buildFacets(facetedResult.facets.getAllDims(10)));
 
             } else {
                 // Perform normal search
-                results = searcher.search(query.build(), searchRequest.getResults() * searchRequest.getPage());
+                results = searcher.search(query.build(), searchRequest.getEndIndex(), sort);
 
                 // Collect facets separately
                 FacetsCollector fc = new FacetsCollector();
@@ -192,6 +210,7 @@ public class SearchController implements SearchClient {
                     SearchResult result = new SearchResult();
                     result.setId(document.getField("id").stringValue());
                     result.setTitle(document.getField("title").stringValue());
+                    result.setValue(document.getField("value").numericValue().doubleValue());
                     result.setMetadata(document.getFields()
                             .stream()
                             .filter(field -> field.fieldType().indexOptions() == IndexOptions.NONE)
@@ -250,9 +269,26 @@ public class SearchController implements SearchClient {
 
             Document document = new Document();
 
+            // Entity information
             document.add(new StringField("id", searchDocument.getEntity().getId(), Field.Store.YES));
             document.add(new StringField("type", searchDocument.getEntity().getType().name(), Field.Store.YES));
+
+            // Indexed fields
             document.add(new TextField("title", searchDocument.getTitle(), Field.Store.YES));
+            document.add(new StoredField("value", Optional.ofNullable(searchDocument.getValue()).orElse(0d)));
+
+            // Sort title field
+            document.add(new SortedDocValuesField(SearchRequest.SearchSortField.TITLE.getValue(), new BytesRef(searchDocument.getTitle())));
+
+            // Sort date field
+            if (searchDocument.getDate() != null) {
+                document.add(new NumericDocValuesField(SearchRequest.SearchSortField.DATE.getValue(), Timestamp.valueOf(searchDocument.getDate()).getTime()));
+            }
+
+            // Sort value field
+            if (searchDocument.getValue() != null) {
+                document.add(new NumericDocValuesField(SearchRequest.SearchSortField.VALUE.getValue(), Math.round(searchDocument.getValue() * 100)));
+            }
 
             // Populate additional fields
             if (searchDocument.getFacets() != null) {

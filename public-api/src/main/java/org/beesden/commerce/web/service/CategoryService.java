@@ -21,28 +21,13 @@ import java.util.Set;
 public class CategoryService {
 
     private final SearchClient searchClient;
-    private final CategoryClient categoryClient;
 
     @Autowired
-    public CategoryService(SearchClient searchClient, CategoryClient categoryClient) {
+    public CategoryService(SearchClient searchClient) {
         this.searchClient = searchClient;
-        this.categoryClient = categoryClient;
     }
 
-    public PagedResponse<CategoryResource> listCategories(PagedRequest request) {
-        return categoryClient.listCategories(request);
-    }
-
-    public CategoryResults getCategory(String categoryId, SearchRequest request) {
-
-        CategoryResource category;
-        SearchResource products;
-
-        try {
-            category = categoryClient.getCategory(categoryId);
-        } catch (FeignException e) {
-            return null;
-        }
+    public SearchResource getProducts(String categoryId, SearchRequest request) {
 
         try {
             SearchRequest searchRequest = new SearchRequest();
@@ -59,13 +44,11 @@ public class CategoryService {
 
             searchRequest.setFacets(facets);
 
-            products = searchClient.performSearch(searchRequest);
+            return searchClient.performSearch(searchRequest);
 
         } catch (FeignException e) {
-            products = new SearchResource();
+            return new SearchResource();
         }
-
-        return new CategoryResults(category, products);
     }
 
 }

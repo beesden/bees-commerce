@@ -34,6 +34,7 @@ public class SearchResource extends PagedResponse<SearchResource.SearchResult> {
 	public static class SearchResult {
 		private String id;
 		private String title;
+		private double value;
 		private Map<String, List<String>> metadata;
 	}
 

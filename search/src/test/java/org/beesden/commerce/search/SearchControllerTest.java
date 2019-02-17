@@ -10,6 +10,7 @@ import org.beesden.commerce.search.exception.SearchEntityException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
@@ -28,32 +29,42 @@ public class SearchControllerTest {
 
         searchRequest = new SearchRequest();
         searchController.clearIndex();
-        SearchDocument document = new SearchDocument();
 
-        document.setEntity(new EntityReference(EntityType.CATEGORY, "womens_clothes"));
-        document.setTitle("Women's Clothes");
+        SearchDocument document = new SearchDocument();
+        document.setEntity(new EntityReference(EntityType.CATEGORY, "hats"));
+        document.setTitle("Hats");
         document.setFacets(new HashMap<>());
         searchController.submitToIndex(document);
 
+        document = new SearchDocument();
         document.setEntity(new EntityReference(EntityType.CATEGORY, "womens_kimonos"));
         document.setTitle("Women's Kimonos");
+        document.setDate(LocalDateTime.of(2019, 1, 1, 1, 0));
         document.setFacets(new HashMap<>());
         searchController.submitToIndex(document);
 
+        document = new SearchDocument();
         document.setEntity(new EntityReference(EntityType.PRODUCT, "p1109"));
         document.setTitle("Sequin kimono");
+        document.setDate(LocalDateTime.of(2017, 1, 1, 1, 0));
+        document.setValue(25D);
         document.getFacets().put("colour", Set.of("red", "blue"));
         document.getFacets().put("size", Set.of("XS", "SM", "M", "LG"));
         searchController.submitToIndex(document);
 
+        document = new SearchDocument();
         document.setEntity(new EntityReference(EntityType.PRODUCT, "p1455"));
         document.setTitle("Fancy Kimono Hat");
+        document.setDate(LocalDateTime.of(2020, 1, 1, 1, 0));
+        document.setValue(12D);
         document.getFacets().put("colour", Set.of("pink", "blue"));
         document.getFacets().put("size", Set.of("XS", "M"));
         searchController.submitToIndex(document);
 
+        document = new SearchDocument();
         document.setEntity(new EntityReference(EntityType.PRODUCT, "p1955"));
         document.setTitle("Massive Pointy hat");
+        document.setValue(99.5);
         document.getFacets().put("colour", Set.of("red"));
         document.getFacets().put("size", Set.of("XL", "LG"));
         searchController.submitToIndex(document);
@@ -114,7 +125,7 @@ public class SearchControllerTest {
         // Search for weighted term
         searchRequest.setTerm("fancy hat");
         results = searchController.performSearch(searchRequest);
-        assertThat(results.getTotal()).isEqualTo(2);
+        assertThat(results.getTotal()).isEqualTo(3);
         assertThat(results.getResults().get(0).getId()).isEqualTo("p1455");
 
         // Misspelled search
@@ -126,6 +137,71 @@ public class SearchControllerTest {
         searchRequest.setTerm("KiMOnO");
         results = searchController.performSearch(searchRequest);
         assertThat(results.getTotal()).isEqualTo(3);
+
+    }
+
+    @Test
+    public void performSearchWithPagination() {
+
+        searchRequest.setTerm("*");
+
+        // List all results
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getResults().size()).isEqualTo(5);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Hats");
+        assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getRequest().getPage()).isEqualTo(1);
+
+        // Limit results
+        searchRequest.setResults(2);
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getResults().size()).isEqualTo(2);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Hats");
+        assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getRequest().getPage()).isEqualTo(1);
+
+        // Paginate results
+        searchRequest.setPage(3);
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getResults().size()).isEqualTo(1);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Massive Pointy hat");
+        assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getRequest().getPage()).isEqualTo(3);
+
+    }
+
+    @Test
+    public void performSearchWithSort() {
+
+        searchRequest.setTerm("*");
+
+        // Search for empty results
+        searchRequest.setSort("title");
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Fancy Kimono Hat");
+        assertThat(results.getResults().get(1).getTitle()).isEqualTo("Hats");
+        assertThat(results.getResults().get(2).getTitle()).isEqualTo("Massive Pointy hat");
+        assertThat(results.getResults().get(3).getTitle()).isEqualTo("Sequin kimono");
+        assertThat(results.getResults().get(4).getTitle()).isEqualTo("Women's Kimonos");
+
+        searchRequest.setSort("price");
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Fancy Kimono Hat");
+        assertThat(results.getResults().get(1).getTitle()).isEqualTo("Sequin kimono");
+        assertThat(results.getResults().get(2).getTitle()).isEqualTo("Massive Pointy hat");
+        assertThat(results.getResults().get(3).getTitle()).isEqualTo("Hats");
+        assertThat(results.getResults().get(4).getTitle()).isEqualTo("Women's Kimonos");
+
+        searchRequest.setSort("date");
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getTotal()).isEqualTo(5);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Sequin kimono");
+        assertThat(results.getResults().get(1).getTitle()).isEqualTo("Women's Kimonos");
+        assertThat(results.getResults().get(2).getTitle()).isEqualTo("Fancy Kimono Hat");
+        assertThat(results.getResults().get(3).getTitle()).isEqualTo("Hats");
+        assertThat(results.getResults().get(4).getTitle()).isEqualTo("Massive Pointy hat");
     }
 
 
@@ -169,36 +245,6 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void performSearchWithPagination() {
-
-        searchRequest.setTerm("*");
-
-        // List all results
-        results = searchController.performSearch(searchRequest);
-        assertThat(results.getResults().size()).isEqualTo(5);
-        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Women's Clothes");
-        assertThat(results.getTotal()).isEqualTo(5);
-        assertThat(results.getRequest().getPage()).isEqualTo(1);
-
-        // Limit results
-        searchRequest.setResults(2);
-        results = searchController.performSearch(searchRequest);
-        assertThat(results.getResults().size()).isEqualTo(2);
-        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Women's Clothes");
-        assertThat(results.getTotal()).isEqualTo(5);
-        assertThat(results.getRequest().getPage()).isEqualTo(1);
-
-        // Paginate results
-        searchRequest.setPage(3);
-        results = searchController.performSearch(searchRequest);
-        assertThat(results.getResults().size()).isEqualTo(1);
-        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Massive Pointy hat");
-        assertThat(results.getTotal()).isEqualTo(5);
-        assertThat(results.getRequest().getPage()).isEqualTo(3);
-
-    }
-
-    @Test
     public void performSearchWithFacetsAndPagination() {
 
         searchRequest.setTypes(Set.of(EntityType.PRODUCT));
@@ -225,6 +271,33 @@ public class SearchControllerTest {
         assertThat(results.getTotal()).isEqualTo(2);
         assertThat(results.getResults().get(0).getTitle()).isEqualTo("Massive Pointy hat");
         assertThat(results.getRequest().getPage()).isEqualTo(2);
+
+    }
+
+    @Test
+    public void performSearchWithFacetsAndSort() {
+
+        searchRequest.setTypes(Set.of(EntityType.PRODUCT));
+        searchRequest.setFacets(Set.of("colour:blue"));
+
+        // Search for empty results
+        searchRequest.setSort("title");
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getTotal()).isEqualTo(2);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Fancy Kimono Hat");
+        assertThat(results.getResults().get(1).getTitle()).isEqualTo("Sequin kimono");
+
+        searchRequest.setSort("price");
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getTotal()).isEqualTo(2);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Fancy Kimono Hat");
+        assertThat(results.getResults().get(1).getTitle()).isEqualTo("Sequin kimono");
+
+        searchRequest.setSort("date");
+        results = searchController.performSearch(searchRequest);
+        assertThat(results.getTotal()).isEqualTo(2);
+        assertThat(results.getResults().get(0).getTitle()).isEqualTo("Sequin kimono");
+        assertThat(results.getResults().get(1).getTitle()).isEqualTo("Fancy Kimono Hat");
 
     }
 

@@ -9,13 +9,10 @@ import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.PagedRequest;
 import org.beesden.commerce.common.model.PagedResponse;
 import org.beesden.commerce.common.model.resource.CategoryResource;
-import org.beesden.commerce.common.util.RequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -64,15 +61,16 @@ public class CategoryResourceController implements CategoryClient {
 
     }
 
-    public PagedResponse<CategoryResource> listCategories(@Valid @RequestObject PagedRequest pagination) {
+    public PagedResponse<CategoryResource> listCategories(@RequestParam int page, @RequestParam int results) {
 
-        Page<Category> categories = categoryRepository.findAll(pagination.toPageable());
+        PageRequest pageRequest = PageRequest.of(page, results);
+        Page<Category> categories = categoryRepository.findAll(pageRequest);
         List<CategoryResource> categoryResourceList = categories.getContent()
                 .stream()
                 .map(Category::toCategory)
                 .collect(Collectors.toList());
 
-        return new PagedResponse<>(pagination, categoryResourceList, categories.getTotalElements());
+        return new PagedResponse<>(new PagedRequest(page, results, null), categoryResourceList, categories.getTotalElements());
 
     }
 

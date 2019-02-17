@@ -57,7 +57,7 @@ public class ProductVariant extends AbstractDomainEntity {
      *
      * @return product
      */
-    public ProductResource.Variant toResource() {
+    ProductResource.Variant toResource() {
         ProductResource.Variant resource = new ProductResource.Variant();
 
         resource.setTitle(title);
@@ -65,7 +65,10 @@ public class ProductVariant extends AbstractDomainEntity {
         resource.setDescription(description);
         resource.setColour(colour);
         resource.setSize(size);
-        resource.setPrice(new BigDecimal(25));
+
+        // TODO - don't skip prices / locales
+        ProductPrice priceLocale = prices.stream().filter(price -> price.getLocale().equals("GB")).findFirst().orElse(new ProductPrice());
+        resource.setPrice(priceLocale.getValue());
 
         return resource;
     }

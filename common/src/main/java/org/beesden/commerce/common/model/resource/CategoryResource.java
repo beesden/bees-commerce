@@ -6,6 +6,8 @@ import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.Searchable;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.Set;
+
 @Data
 public class CategoryResource implements Searchable {
 
@@ -15,6 +17,7 @@ public class CategoryResource implements Searchable {
     private String title;
     private String summary;
     private String description;
+    private Set<String> parents;
 
     @Override
     public SearchDocument toSearchDocument() {

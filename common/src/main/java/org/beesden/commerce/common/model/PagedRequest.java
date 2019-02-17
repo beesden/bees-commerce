@@ -16,7 +16,7 @@ public class PagedRequest {
     private int page = 1;
 
     @Getter
-    private int results = DEFAULT_RESULTS;
+    private int results = 12;
 
     @Getter
     @Setter
@@ -38,6 +38,9 @@ public class PagedRequest {
 
     public int getStartIndex() {
         return results * (page - 1);
+    }
+    public int getEndIndex() {
+        return results * page;
     }
 
     public PageRequest toPageable() {

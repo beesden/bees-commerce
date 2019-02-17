@@ -5,6 +5,7 @@ import org.beesden.commerce.common.model.EntityReference;
 import org.beesden.commerce.common.model.EntityType;
 import org.beesden.commerce.common.model.Searchable;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -35,6 +36,18 @@ public class ProductResource implements Searchable {
 
     }
 
+    public List<String> getColours() {
+        return variants.stream().map(Variant::getColour).distinct().sorted().collect(Collectors.toList());
+    }
+
+    public double getMinPrice() {
+        return variants.stream().map(Variant::getPrice).sorted().findFirst().orElse(BigDecimal.ZERO).doubleValue();
+    }
+
+    public double getMaxPrice() {
+        return variants.stream().map(Variant::getPrice).sorted().findFirst().orElse(BigDecimal.ZERO).doubleValue();
+    }
+
     @Override
     public SearchDocument toSearchDocument() {
 
@@ -43,8 +56,10 @@ public class ProductResource implements Searchable {
         facets.put("Size", variants.stream().map(Variant::getSize).filter(Objects::nonNull).collect(Collectors.toSet()));
         facets.put("category", categories);
 
+
         return SearchDocument.builder()
                 .title(title)
+                .value(getMinPrice())
                 .facets(facets)
                 .entity(new EntityReference(EntityType.PRODUCT, id))
                 .build();

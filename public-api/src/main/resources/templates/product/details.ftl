@@ -5,8 +5,8 @@
     <nav class="header-breadcrumbs">
         <ol>
             <li><a href="/">Home</a></li>
-            <#if category??>
-                <li><a href="/categories/${category.id}">${category.title}</a></li>
+            <#if currentCategory??>
+                <li><a href="/categories/${currentCategory.id}">${currentCategory.title}</a></li>
             <#else>
                 <li><a href="/categories">View all</a></li>
             </#if>
@@ -20,17 +20,30 @@
             <h1 class="product__title" itemprop="name">${product.title}</h1>
 
             <p class="product__price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                £25.00
-                <#--
-                <fmt:message key="products.product.price${productPrices.maxPrice > productPrices.minPrice ? '.fromto' : productPrices.wasPrice > productPrices.minPrice ? '.wasnow' : ''}">
-                    <fmt:param><fmt:formatNumber type="currency" value="${productPrices.minPrice}" currencySymbol="${pageRequest.currency}" /></fmt:param>
-                    <fmt:param><fmt:formatNumber type="currency" value="${productPrices.maxPrice}" currencySymbol="${pageRequest.currency}" /></fmt:param>
-                    <fmt:param><fmt:formatNumber type="currency" value="${productPrices.wasPrice}" currencySymbol="${pageRequest.currency}" /></fmt:param>
-                </fmt:message>
-                -->
+                <#if product.maxPrice gt product.minPrice>
+                    <span>from </span>${product.minPrice?string.currency}
+                    <span>to </span>${product.maxPrice?string.currency}
+                <#else>
+                    ${product.minPrice?string.currency}
+                </#if>
             </p>
 
-            <button class="product__add">Add to bag</button>
+            <div class="product__colour">${product.colours[0]}</div>
+
+            <form class="product__form" action="/basket" method="POST">
+
+                <#if product.variants?size gt 1>
+                    <select name="colour">
+                        <option>Size</option>
+                        <#list product.variants as variant>
+                            <option value="${variant.sku}">${variant.size}</option>
+                        </#list>
+                    </select>
+                </#if>
+
+                <button class="product__add">Add to bag</button>
+
+            </form>
 
             <h2 class="product__subtitle">Description</h2>
             <div class="product__info">${product.description}</div>
@@ -76,19 +89,20 @@
 
     </article>
 
+    <#if relatedProducts??>
+        <aside class="related-products">
+            <h2>Related products</h2>
 
-    <aside class="related-products" data-js="product__recent" data-product__id="${product.id}">
-        <h2>Related products</h2>
-
-        <section class="product-scroll">
-            <#list relatedProducts.results as related>
-                <a class="product-link" href="/categories/${category.id}/${related.id}">
-                    <img class="product-image" src="/assets/catalogue/${related.id}_1.jpg" alt="${related.title}"/>
-                    <span class="title">${related.title}</span>
-                    <span class="price">£25.00</span>
-                </a>
-            </#list>
-        </section>
-    </aside>
+            <section class="product-scroll">
+                <#list relatedProducts.results as related>
+                    <a class="product-link" href="/categories/${currentCategory.id}/${related.id}">
+                        <img class="product-image" src="/assets/catalogue/${related.id}_1.jpg" alt="${related.title}"/>
+                        <span class="title">${related.title}</span>
+                        <span class="price">${related.value?string.currency}</span>
+                    </a>
+                </#list>
+            </section>
+        </aside>
+    </#if>
 
 </@layoutDefault>

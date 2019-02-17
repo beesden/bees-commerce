@@ -6,7 +6,9 @@ import org.beesden.commerce.common.domain.AbstractDomainEntity;
 import org.beesden.commerce.common.model.resource.CategoryResource;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -33,7 +35,7 @@ public class Category extends AbstractDomainEntity {
 
     @ManyToMany
     @JoinTable(name = "bees_category_ancestors", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "parent_category_id"))
-    private List<Category> ancestors;
+    private List<Category> ancestors = new ArrayList<>();
 
     /**
      * Convert the DTO to a categoryResource object.
@@ -47,6 +49,7 @@ public class Category extends AbstractDomainEntity {
         categoryResource.setTitle(title);
         categoryResource.setSummary(summary);
         categoryResource.setDescription(description);
+        categoryResource.setParents(ancestors.stream().map(Category::getCategoryId).collect(Collectors.toSet()));
 
         return categoryResource;
     }

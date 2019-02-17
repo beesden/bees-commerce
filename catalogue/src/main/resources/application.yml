@@ -2,7 +2,7 @@ spring:
   application:
     name: catalogue-client
   datasource:
-    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:bees_commerce}
+    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:bees_commerce}?useSSL=false
     username: ${DATABASE_USER:dbuser}
     password: ${DATABASE_PASS:dbpass}
     driver-class-name: com.mysql.jdbc.Driver

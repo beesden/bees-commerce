@@ -1,9 +1,11 @@
 package org.beesden.commerce.web.controller;
 
-import org.beesden.commerce.common.model.PagedRequest;
+import org.beesden.commerce.common.client.CategoryClient;
+import org.beesden.commerce.common.client.SearchClient;
 import org.beesden.commerce.common.model.SearchRequest;
-import org.beesden.commerce.web.model.CategoryResults;
+import org.beesden.commerce.common.model.resource.CategoryResource;
 import org.beesden.commerce.web.service.CategoryService;
+import org.beesden.commerce.web.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,34 +19,28 @@ import javax.validation.Valid;
 @RequestMapping(path = "/categories")
 public class CategoryController {
 
+    private final Session session;
+    private final CategoryClient categoryClient;
     private final CategoryService categoryService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(Session session, CategoryClient categoryClient, CategoryService categoryService) {
+        this.session = session;
+        this.categoryClient = categoryClient;
         this.categoryService = categoryService;
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView viewCategories(@Valid PagedRequest request) {
-
-        ModelAndView model = new ModelAndView();
-
-        model.addObject("categories", categoryService.listCategories(request));
-        model.setViewName("category/list");
-
-        return model;
-
     }
 
     @RequestMapping(path = "/{categoryId}", method = RequestMethod.GET)
     public ModelAndView viewCategory(@PathVariable String categoryId, @Valid SearchRequest request) {
 
         ModelAndView model = new ModelAndView();
-        CategoryResults response = categoryService.getCategory(categoryId, request);
+        CategoryResource category = categoryClient.getCategory(categoryId);
 
-        if (response != null) {
-            model.addObject("category", response.getCategory());
-            model.addObject("products", response.getProducts());
+        if (category != null) {
+            model.addObject("session", session);
+            model.addObject("request", request);
+            model.addObject("category", category);
+            model.addObject("products", categoryService.getProducts(categoryId, request));
             model.setViewName("category/view");
         } else {
             model.setViewName("category/empty");
